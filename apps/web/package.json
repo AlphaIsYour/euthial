@@ -1,0 +1,11 @@
+{
+  "name": "@euthial/web",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "echo 'Run: npx create-next-app@latest ./ to scaffold Next.js 14 here'",
+    "build": "echo 'Next.js build placeholder'"
+  },
+  "dependencies": {},
+  "devDependencies": {}
+}

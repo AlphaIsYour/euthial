@@ -1,0 +1,19 @@
+{
+  "id": "S4_leak30",
+  "name": "Tenant Cash Leakage 30%",
+  "description": "Tenant diverts 30% of sales to cash (unrecorded). Recorded revenue drops to 70% of base. Payment floor detects shortfall; bond partially drawn; full claim achieved without eviction.",
+  "baseDailyGrossIDR": 2370371,
+  "periodDays": 30,
+  "months": 24,
+  "curve": [{ "fromDay": 1, "factor": 1.0 }],
+  "leakage": 0.30,
+  "seasonality": null,
+  "events": [],
+  "expectedOutcome": {
+    "effectiveRevenueFactor": 0.70,
+    "finalPhase": "RESIDUAL",
+    "bondUsedApprox": 5330000,
+    "stepIn": false,
+    "testIds": ["T-26", "T-28"]
+  }
+}

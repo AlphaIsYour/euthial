@@ -1,0 +1,12 @@
+{
+  "name": "@euthial/attestor",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "demo:reset": "echo 'TODO: Run forge script DeployAndSeed then seed attestor config'",
+    "demo:run": "tsx src/runner.ts"
+  },
+  "dependencies": {},
+  "devDependencies": {}
+}

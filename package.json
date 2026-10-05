@@ -1,0 +1,29 @@
+{
+  "name": "euthial-monorepo",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Verifiable Revenue-Based Financing for Commercial Ruko Fit-Outs",
+  "scripts": {
+    "dev": "pnpm --filter web dev",
+    "build": "pnpm --filter web build",
+    "test:contracts": "cd contracts && forge test",
+    "test:sim": "pnpm --filter @euthial/sim test",
+    "test:all": "pnpm test:contracts && pnpm test:sim",
+    "contracts:compile": "cd contracts && forge build",
+    "contracts:deploy": "cd contracts && forge script script/DeployAndSeed.s.sol --broadcast",
+    "demo:reset": "pnpm --filter attestor demo:reset",
+    "demo:run": "pnpm --filter attestor demo:run"
+  },
+  "keywords": [
+    "ethereum",
+    "rwa",
+    "revenue-based-financing",
+    "erc4626",
+    "eip712",
+    "solidity",
+    "nextjs",
+    "fintech"
+  ],
+  "author": "Euthial Team",
+  "license": "MIT"
+}

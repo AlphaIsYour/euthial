@@ -1,0 +1,25 @@
+{
+  "id": "S6_default",
+  "name": "Early Tenant Default (Month 6)",
+  "description": "Tenant ceases operations and zero revenue recorded starting at month 6 (day 180). Floor breached, CURE triggers, bond drawn to maximum, followed by STEP_IN covenant breach and liquidation/recovery.",
+  "baseDailyGrossIDR": 2370371,
+  "periodDays": 30,
+  "months": 24,
+  "curve": [
+    { "fromDay": 1, "factor": 1.0 },
+    { "fromDay": 181, "factor": 0.0 }
+  ],
+  "leakage": 0.0,
+  "seasonality": null,
+  "events": [
+    { "day": 181, "type": "ZERO_REVENUE", "description": "Tenant halts operations" }
+  ],
+  "expectedOutcome": {
+    "seniorRepaidByMonth": null,
+    "juniorRepaidByMonth": null,
+    "finalPhase": "LIQUIDATION",
+    "bondUsed": 12800000,
+    "stepInTriggered": true,
+    "testIds": ["T-15", "T-16"]
+  }
+}
