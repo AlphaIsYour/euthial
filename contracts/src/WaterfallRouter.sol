@@ -171,6 +171,7 @@ contract WaterfallRouter is EIP712, ReentrancyGuard {
         asset = IERC20(asset_);
         seniorClaim = seniorClaim_;
         juniorClaim = juniorClaim_;
+    }
 
     // ========================================
     // Main Settlement Function
