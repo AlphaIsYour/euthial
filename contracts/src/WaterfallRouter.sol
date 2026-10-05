@@ -30,9 +30,20 @@ import {Math} from "@openzeppelin/contracts/utils/math/Math.sol";
  *
  * Invariants:
  *   - INV-01: landlordAmt + toSenior + toJunior = pull <= G.
- *   - INV-02: Router token balance unchanged after settle().
- *   - INV-03: juniorPaid > 0 implies seniorPaid == seniorClaim.
+ *   - INV-02: Router token balance unchanged after settle() (enforced as balance == 0 for pass-through design).
+ *   - INV-03: juniorPaid > 0 implies seniorPaid == seniorClaim (senior-first distribution).
  *   - INV-06: dayId strictly monotonic; one settlement per dayId.
+ *
+ * Phase Semantics:
+ *   - Phase A (Amortization): Active while seniorPaid < seniorClaim OR juniorPaid < juniorClaim
+ *   - Phase B (Residual): Active when seniorPaid >= seniorClaim AND juniorPaid >= juniorClaim
+ *   Note: "Phase" here refers to waterfall distribution mode, distinct from FitOutAgreement lifecycle phases.
+ *
+ * Agreement Integration (DEFERRED to Phase 2):
+ *   - Specification 05 Section 8.2 item 7 requires calling Agreement.onSettlement() for covenant evaluation.
+ *   - This is intentionally deferred until FitOutAgreement.sol implementation is complete.
+ *   - Current implementation focuses on waterfall correctness and can be verified independently.
+ *   - Phase/pause enforcement (OPERATING, RESIDUAL) is FitOutAgreement's responsibility, not WaterfallRouter's.
  */
 contract WaterfallRouter is EIP712, ReentrancyGuard {
     using SafeERC20 for IERC20;
