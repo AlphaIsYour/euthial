@@ -74,7 +74,14 @@ contract TrancheVaultTest is Test {
         assertEq(maxWithdrawable, depositAmount - deployAmount);
         
         vm.startPrank(alice);
-        vm.expectRevert(TrancheVault.InsufficientIdleCash.selector);
+        vm.expectRevert(
+            abi.encodeWithSignature(
+                "ERC4626ExceededMaxWithdraw(address,uint256,uint256)",
+                alice,
+                depositAmount,
+                depositAmount - deployAmount
+            )
+        );
         vault.withdraw(depositAmount, alice, alice);
         vm.stopPrank();
     }

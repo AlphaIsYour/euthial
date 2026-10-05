@@ -58,7 +58,6 @@ contract TrancheVault is ERC4626 {
     error OnlyAgreement();
     error OnlyRouter();
     error OnlyAdmin();
-    error InsufficientIdleCash();
     error RecipientNotAllowlisted();
     error ZeroAddress();
 
@@ -114,7 +113,8 @@ contract TrancheVault is ERC4626 {
         uint256 assets,
         uint256 shares
     ) internal override {
-        if (assets > idleCash) revert InsufficientIdleCash();
+        // Note: Parent ERC4626 already validates via maxWithdraw()
+        // which is constrained by idleCash
         idleCash -= assets;
         super._withdraw(caller, receiver, owner, assets, shares);
     }
@@ -126,7 +126,7 @@ contract TrancheVault is ERC4626 {
      */
     function deploy(uint256 amount, address to) external {
         if (msg.sender != agreement) revert OnlyAgreement();
-        if (amount > idleCash) revert InsufficientIdleCash();
+        require(amount <= idleCash, "Insufficient idle cash");
         if (to == address(0)) revert ZeroAddress();
 
         idleCash -= amount;
