@@ -48,9 +48,24 @@ interface ProtocolContextType {
   landlordRent: number;
   idleCashSenior: number;
   bondBalance: number;
+  bondDrawn: number;
   covenantStatus: CovenantStatus;
   seniorClaimCap: number;
   juniorClaimCap: number;
+
+  // Protocol Constants & Progress Metrics
+  totalCapex: number;
+  seniorPrincipal: number;
+  juniorPrincipal: number;
+  initialBond: number;
+  targetTenorMonths: number;
+  maxTenorMonths: number;
+  remainingSeniorClaim: number;
+  remainingJuniorClaim: number;
+  seniorProgressPct: number;
+  juniorProgressPct: number;
+  isSeniorCompleted: boolean;
+  isJuniorCompleted: boolean;
 
   // Actions
   withdrawSeniorCash: () => void;
@@ -106,10 +121,48 @@ export const ProtocolProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   const [milestones, setMilestones] = useState<Milestone[]>(defaultMilestones);
 
   // Constants based on docs/02_ECONOMIC_MODEL.md
-  const baseMonthlyGross = 71111100; // Rp 71,111,100 / month (~ Rp 2,370,370 / day)
-  const seniorClaimCap = 150000000;  // 1.25x on Rp 120M
-  const juniorClaimCap = 42000000;   // 1.40x on Rp 30M
-  const initialBond = 15000000;      // 10% on Rp 150M
+  const totalCapex = 150000000;       // Rp 150 Juta
+  const seniorPrincipal = 120000000;  // 80% (Rp 120 Juta)
+  const juniorPrincipal = 30000000;   // 20% (Rp 30 Juta)
+  const baseMonthlyGross = 71111100;  // Rp 71,111,100 / month (~ Rp 2,370,370 / day)
+  const seniorClaimCap = 150000000;   // 1.25x on Rp 120M
+  const juniorClaimCap = 42000000;    // 1.40x on Rp 30M
+  const initialBond = 15000000;       // 10% on Rp 150M
+  const targetTenorMonths = 18;
+  const maxTenorMonths = 24;
+
+  // Hydrate from localStorage once mounted
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      try {
+        const savedMonth = localStorage.getItem("euthial_sim_month");
+        const savedScenario = localStorage.getItem("euthial_sim_scenario");
+        if (savedMonth) {
+          const parsedM = parseInt(savedMonth, 10);
+          if (!isNaN(parsedM) && parsedM >= 1 && parsedM <= 24) {
+            setCurrentMonth(parsedM);
+          }
+        }
+        if (savedScenario === "S1" || savedScenario === "S4" || savedScenario === "S6") {
+          setActiveScenario(savedScenario);
+        }
+      } catch {
+        // Ignore storage access errors
+      }
+    }
+  }, []);
+
+  // Persist to localStorage on change
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      try {
+        localStorage.setItem("euthial_sim_month", currentMonth.toString());
+        localStorage.setItem("euthial_sim_scenario", activeScenario);
+      } catch {
+        // Ignore storage access errors
+      }
+    }
+  }, [currentMonth, activeScenario]);
 
   // Calculate dynamic data based on currentMonth and activeScenario
   let grossFactor = 1.0;
@@ -180,6 +233,12 @@ export const ProtocolProvider: React.FC<{ children: React.ReactNode }> = ({ chil
 
   const bondBalance = Math.max(0, initialBond - bondDrawn);
   const idleCashSenior = hasWithdrawn ? 0 : Math.round(seniorRepaid * 0.12);
+  const remainingSeniorClaim = Math.max(0, seniorClaimCap - seniorRepaid);
+  const remainingJuniorClaim = Math.max(0, juniorClaimCap - juniorRepaid);
+  const seniorProgressPct = Math.min(100, Math.round((seniorRepaid / seniorClaimCap) * 100));
+  const juniorProgressPct = Math.min(100, Math.round((juniorRepaid / juniorClaimCap) * 100));
+  const isSeniorCompleted = seniorRepaid >= seniorClaimCap;
+  const isJuniorCompleted = juniorRepaid >= juniorClaimCap;
 
   const [auditLogs, setAuditLogs] = useState<AuditEvent[]>([
     {
@@ -285,6 +344,12 @@ export const ProtocolProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     setIsPlaying(false);
     setHasWithdrawn(false);
     setMilestones(defaultMilestones);
+    if (typeof window !== "undefined") {
+      try {
+        localStorage.removeItem("euthial_sim_month");
+        localStorage.removeItem("euthial_sim_scenario");
+      } catch {}
+    }
     addLog("ProtocolReset", "State protokol direset ke konfigurasi awal Bulan ke-1.", "info", 1);
   };
 
@@ -359,9 +424,22 @@ export const ProtocolProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         landlordRent,
         idleCashSenior,
         bondBalance,
+        bondDrawn,
         covenantStatus,
         seniorClaimCap,
         juniorClaimCap,
+        totalCapex,
+        seniorPrincipal,
+        juniorPrincipal,
+        initialBond,
+        targetTenorMonths,
+        maxTenorMonths,
+        remainingSeniorClaim,
+        remainingJuniorClaim,
+        seniorProgressPct,
+        juniorProgressPct,
+        isSeniorCompleted,
+        isJuniorCompleted,
         withdrawSeniorCash,
         hasWithdrawn,
         cureTopUp,
@@ -382,4 +460,100 @@ export const useProtocol = () => {
   const ctx = useContext(ProtocolContext);
   if (!ctx) throw new Error("useProtocol must be used within a ProtocolProvider");
   return ctx;
+};
+
+// ============================================================================
+// Specialized Role-Oriented Hooks (Issue #26)
+// ============================================================================
+
+export const useTenantData = () => {
+  const p = useProtocol();
+  return {
+    currentMonth: p.currentMonth,
+    activeScenario: p.activeScenario,
+    grossMonthly: p.grossMonthly,
+    tenantCash: p.tenantCash,
+    initialBond: p.initialBond,
+    bondBalance: p.bondBalance,
+    bondDrawn: p.bondDrawn,
+    covenantStatus: p.covenantStatus,
+    simulateDailySale: p.simulateDailySale,
+    cureTopUp: p.cureTopUp,
+    depositBond: p.depositBond,
+    auditLogs: p.auditLogs,
+  };
+};
+
+export const useInvestorData = () => {
+  const p = useProtocol();
+  return {
+    currentMonth: p.currentMonth,
+    activeScenario: p.activeScenario,
+    seniorPrincipal: p.seniorPrincipal,
+    seniorClaimCap: p.seniorClaimCap,
+    seniorRepaid: p.seniorRepaid,
+    remainingSeniorClaim: p.remainingSeniorClaim,
+    seniorProgressPct: p.seniorProgressPct,
+    isSeniorCompleted: p.isSeniorCompleted,
+    idleCashSenior: p.idleCashSenior,
+    hasWithdrawn: p.hasWithdrawn,
+    withdrawSeniorCash: p.withdrawSeniorCash,
+    juniorRepaid: p.juniorRepaid,
+    juniorClaimCap: p.juniorClaimCap,
+    covenantStatus: p.covenantStatus,
+    auditLogs: p.auditLogs,
+  };
+};
+
+export const useLandlordData = () => {
+  const p = useProtocol();
+  return {
+    currentMonth: p.currentMonth,
+    activeScenario: p.activeScenario,
+    landlordRent: p.landlordRent,
+    juniorPrincipal: p.juniorPrincipal,
+    juniorClaimCap: p.juniorClaimCap,
+    juniorRepaid: p.juniorRepaid,
+    remainingJuniorClaim: p.remainingJuniorClaim,
+    juniorProgressPct: p.juniorProgressPct,
+    isJuniorCompleted: p.isJuniorCompleted,
+    milestones: p.milestones,
+    approveMilestone: p.approveLandlordMilestone,
+    covenantStatus: p.covenantStatus,
+    auditLogs: p.auditLogs,
+  };
+};
+
+export const useInspectorData = () => {
+  const p = useProtocol();
+  return {
+    currentMonth: p.currentMonth,
+    milestones: p.milestones,
+    signMilestone: p.signInspectorMilestone,
+    auditLogs: p.auditLogs,
+  };
+};
+
+export const useJuryDeck = () => {
+  const p = useProtocol();
+  return {
+    currentMonth: p.currentMonth,
+    activeScenario: p.activeScenario,
+    isPlaying: p.isPlaying,
+    setMonth: p.setMonth,
+    nextMonth: p.nextMonth,
+    prevMonth: p.prevMonth,
+    setScenario: p.setScenario,
+    toggleAutoPlay: p.toggleAutoPlay,
+    resetSimulation: p.resetSimulation,
+    covenantStatus: p.covenantStatus,
+    grossMonthly: p.grossMonthly,
+    seniorRepaid: p.seniorRepaid,
+    juniorRepaid: p.juniorRepaid,
+    landlordRent: p.landlordRent,
+    tenantCash: p.tenantCash,
+    bondBalance: p.bondBalance,
+    bondDrawn: p.bondDrawn,
+    auditLogs: p.auditLogs,
+  };
 };

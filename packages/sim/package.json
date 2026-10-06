@@ -8,7 +8,7 @@
     ".": "./src/index.ts"
   },
   "scripts": {
-    "test": "echo 'TODO: Add vitest for simulator parity tests'"
+    "test": "tsx ./src/verify_scenarios.ts"
   },
   "dependencies": {},
   "devDependencies": {}
