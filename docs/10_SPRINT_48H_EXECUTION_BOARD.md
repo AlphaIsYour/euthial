@@ -524,3 +524,194 @@ Memastikan kontrak ter-deploy di Sepolia Testnet, web frontend live di Vercel, s
 - [ ] Tidak ada kata-kata terlarang (*sekuritisasi*, *zero-capex*, *guaranteed return*, *tanpa polisi/pengadilan*).
 - [ ] Video rekaman demo cadangan (2-3 menit) sudah ada di laptop presenter.
 - [ ] Latihan tanya jawab Q&A juri (QA-01 s.d. QA-03) lancar di bawah 45 detik per jawaban.
+
+---
+
+## BAGIAN V: SPRINT LANJUTAN — DEV-1 CONTRACT HARDENING & PARALLEL WORK
+
+---
+
+### [ISSUE #13] [DEV-1] Smart Contract: Covenant State Machine Tests
+- **Assignee:** Dev 1 (Smart Contract Lead)
+- **Labels:** `smart-contract`, `covenant`, `p0`
+- **Terkait Dokumen:** `05_SMART_CONTRACT_SPEC.md` (Bagian 5.3, 5.4, 9, 13)
+
+#### 🎯 Goal:
+Menguji jalur evaluasi covenant pada `FitOutAgreement.sol` (`onSettlement`, `_evaluateCovenant`, `_processCureExpiry`) saat ruko beroperasi di status `OPERATING`, mencakup status normal, window `CURE`, penarikan bond, hingga eskalasi ke `STEP_IN` dan `RESIDUAL`.
+
+#### 📝 Spesifikasi Pengujian:
+1. **Normal & Tolerance:**
+   - Omzet di atas floor: status tetap `HEALTHY`.
+   - Shortfall di bawah tolerance (misal 1% dari claim): status tetap `HEALTHY`, tidak memicu cure.
+2. **Cure Window:**
+   - Shortfall kumulatif melebihi tolerance: status bertransisi ke `CURE`, menetapkan `cureTarget` dan `cureDeadlineDay`.
+   - Skenario Recovery: settlement tambahan dalam masa cure memenuhi target, status pulih menjadi `HEALTHY` (`CureResolved`).
+3. **Cure Expiry & Bond Drawing:**
+   - Masa cure habis tanpa pelunasan: bond ditarik (`BondDrawn`), status menjadi `BREACHED`.
+   - Jika bond tidak cukup menutup shortfall: langsung bertransisi ke `STEP_IN`.
+   - Jika breach terjadi 2 kali berturut-turut: langsung bertransisi ke `STEP_IN`.
+4. **Transition to Residual:**
+   - Jika `claimPaid >= totalClaim`: bertransisi ke `RESIDUAL`.
+5. **Invariants:**
+   - Fuzz test: `floor(d)` selalu monoton naik dan tidak pernah melebihi `totalClaim`.
+
+#### ✅ Acceptance Criteria (DoD):
+- [ ] File test baru `contracts/test/Covenant.t.sol` lolos 100% pada `forge test`.
+- [ ] Mencakup event assertion untuk `CovenantEvaluated`, `CureStarted`, `CureResolved`, `BondDrawn`, dan `StepInTriggered`.
+- [ ] Invariant covenant state transition terverifikasi.
+
+> **Prompt Siap-Copy untuk AI Agent Dev 1:**
+> ```text
+> Buat file test baru contracts/test/Covenant.t.sol untuk menguji FitOutAgreement covenant engine secara mendalam:
+> 1. Setup alur lengkap: DRAFT -> FUNDRAISING (deposit bond) -> BUILDING (approve milestones) -> OPERATING.
+> 2. Test alur normal: settlement cukup menjaga status HEALTHY.
+> 3. Test cure trigger: shortfall > tolerance mengubah status menjadi CURE dengan cureTarget dan cureDeadlineDay yang tepat.
+> 4. Test cure resolution: pembayaran susulan mengembalikan status ke HEALTHY.
+> 5. Test cure breach: cure expired menarik bond (BondDrawn) dan menguji transisi ke STEP_IN jika bond kurang atau breach count >= 2.
+> 6. Test transisi RESIDUAL saat claimPaid >= totalClaim. Rujuk 05_SMART_CONTRACT_SPEC.md bagian 9.
+> ```
+
+---
+
+### [ISSUE #14] [DEV-1] Smart Contract: Bond & Refund Lifecycle Tests
+- **Assignee:** Dev 1 (Smart Contract Lead)
+- **Labels:** `smart-contract`, `p0`, `foundry`
+- **Terkait Dokumen:** `05_SMART_CONTRACT_SPEC.md` (Bagian 6, 13)
+
+#### 🎯 Goal:
+Membuat test suite komprehensif untuk siklus hidup dana jaminan (`bondAmount`) pada `FitOutAgreement.sol`, memastikan hak pengembalian dana tenant (`refundBond`) berfungsi aman dan invarian konservasi dana jaminan (`INV-08`) selalu terjaga.
+
+#### 📝 Spesifikasi Pengujian:
+1. **Refund Pasca-Gagal Fundraising (`FAILED_REFUND`):**
+   - Tenant menyetor jaminan saat `FUNDRAISING`, deadline lewat tanpa start build -> call `failFundraising()`.
+   - Tenant memanggil `refundBond()`: saldo token jaminan kembali 100% ke tenant.
+2. **Refund Pasca-Batal Pembangunan (`ABORTED_REFUND`):**
+   - Milestone pembangunan tidak selesai hingga build deadline -> call `abortBuild()`.
+   - Tenant memanggil `refundBond()`: sisa jaminan kembali utuh ke tenant.
+3. **Refund Pasca-Selesai Kontrak (`CLOSED`):**
+   - Kontrak mencapai `RESIDUAL` lalu `close()`.
+   - Tenant dapat menarik sisa bond yang belum pernah ditarik covenant.
+4. **Access Control & Revert Protection:**
+   - Bukan tenant memanggil `refundBond()` -> revert `Unauthorized`.
+   - Memanggil `refundBond()` saat status masih `OPERATING` atau `BUILDING` -> revert `InvalidState`.
+   - Memanggil `refundBond()` saat saldo 0 -> aman / no-op tanpa transfer revert.
+5. **Invariant `INV-08`:**
+   - Pastikan `bondBalance + bondDrawn + bondRefunded == bondDeposited` selalu `true` di setiap state.
+
+#### ✅ Acceptance Criteria (DoD):
+- [ ] File test `contracts/test/BondRefund.t.sol` dibuat dan passing 100%.
+- [ ] Invariant `bondConservation()` teruji sebelum dan sesudah penarikan jaminan.
+- [ ] Zero token leakage: token balance kontrak `FitOutAgreement` sesuai saldo internal.
+
+> **Prompt Siap-Copy untuk AI Agent Dev 1:**
+> ```text
+> Buat file test baru contracts/test/BondRefund.t.sol yang berfokus menguji siklus hidup jaminan (escrow bond):
+> 1. Test depositBond(): pastikan token ditarik dari tenant dan hanya bisa dideposit sekali.
+> 2. Test refundBond() pada kondisi FAILED_REFUND, ABORTED_REFUND, dan CLOSED.
+> 3. Negative test: revert Unauthorized jika caller bukan tenant, revert InvalidState jika dipanggil di status yang salah.
+> 4. Invariant test INV-08: verifikasi bondConservation() selalu bernilai true pada setiap tahap. Rujuk 05_SMART_CONTRACT_SPEC.md bagian 6.
+> ```
+
+---
+
+### [ISSUE #15] [DEV-1] Smart Contract: ExcusedDays & Liquidation Tests
+- **Assignee:** Dev 1 (Smart Contract Lead)
+- **Labels:** `smart-contract`, `p1`, `covenant`
+- **Terkait Dokumen:** `05_SMART_CONTRACT_SPEC.md` (Bagian 5.5, 9, 13)
+
+#### 🎯 Goal:
+Menguji fungsi force majeure / hari bebas kewajiban (`markExcused`) oleh Arbiter dan jalur likuidasi akhir (`startLiquidation` -> `finalizeLiquidation`) saat terjadi default ruko di status `STEP_IN`.
+
+#### 📝 Spesifikasi Pengujian:
+1. **Fitur Excused Days (`markExcused`):**
+   - Arbiter menandai rentang hari izin yang sah: `excusedDays` bertambah, `logicalDays()` berkurang proporsional.
+   - Menguji bahwa floor tertunda atau lebih rendah saat ada excused days.
+   - Negative test: non-Arbiter memanggil -> revert `Unauthorized`.
+   - Boundary test: rentang hari melebihi batas `maxExcusedDays` -> revert `ExcusedDaysExceeded`.
+   - Boundary test: `endDay > lastDayId + 7` atau `endDay < startDay` -> revert `InvalidExcusedRange`.
+2. **Alur Likuidasi Penuh:**
+   - State transition dari `STEP_IN` -> `LIQUIDATING` via `startLiquidation()`.
+   - Arbiter memanggil `finalizeLiquidation()`: memicu `writeOffRemaining()` pada kedua vault (Senior dan Junior) dan bertransisi ke status `CLOSED`.
+   - Negative test: non-Arbiter mencoba memanggil likuidasi -> revert `Unauthorized`.
+   - Status non-STEP_IN mencoba likuidasi -> revert `InvalidState`.
+
+#### ✅ Acceptance Criteria (DoD):
+- [ ] File test `contracts/test/ExcusedDaysAndLiquidation.t.sol` lulus 100%.
+- [ ] Verifikasi write-off pada `seniorVault` dan `juniorVault` terbukti menurunkan `principalOutstanding` menjadi 0.
+- [ ] Batas maksimum `maxExcusedDays` tidak dapat ditembus.
+
+> **Prompt Siap-Copy untuk AI Agent Dev 1:**
+> ```text
+> Buat file test contracts/test/ExcusedDaysAndLiquidation.t.sol:
+> 1. Test markExcused(): uji efek penambahan hari dispensasi terhadap perhitungan logicalDays() dan floor(), verifikasi revert Unauthorized jika caller bukan arbiter, dan revert ExcusedDaysExceeded jika akumulasi melebihi batas.
+> 2. Test likuidasi: dari state STEP_IN, arbiter menjalankan startLiquidation(), lalu finalizeLiquidation(). Pastikan ITrancheVault.writeOffRemaining() dipanggil pada senior & junior vault, dan status berakhir di CLOSED. Rujuk 05_SMART_CONTRACT_SPEC.md bagian 5.5 & 9.
+> ```
+
+---
+
+### [ISSUE #16] [DEV-1] Smart Contract: Fix safeApprove Deprecation & Access Control Hardening
+- **Assignee:** Dev 1 (Smart Contract Lead)
+- **Labels:** `smart-contract`, `bug`, `p0`
+- **Terkait Dokumen:** `05_SMART_CONTRACT_SPEC.md` (Bagian 6, 7, 8)
+
+#### 🎯 Goal:
+Memperbaiki bug penggunaan fungsi OpenZeppelin v5 yang deprecated (`safeApprove`), serta memperketat access control guard pada fungsi transisi state eksternal di `FitOutAgreement.sol`.
+
+#### 📝 Spesifikasi Perbaikan:
+1. **Perbaikan `safeApprove`:**
+   - Pada `FitOutAgreement.sol` baris 141 (`asset.safeApprove(router, draw)`): ganti dengan `forceApprove(router, draw)` dari library OpenZeppelin `SafeERC20`.
+   - Pada `WaterfallRouter.sol` baris 241-250 (`safeApprove(vault, ...)`): gunakan `forceApprove` atau optimasi direct transfer.
+2. **Access Control Hardening di `FitOutAgreement.sol`:**
+   - Evaluasi caller guard pada `startBuild()`: batasi hanya landlord atau tenant.
+   - Evaluasi caller guard pada `abortBuild()`: batasi hanya landlord, tenant, atau arbiter.
+   - Evaluasi caller guard pada `startOperating()`: batasi hanya landlord atau contractor setelah semua milestone selesai.
+   - Evaluasi `failFundraising()`: batasi hanya landlord atau tenant.
+3. **Negative Test Suite:**
+   - Tambahkan test unauthorized access untuk setiap fungsi transisi state publik di `FitOutAgreement.t.sol`.
+
+#### ✅ Acceptance Criteria (DoD):
+- [ ] Tidak ada lagi pemanggilan `safeApprove` yang deprecated di seluruh codebase contracts.
+- [ ] Semua fungsi transisi state memiliki pengecekan `msg.sender` yang eksplisit.
+- [ ] Test revert `Unauthorized` untuk address acak lolos 100%.
+
+> **Prompt Siap-Copy untuk AI Agent Dev 1:**
+> ```text
+> Lakukan refactoring & hardening pada contracts/src/FitOutAgreement.sol dan WaterfallRouter.sol:
+> 1. Ganti pemanggilan asset.safeApprove() dengan forceApprove() sesuai standar OpenZeppelin v5.
+> 2. Tambahkan explicit caller authorization check pada startBuild(), abortBuild(), startOperating(), dan failFundraising() agar tidak bisa dipanggil oleh sembarang alamat pihak ketiga.
+> 3. Update FitOutAgreement.t.sol dengan test case negatif yang memverifikasi setiap fungsi di atas revert Unauthorized jika dipanggil oleh unauthorized caller.
+> ```
+
+---
+
+### [ISSUE #17] [DEV-1] Smart Contract: Integration Smoke Test (DeployAndSeed)
+- **Assignee:** Dev 1 (Smart Contract Lead)
+- **Labels:** `smart-contract`, `devops`, `automation`, `p1`
+- **Terkait Dokumen:** `06_MVP_BUILD_PLAN.md` (Bagian 3), `10_SPRINT_48H_EXECUTION_BOARD.md` (Issue #08)
+
+#### 🎯 Goal:
+Membuat integration smoke test berbasis Foundry untuk memastikan script `DeployAndSeed.s.sol` dapat dieksekusi end-to-end tanpa error, menghasilkan konfigurasi alamat yang valid, dan siap digunakan oleh Dev-2 (Frontend) & Dev-3 (Attestor).
+
+#### 📝 Spesifikasi Pengujian:
+1. **Eksekusi Script Deploy:**
+   - Jalankan `DeployAndSeed.s.sol` dalam lingkungan test Foundry (`Integration.t.sol`).
+2. **Verifikasi Output Deployment:**
+   - Alamat `MockIDR`, `SeniorVault`, `JuniorVault`, `FitOutAgreement`, dan `WaterfallRouter` ter-cross link dengan benar (`router.agreement()`, `vault.router()`, `agreement.router()`).
+   - Saldo mint awal dan allowlist terkonfigurasi.
+   - Agreement berhasil masuk ke status `OPERATING` (milestone 0, 1, 2 diapprove dan dana dideploy).
+   - Minimal 1 transaksi settlement perdana berhasil dieksekusi oleh attestor dan diverifikasi router.
+3. **Automasi Tooling:**
+   - Tambahkan target command di `contracts/foundry.toml` atau file helper script/Makefile untuk kemudahan verifikasi cepat (`forge test --match-contract IntegrationSmokeTest`).
+
+#### ✅ Acceptance Criteria (DoD):
+- [ ] File test `contracts/test/Integration.t.sol` lulus 100%.
+- [ ] Script `DeployAndSeed.s.sol` terbukti idempotent dan siap deploy ke Anvil lokal atau Sepolia testnet.
+- [ ] Environment variabel dan konfigurasi terdokumentasi jelas di `contracts/README.md`.
+
+> **Prompt Siap-Copy untuk AI Agent Dev 1:**
+> ```text
+> Buat file test integrasi contracts/test/Integration.t.sol:
+> Jalankan pipeline DeployAndSeed.s.sol dari awal hingga akhir di dalam test Foundry.
+> Verifikasi bahwa seluruh kontrak terhubung sempurna (circular reference teratasi via setRouter), state agreement berada di OPERATING, settlement awal berhasil dijalankan, dan nilai klaim tercatat dengan presisi. Tambahkan dokumentasi petunjuk deploy lokal di contracts/README.md.
+> ```
+
