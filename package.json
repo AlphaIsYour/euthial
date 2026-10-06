@@ -4,8 +4,8 @@
   "private": true,
   "description": "Verifiable Revenue-Based Financing for Commercial Ruko Fit-Outs",
   "scripts": {
-    "dev": "pnpm --filter web dev",
-    "build": "pnpm --filter web build",
+    "dev": "pnpm --filter @euthial/web dev",
+    "build": "pnpm --filter @euthial/web build",
     "test:contracts": "cd contracts && forge test",
     "test:sim": "pnpm --filter @euthial/sim test",
     "test:all": "pnpm test:contracts && pnpm test:sim",

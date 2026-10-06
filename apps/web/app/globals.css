@@ -1,0 +1,77 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* DARK MODE (DEFAULT) */
+  --app-bg: #0A0A0A;
+  --sidebar-bg: #141414;
+  --panel-bg: #0A0A0A;
+  --panel-header-bg: #0A0A0A;
+  --card-bg: #1A1A1A;
+  --card-bg-soft: rgba(26, 26, 26, 0.85);
+  --input-bg: rgba(255, 255, 255, 0.06);
+  --text-main: #FFFFFF;
+  --text-muted: #8A8A8A;
+  --border-soft: rgba(207, 207, 207, 0.10);
+  --border-hover: rgba(207, 207, 207, 0.18);
+  --dot-color: rgba(207, 207, 207, 0.08);
+  --hover-bg: rgba(255, 255, 255, 0.04);
+  --active-bg: rgba(255, 255, 255, 0.08);
+  
+  /* STATUS & ACCENT (MINIMAL & MUTED) */
+  --status-healthy: #10B981;
+  --status-healthy-bg: rgba(16, 185, 129, 0.10);
+  --status-warning: #F59E0B;
+  --status-warning-bg: rgba(245, 158, 11, 0.10);
+  --status-danger: #EF4444;
+  --status-danger-bg: rgba(239, 68, 68, 0.10);
+  --accent-senior: #3B82F6;
+  --accent-junior: #8B5CF6;
+  --accent-landlord: #10B981;
+}
+
+[data-theme="light"] {
+  --app-bg: #F4F4F5;
+  --sidebar-bg: #EAEAEC;
+  --panel-bg: #FAFAFA;
+  --panel-header-bg: #EAEAEC;
+  --card-bg: #FFFFFF;
+  --card-bg-soft: rgba(255, 255, 255, 0.85);
+  --input-bg: rgba(0, 0, 0, 0.04);
+  --text-main: #171717;
+  --text-muted: #71717A;
+  --border-soft: rgba(23, 23, 23, 0.12);
+  --border-hover: rgba(23, 23, 23, 0.22);
+  --dot-color: rgba(23, 23, 23, 0.10);
+  --hover-bg: rgba(0, 0, 0, 0.04);
+  --active-bg: rgba(0, 0, 0, 0.06);
+}
+
+body {
+  background-color: var(--app-bg);
+  color: var(--text-main);
+  font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  -webkit-font-smoothing: antialiased;
+}
+
+.dotted-bg {
+  background-image: radial-gradient(circle at 1px 1px, var(--dot-color) 1px, transparent 0);
+  background-size: 24px 24px;
+}
+
+/* Custom utilitarian scrollbar */
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(207, 207, 207, 0.15);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(207, 207, 207, 0.25);
+}
