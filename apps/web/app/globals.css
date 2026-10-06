@@ -2,7 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
+:root, [data-theme="dark"] {
   /* DARK MODE (DEFAULT) */
   --app-bg: #0A0A0A;
   --sidebar-bg: #141414;
@@ -32,20 +32,31 @@
 }
 
 [data-theme="light"] {
+  /* LIGHT MODE */
   --app-bg: #F4F4F5;
   --sidebar-bg: #EAEAEC;
   --panel-bg: #FAFAFA;
-  --panel-header-bg: #EAEAEC;
+  --panel-header-bg: #FAFAFA;
   --card-bg: #FFFFFF;
-  --card-bg-soft: rgba(255, 255, 255, 0.85);
+  --card-bg-soft: rgba(255, 255, 255, 0.95);
   --input-bg: rgba(0, 0, 0, 0.04);
   --text-main: #171717;
   --text-muted: #71717A;
   --border-soft: rgba(23, 23, 23, 0.12);
   --border-hover: rgba(23, 23, 23, 0.22);
-  --dot-color: rgba(23, 23, 23, 0.10);
+  --dot-color: rgba(23, 23, 23, 0.08);
   --hover-bg: rgba(0, 0, 0, 0.04);
-  --active-bg: rgba(0, 0, 0, 0.06);
+  --active-bg: rgba(0, 0, 0, 0.08);
+
+  --status-healthy: #059669;
+  --status-healthy-bg: rgba(16, 185, 129, 0.15);
+  --status-warning: #D97706;
+  --status-warning-bg: rgba(245, 158, 11, 0.15);
+  --status-danger: #DC2626;
+  --status-danger-bg: rgba(239, 68, 68, 0.15);
+  --accent-senior: #2563EB;
+  --accent-junior: #7C3AED;
+  --accent-landlord: #059669;
 }
 
 body {
@@ -60,18 +71,18 @@ body {
   background-size: 24px 24px;
 }
 
-/* Custom utilitarian scrollbar */
+/* Custom utilitarian scrollbar 6px */
 ::-webkit-scrollbar {
-  width: 5px;
-  height: 5px;
+  width: 6px;
+  height: 6px;
 }
 ::-webkit-scrollbar-track {
   background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: rgba(207, 207, 207, 0.15);
+  background: rgba(207, 207, 207, 0.18);
   border-radius: 4px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(207, 207, 207, 0.25);
+  background: rgba(207, 207, 207, 0.30);
 }
