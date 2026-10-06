@@ -40,6 +40,9 @@
 | 08 | `08_DATA_VALIDATION_PLAN.md` | Cara mengumpulkan data publik tanpa relasi/wawancara | Riset |
 | 09 | `09_DECISION_LOG_OPEN_QUESTIONS.md` | Keputusan desain (ADR ringkas) dan pertanyaan terbuka | Semua |
 | 10 | `10_SPRINT_48H_EXECUTION_BOARD.md` | Rencana sprint 48 jam, token desain anti AI-slop, dan 12 GitHub issues siap-copy | Semua / Tim |
+| 11 | `11_DEV2_ROLE_SEPARATION_ISSUES.md` | Arsitektur pemisahan portal 5 peran & spesifikasi Issue #20-#25 | Frontend, Fullstack |
+| 12 | `12_PRODUCT_BRAINSTORMING_AND_FAQ.md` | Rangkuman brainstorming: alur kasir/QRIS, uang tunai, & opsi branding | Produk, Bisnis, Semua |
+| 13 | `13_SECURITY_AND_ECONOMIC_MITIGATIONS.md` | Mitigasi keamanan & ekonomi: solusi 4 celah kritis (Bond, Step-In, Oracle, QR Bypass) | Keamanan, Kontrak, Tim |
 
 **Urutan baca.**
 - Smart contract dev: 00 → 04 → 02 (bagian formula) → 05 → 07 (matriks tes) → 06.
