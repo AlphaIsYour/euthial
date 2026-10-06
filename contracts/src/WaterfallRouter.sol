@@ -270,6 +270,11 @@ contract WaterfallRouter is EIP712, ReentrancyGuard {
         if (transitioned) {
             emit PhaseSwitchedToResidual(s.dayId, seniorPaid + juniorPaid);
         }
+
+        // 11. Hook into Agreement for covenant evaluation
+        if (agreement != address(0)) {
+            IFitOutAgreement(agreement).onSettlement(s.dayId, seniorPaid + juniorPaid);
+        }
     }
 
     // ========================================
@@ -367,5 +372,9 @@ contract WaterfallRouter is EIP712, ReentrancyGuard {
 
 interface ITrancheVault {
     function onRepayment(uint256 amount) external;
+}
+
+interface IFitOutAgreement {
+    function onSettlement(uint32 dayId, uint256 cumulativeInvestorPaid) external;
 }
 
