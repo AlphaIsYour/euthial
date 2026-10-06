@@ -3,6 +3,10 @@
 **Assignee Utama:** Dev 2 (Frontend & UI Lead)  
 **Tujuan Arsitektur:** Memisahkan satu halaman dasbor monolitik menjadi **4 Portal Stakeholder Terdedikasi + 1 Demo Arena Juri** dengan URL routing Next.js App Router, layout mandiri, dan hierarki informasi yang relevan tanpa kebisingan (*zero information noise*).
 
+> **Status Sinkronisasi Nomor Issue GitHub Repository:**  
+> Terakhir tercatat di repository GitHub: Issue #17 (Dev-1 Smoke Test) serta PR #18 & #19.  
+> Urutan nomor task issue baru untuk **Dev 2** disesuaikan melanjutkan nomor urut: **#20 s.d. #25**.
+
 ---
 
 ## 🗺️ Gambaran Struktur Routing Baru yang Diusulkan
@@ -11,21 +15,21 @@
 apps/web/app/
 ├── page.tsx                    # Landing Hub (Portal Selector: Pintu Masuk 5 Peran)
 ├── (portals)/
-│   ├── tenant/page.tsx         # [ISSUE #12] Portal Khusus Penyewa Kedai (F&B Operator)
-│   ├── investor/page.tsx       # [ISSUE #13] Portal Khusus Pemodal / Investor Senior
-│   ├── landlord/page.tsx       # [ISSUE #14] Portal Khusus Pemilik Ruko (Aset & Sewa)
-│   └── inspector/page.tsx      # [ISSUE #15] Portal Khusus Pengawas & Kontraktor Renovasi
+│   ├── tenant/page.tsx         # [ISSUE #21] [DEV-2] Portal Khusus Penyewa Kedai (F&B Operator)
+│   ├── investor/page.tsx       # [ISSUE #22] [DEV-2] Portal Khusus Pemodal / Investor Senior
+│   ├── landlord/page.tsx       # [ISSUE #23] [DEV-2] Portal Khusus Pemilik Ruko (Aset & Sewa)
+│   └── inspector/page.tsx      # [ISSUE #24] [DEV-2] Portal Khusus Pengawas & Kontraktor Renovasi
 └── demo/
-    └── page.tsx                # [ISSUE #16] Jury Control Deck (Stress Test & Audit Live)
+    └── page.tsx                # [ISSUE #25] [DEV-2] Jury Control Deck (Stress Test & Audit Live)
 ```
 
 ---
 
-## 📋 DAFTAR TASK ISSUES DEV 2 (SIAP COPY / REVIEW GITHUB)
+## 📋 DAFTAR TASK ISSUES DEV 2 (SIAP COPY KE GITHUB ISSUES)
 
 ---
 
-### [ISSUE #11] [DEV-2] Routing Architecture & Landing Hub Portal Selector (`/`)
+### [ISSUE #20] [DEV-2] Routing Architecture & Landing Hub Portal Selector (`/`)
 - **Assignee:** Dev 2 (Frontend Lead)
 - **Labels:** `frontend`, `p0`, `routing`, `architecture`
 - **Terkait Dokumen:** `10_SPRINT_48H_EXECUTION_BOARD.md` & `06_MVP_BUILD_PLAN.md`
@@ -52,7 +56,7 @@ Merombak root page (`/`) menjadi **Landing Hub Portal Selector** yang elegan dan
 
 ---
 
-### [ISSUE #12] [DEV-2] Dedicated Tenant Portal (`/tenant`)
+### [ISSUE #21] [DEV-2] Dedicated Tenant Portal (`/tenant`)
 - **Assignee:** Dev 2 (Frontend Lead)
 - **Labels:** `frontend`, `p0`, `tenant-portal`
 - **Terkait Dokumen:** `01_PRODUCT_CONTEXT.md` (§3) & `02_ECONOMIC_MODEL.md` (§8)
@@ -80,7 +84,7 @@ Membangun portal khusus untuk pengusaha kedai kopi / penyewa ruko yang berfokus 
 
 ---
 
-### [ISSUE #13] [DEV-2] Dedicated Investor Senior Portal (`/investor`)
+### [ISSUE #22] [DEV-2] Dedicated Investor Senior Portal (`/investor`)
 - **Assignee:** Dev 2 (Frontend Lead)
 - **Labels:** `frontend`, `p0`, `investor-portal`, `erc-4626`
 - **Terkait Dokumen:** `05_SMART_CONTRACT_SPEC.md` (§1, §7)
@@ -109,7 +113,7 @@ Membangun portal khusus pemodal luar (Senior Tranche) untuk memantau performa in
 
 ---
 
-### [ISSUE #14] [DEV-2] Dedicated Landlord / Pemilik Ruko Portal (`/landlord`)
+### [ISSUE #23] [DEV-2] Dedicated Landlord / Pemilik Ruko Portal (`/landlord`)
 - **Assignee:** Dev 2 (Frontend Lead)
 - **Labels:** `frontend`, `p0`, `landlord-portal`, `property`
 - **Terkait Dokumen:** `01_PRODUCT_CONTEXT.md` (§3) & `06_MVP_BUILD_PLAN.md` (§4.2)
@@ -134,7 +138,7 @@ Membangun portal khusus pemilik aset fisik ruko untuk memantau pendapatan sewa b
 
 ---
 
-### [ISSUE #15] [DEV-2] Dedicated Inspector & Contractor Portal (`/inspector`)
+### [ISSUE #24] [DEV-2] Dedicated Inspector & Contractor Portal (`/inspector`)
 - **Assignee:** Dev 2 (Frontend Lead)
 - **Labels:** `frontend`, `p0`, `inspection-portal`, `milestone`
 - **Terkait Dokumen:** `05_SMART_CONTRACT_SPEC.md` (§6) & `06_MVP_BUILD_PLAN.md` (§4.2)
@@ -161,7 +165,7 @@ Membangun portal khusus pengawas independen dan kontraktor pelaksana untuk menge
 
 ---
 
-### [ISSUE #16] [DEV-2] Dedicated Jury & Demo Mission Control Deck (`/demo`)
+### [ISSUE #25] [DEV-2] Dedicated Jury & Demo Mission Control Deck (`/demo`)
 - **Assignee:** Dev 2 (Frontend Lead)
 - **Labels:** `frontend`, `p0`, `jury-deck`, `simulation`
 - **Terkait Dokumen:** `07_RISK_STRESS_TEST_QA.md` & `06_MVP_BUILD_PLAN.md` (§4.4)
