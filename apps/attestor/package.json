@@ -5,7 +5,8 @@
   "type": "module",
   "scripts": {
     "demo:reset": "echo 'TODO: Run forge script DeployAndSeed then seed attestor config'",
-    "demo:run": "tsx src/runner.ts"
+    "demo:run": "tsx src/runner.ts",
+    "attest:day": "tsx src/cli_attest.ts"
   },
   "dependencies": {
     "@euthial/sim": "workspace:*",

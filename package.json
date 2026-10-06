@@ -12,7 +12,8 @@
     "contracts:compile": "cd contracts && forge build",
     "contracts:deploy": "cd contracts && forge script script/DeployAndSeed.s.sol --broadcast",
     "demo:reset": "pnpm --filter attestor demo:reset",
-    "demo:run": "pnpm --filter attestor demo:run"
+    "demo:run": "pnpm --filter @euthial/attestor demo:run",
+    "attest:day": "pnpm --filter @euthial/attestor attest:day"
   },
   "keywords": [
     "ethereum",
