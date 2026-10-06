@@ -55,6 +55,9 @@ contract FitOutAgreementTest is Test {
             landlord, attestor, address(token), SENIOR_CLAIM, JUNIOR_CLAIM
         );
 
+        vm.prank(landlord);
+        agreement.setRouter(address(router));
+
         seniorVault.setAgreement(address(agreement));
         juniorVault.setAgreement(address(agreement));
         seniorVault.setRouter(address(router));
