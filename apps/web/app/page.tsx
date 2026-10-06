@@ -1,506 +1,607 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
-import { AppProvider, useApp, UserRole, NavTab } from "../context/AppContext";
-import { Shell } from "../components/layout/Shell";
-import { WaterfallVisualizer } from "../components/waterfall/WaterfallVisualizer";
-import { TrancheClaimCards } from "../components/waterfall/TrancheClaimCards";
-import { InvestorView } from "../components/roles/InvestorView";
-import { LandlordView } from "../components/roles/LandlordView";
-import { TenantView } from "../components/roles/TenantView";
-import { InspectorView } from "../components/roles/InspectorView";
-import { CovenantChart } from "../components/charts/CovenantChart";
-import { ScenarioControllerPanel } from "../components/scenario/ScenarioControllerPanel";
-import { EconomicSimulatorView } from "../components/simulator/EconomicSimulatorView";
-import { ContractSpecsView } from "../components/contracts/ContractSpecsView";
-import { MaterialIcon } from "../components/ui/MaterialIcon";
-
-// 4 Active Roles
-const roleItems: { role: UserRole; label: string; icon: string; desc: string; badge: string }[] = [
-  {
-    role: "INVESTOR",
-    label: "Senior Investor",
-    icon: "trending_up",
-    desc: "Capital recovery & 1.25x cap target",
-    badge: "Senior (80%)",
-  },
-  {
-    role: "LANDLORD",
-    label: "Pemilik Ruko",
-    icon: "real_estate_agent",
-    desc: "5% turnover rent & 1.40x first-loss buffer",
-    badge: "Junior (20%)",
-  },
-  {
-    role: "TENANT",
-    label: "Tenant Kedai",
-    icon: "storefront",
-    desc: "Retains 80% daily QRIS & escrow bond safety",
-    badge: "Kedai Kopi Melati",
-  },
-  {
-    role: "INSPECTOR",
-    label: "Inspektur Lapangan",
-    icon: "engineering",
-    desc: "Physical fit-out milestone approval & co-sign",
-    badge: "Multi-Sig Milestone",
-  },
-];
-
-interface ToolCardItem {
-  id: string;
-  title: string;
-  desc: string;
-  icon: string;
-  badge: string;
-  badgeType: "popular" | "new";
-  tab?: NavTab;
-  scrollId?: string;
-}
-
-// Section: Recently Used Tools
-const recentlyUsedTools: ToolCardItem[] = [
-  {
-    id: "tool-deck",
-    title: "Jury Scenario Controller Deck",
-    desc: "Interactive stress-test deck for evaluating S1 Normal, S4 Cash Skimming 30%, and S6 Early Default.",
-    icon: "play_circle",
-    badge: "New",
-    badgeType: "new",
-    scrollId: "scenarios-section",
-  },
-  {
-    id: "tool-waterfall",
-    title: "Waterfall Settlement Engine",
-    desc: "Automated split of gross sales: 80% tenant retain, 15% investor pool (senior-first), 5% landlord.",
-    icon: "account_tree",
-    badge: "New",
-    badgeType: "new",
-    scrollId: "waterfall-section",
-  },
-  {
-    id: "tool-covenant",
-    title: "Payment Floor & Escrow Bond",
-    desc: "Cumulative payment floor curve with 7-day cure window and automated bond draw preventing early eviction.",
-    icon: "verified_user",
-    badge: "Popular",
-    badgeType: "popular",
-    scrollId: "covenant-section",
-  },
-];
-
-// Section: Popular Protocols & Tools
-const popularTools: ToolCardItem[] = [
-  {
-    id: "tool-vaults",
-    title: "Dual-Tranche Vaults (ERC-4626)",
-    desc: "Internal cash accounting preventing donation attacks. Senior 1.25x cap and Junior 1.40x first-loss buffer.",
-    icon: "account_balance_wallet",
-    badge: "Popular",
-    badgeType: "popular",
-    tab: "contracts",
-  },
-  {
-    id: "tool-simulator",
-    title: "Monte Carlo Economic Simulator",
-    desc: "Run 100+ revenue Monte Carlo simulations under varied footfall, churn, and macroeconomic stress.",
-    icon: "candlestick_chart",
-    badge: "Popular",
-    badgeType: "popular",
-    tab: "simulator",
-  },
-  {
-    id: "tool-milestone",
-    title: "Contractor Milestone Escrow",
-    desc: "Tranche disbursement gated by 2-of-3 multi-signature approvals (Tenant, Landlord, Independent Inspector).",
-    icon: "construction",
-    badge: "Popular",
-    badgeType: "popular",
-    tab: "contracts",
-  },
-];
-
-// Section: Category Quick Access Cards
-const categories = [
-  { title: "Senior Tranche Vault", subtitle: "Rp 120M Pokok (80%)", role: "INVESTOR" as UserRole },
-  { title: "Junior Tranche Vault", subtitle: "Rp 30M First-Loss (20%)", role: "LANDLORD" as UserRole },
-  { title: "Tenant Escrow Bond", subtitle: "Rp 15M Jaminan (10%)", role: "TENANT" as UserRole },
-  { title: "Daily QRIS Velocity", subtitle: "~Rp 2.370.000 / hari", role: "INVESTOR" as UserRole },
-];
-
-const DashboardMainContent: React.FC = () => {
-  const { role, setRole, activeTab, setActiveTab } = useApp();
-  const [greeting, setGreeting] = useState("Good evening");
-
-  useEffect(() => {
-    const hour = new Date().getHours();
-    if (hour < 12) setGreeting("Good morning");
-    else if (hour < 18) setGreeting("Good afternoon");
-    else setGreeting("Good evening");
-  }, []);
-
-  const handleToolClick = (tool: ToolCardItem) => {
-    if (tool.tab) {
-      setActiveTab(tool.tab);
-    } else if (tool.scrollId) {
-      if (activeTab !== "dashboard") {
-        setActiveTab("dashboard");
-      }
-      setTimeout(() => {
-        const el = document.getElementById(tool.scrollId!);
-        if (el) el.scrollIntoView({ behavior: "smooth" });
-      }, 50);
-    }
-  };
-
-  // If user selected Simulator tab
-  if (activeTab === "simulator") {
-    return (
-      <div className="space-y-6">
-        <div className="flex items-center justify-between pb-4 border-b border-[var(--border-soft)]">
-          <div className="flex items-center gap-2">
-            <button
-              onClick={() => setActiveTab("dashboard")}
-              className="p-1.5 rounded-lg border border-[var(--border-soft)] hover:bg-[var(--hover-bg)] text-[var(--text-muted)] hover:text-[var(--text-main)] transition-colors"
-              title="Back to Dashboard"
-            >
-              <MaterialIcon name="arrow_back" size={18} />
-            </button>
-            <h1 className="text-[20px] font-bold text-[var(--text-main)]">
-              Monte Carlo Economic Simulator
-            </h1>
-          </div>
-          <button
-            onClick={() => setActiveTab("dashboard")}
-            className="text-xs font-mono text-[var(--text-muted)] hover:text-[var(--text-main)]"
-          >
-            ← Back to Overview
-          </button>
-        </div>
-        <EconomicSimulatorView />
-      </div>
-    );
-  }
-
-  // If user selected Contracts tab
-  if (activeTab === "contracts") {
-    return (
-      <div className="space-y-6">
-        <div className="flex items-center justify-between pb-4 border-b border-[var(--border-soft)]">
-          <div className="flex items-center gap-2">
-            <button
-              onClick={() => setActiveTab("dashboard")}
-              className="p-1.5 rounded-lg border border-[var(--border-soft)] hover:bg-[var(--hover-bg)] text-[var(--text-muted)] hover:text-[var(--text-main)] transition-colors"
-              title="Back to Dashboard"
-            >
-              <MaterialIcon name="arrow_back" size={18} />
-            </button>
-            <h1 className="text-[20px] font-bold text-[var(--text-main)]">
-              Dual-Tranche Smart Contracts & On-Chain Deployments
-            </h1>
-          </div>
-          <button
-            onClick={() => setActiveTab("dashboard")}
-            className="text-xs font-mono text-[var(--text-muted)] hover:text-[var(--text-main)]"
-          >
-            ← Back to Overview
-          </button>
-        </div>
-        <ContractSpecsView />
-      </div>
-    );
-  }
-
-  return (
-    <div className="space-y-8">
-      {/* 1. Top Welcome Row */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-2 border-b border-[var(--border-soft)]">
-        <div className="space-y-2">
-          <h1 className="text-[24px] font-bold tracking-tight text-[var(--text-main)] leading-tight">
-            {greeting} 👋
-          </h1>
-          <p className="text-[14px] text-[var(--text-muted)] font-sans">
-            Verifiable Revenue-Based Financing Workspace · Jember Commercial Ruko Fit-Out Pilot #01
-          </p>
-
-          {/* Quick Stats: icon 14px + label 12px muted, minimal accent */}
-          <div className="flex flex-wrap items-center gap-4 pt-1 text-[12px] text-[var(--text-muted)] font-mono">
-            <div className="flex items-center gap-1.5">
-              <MaterialIcon name="domain" size={14} className="text-blue-400" />
-              <span>Pilot: <strong className="text-[var(--text-main)] font-medium">AGR-JBR-001</strong></span>
-            </div>
-            <div className="opacity-40">·</div>
-            <div className="flex items-center gap-1.5">
-              <MaterialIcon name="account_balance_wallet" size={14} className="text-emerald-400" />
-              <span>Vault AUM: <strong className="text-[var(--text-main)] font-medium">Rp 150M</strong></span>
-            </div>
-            <div className="opacity-40">·</div>
-            <div className="flex items-center gap-1.5">
-              <MaterialIcon name="verified_user" size={14} className="text-cyan-400" />
-              <span>Covenant: <strong className="text-emerald-400 font-medium">HEALTHY</strong></span>
-            </div>
-            <div className="opacity-40">·</div>
-            <div className="flex items-center gap-1.5">
-              <MaterialIcon name="qr_code_2" size={14} className="text-purple-400" />
-              <span>Rail: <strong className="text-[var(--text-main)] font-medium">QRIS EIP-712</strong></span>
-            </div>
-          </div>
-        </div>
-
-        {/* Right: Stacked Avatar Circles 32x32 */}
-        <div className="hidden sm:flex items-center gap-3 self-start md:self-center bg-[var(--card-bg)] border border-[var(--border-soft)] px-3 py-2 rounded-[12px]">
-          <div className="text-right">
-            <div className="text-[12px] font-medium text-[var(--text-main)]">4 Ecosystem Actors</div>
-            <div className="text-[10px] font-mono text-[var(--text-muted)]">Active Agreement Co-Signers</div>
-          </div>
-          <div className="flex -space-x-2 overflow-hidden">
-            <div
-              title="Senior Investor (80% Capital)"
-              className="w-[32px] h-[32px] rounded-full bg-blue-600 ring-2 ring-[var(--panel-bg)] flex items-center justify-center text-[10px] font-mono font-bold text-white shadow-sm"
-            >
-              IN
-            </div>
-            <div
-              title="Landlord / Ruko Owner (20% First-Loss)"
-              className="w-[32px] h-[32px] rounded-full bg-purple-600 ring-2 ring-[var(--panel-bg)] flex items-center justify-center text-[10px] font-mono font-bold text-white shadow-sm"
-            >
-              LL
-            </div>
-            <div
-              title="Tenant (Kedai Kopi Melati)"
-              className="w-[32px] h-[32px] rounded-full bg-emerald-600 ring-2 ring-[var(--panel-bg)] flex items-center justify-center text-[10px] font-mono font-bold text-white shadow-sm"
-            >
-              TN
-            </div>
-            <div
-              title="Independent Inspector"
-              className="w-[32px] h-[32px] rounded-full bg-amber-600 ring-2 ring-[var(--panel-bg)] flex items-center justify-center text-[10px] font-mono font-bold text-white shadow-sm"
-            >
-              IS
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* 2. Section: Recently Used Tools */}
-      <section className="space-y-4">
-        <div className="flex items-center gap-2 mb-4">
-          <MaterialIcon name="history" size={16} className="text-[var(--text-muted)]" />
-          <h2 className="text-[14px] font-semibold text-[var(--text-main)]">Recently Used</h2>
-        </div>
-
-        {/* Grid Tool Cards: 1 col mobile, 2 tablet, 3 desktop, gap 12px */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-[12px]">
-          {recentlyUsedTools.map((tool) => (
-            <div
-              key={tool.id}
-              onClick={() => handleToolClick(tool)}
-              className="rounded-[12px] border border-[var(--border-soft)] bg-[var(--card-bg-soft)] p-[20px] transition-all duration-200 hover:border-[var(--border-hover)] hover:bg-[var(--hover-bg)] cursor-pointer group flex items-start gap-[16px]"
-            >
-              {/* Icon box 36x36 rounded 8px */}
-              <div className="w-[36px] h-[36px] rounded-[8px] bg-[var(--hover-bg)] group-hover:bg-[var(--active-bg)] flex items-center justify-center shrink-0 transition-colors">
-                <MaterialIcon name={tool.icon} size={16} className="text-[var(--text-muted)] group-hover:text-[var(--text-main)]" />
-              </div>
-
-              <div className="flex-1 min-w-0">
-                <div className="flex items-center justify-between gap-2">
-                  <h3 className="text-[14px] font-medium text-[var(--text-main)] truncate group-hover:text-blue-500 transition-colors">
-                    {tool.title}
-                  </h3>
-                  {/* Badge */}
-                  <span
-                    className={`rounded-[6px] border px-[6px] py-[2px] text-[11px] font-medium shrink-0 ${
-                      tool.badgeType === "new"
-                        ? "text-[#10B981] bg-[rgba(16,185,129,0.10)] border-emerald-500/20 font-semibold"
-                        : "bg-[var(--hover-bg)] text-[var(--text-muted)] border-[var(--border-soft)]"
-                    }`}
-                  >
-                    {tool.badge}
-                  </span>
-                </div>
-                <p className="text-[12px] text-[var(--text-muted)] mt-[6px] leading-relaxed line-clamp-2">
-                  {tool.desc}
-                </p>
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* 3. Section: Popular Protocols & Tools */}
-      <section className="space-y-4">
-        <div className="flex items-center gap-2 mb-4">
-          <MaterialIcon name="star" size={16} className="text-[var(--text-muted)]" />
-          <h2 className="text-[14px] font-semibold text-[var(--text-main)]">Popular</h2>
-        </div>
-
-        {/* Grid Tool Cards: 1 col mobile, 2 tablet, 3 desktop, gap 12px */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-[12px]">
-          {popularTools.map((tool) => (
-            <div
-              key={tool.id}
-              onClick={() => handleToolClick(tool)}
-              className="rounded-[12px] border border-[var(--border-soft)] bg-[var(--card-bg-soft)] p-[20px] transition-all duration-200 hover:border-[var(--border-hover)] hover:bg-[var(--hover-bg)] cursor-pointer group flex items-start gap-[16px]"
-            >
-              {/* Icon box 36x36 rounded 8px */}
-              <div className="w-[36px] h-[36px] rounded-[8px] bg-[var(--hover-bg)] group-hover:bg-[var(--active-bg)] flex items-center justify-center shrink-0 transition-colors">
-                <MaterialIcon name={tool.icon} size={16} className="text-[var(--text-muted)] group-hover:text-[var(--text-main)]" />
-              </div>
-
-              <div className="flex-1 min-w-0">
-                <div className="flex items-center justify-between gap-2">
-                  <h3 className="text-[14px] font-medium text-[var(--text-main)] truncate group-hover:text-blue-500 transition-colors">
-                    {tool.title}
-                  </h3>
-                  <span
-                    className={`rounded-[6px] border px-[6px] py-[2px] text-[11px] font-medium shrink-0 ${
-                      tool.badgeType === "new"
-                        ? "text-[#10B981] bg-[rgba(16,185,129,0.10)] border-emerald-500/20 font-semibold"
-                        : "bg-[var(--hover-bg)] text-[var(--text-muted)] border-[var(--border-soft)]"
-                    }`}
-                  >
-                    {tool.badge}
-                  </span>
-                </div>
-                <p className="text-[12px] text-[var(--text-muted)] mt-[6px] leading-relaxed line-clamp-2">
-                  {tool.desc}
-                </p>
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* 4. Section: Categories */}
-      <section className="space-y-4">
-        <div className="flex items-center gap-2 mb-4">
-          <MaterialIcon name="folder_open" size={16} className="text-[var(--text-muted)]" />
-          <h2 className="text-[14px] font-semibold text-[var(--text-main)]">Categories</h2>
-        </div>
-
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-[8px]">
-          {categories.map((cat, idx) => (
-            <div
-              key={idx}
-              onClick={() => {
-                setRole(cat.role);
-                const el = document.getElementById("workbench-section");
-                if (el) el.scrollIntoView({ behavior: "smooth" });
-              }}
-              className="p-[12px] rounded-[8px] border border-[var(--border-soft)] bg-[var(--card-bg)] hover:bg-[var(--hover-bg)] transition-colors flex items-center justify-between text-[14px] text-[var(--text-muted)] cursor-pointer group"
-            >
-              <span className="truncate group-hover:text-[var(--text-main)] transition-colors">{cat.title}</span>
-              <span className="text-[11px] font-mono text-[var(--text-muted)] opacity-80 ml-2 shrink-0">{cat.subtitle}</span>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* 5. Section: All Tools & Interactive Workbench */}
-      <section id="workbench-section" className="space-y-6 pt-2">
-        <div className="flex items-center justify-between mb-4">
-          <div className="flex items-center gap-2">
-            <MaterialIcon name="grid_view" size={16} className="text-[var(--text-muted)]" />
-            <h2 className="text-[14px] font-semibold text-[var(--text-main)]">All Tools & Interactive Workbench</h2>
-          </div>
-          <span className="text-[12px] font-mono text-[var(--text-muted)]">
-            Active Role: <span className="text-[var(--text-main)] font-medium">{role}</span>
-          </span>
-        </div>
-
-        {/* Active Role Perspective Switcher Bar */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-[10px]">
-          {roleItems.map((item) => {
-            const isSelected = role === item.role;
-            return (
-              <button
-                key={item.role}
-                type="button"
-                onClick={() => setRole(item.role)}
-                className={`p-3 rounded-[8px] border text-left transition-all flex flex-col justify-between h-[88px] ${
-                  isSelected
-                    ? "bg-[var(--active-bg)] border-blue-500/40 shadow-sm"
-                    : "bg-[var(--card-bg)] border-[var(--border-soft)] hover:bg-[var(--hover-bg)] hover:border-[var(--border-hover)]"
-                }`}
-              >
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <MaterialIcon
-                      name={item.icon}
-                      size={16}
-                      className={isSelected ? "text-blue-500" : "text-[var(--text-muted)]"}
-                    />
-                    <span className={`text-[12px] font-medium ${isSelected ? "text-[var(--text-main)]" : "text-[var(--text-muted)]"}`}>
-                      {item.label}
-                    </span>
-                  </div>
-                  {isSelected && (
-                    <span className="w-1.5 h-1.5 rounded-full bg-blue-500 animate-pulse" />
-                  )}
-                </div>
-                <div className="text-[11px] text-[var(--text-muted)] line-clamp-1">
-                  {item.desc}
-                </div>
-                <div className="text-[10px] font-mono text-[var(--text-muted)] opacity-70 truncate">
-                  {item.badge}
-                </div>
-              </button>
-            );
-          })}
-        </div>
-
-        {/* Selected Role View Card */}
-        <div className="pt-1">
-          {role === "INVESTOR" && <InvestorView />}
-          {role === "LANDLORD" && <LandlordView />}
-          {role === "TENANT" && <TenantView />}
-          {role === "INSPECTOR" && <InspectorView />}
-        </div>
-
-        {/* Interactive Waterfall Section */}
-        <div id="waterfall-section" className="space-y-3 pt-2">
-          <div className="flex items-center gap-2">
-            <MaterialIcon name="waterfall_chart" size={16} className="text-[var(--text-muted)]" />
-            <h3 className="text-[14px] font-semibold text-[var(--text-main)]">
-              Visualisasi Pipeline Waterfall (QRIS Revenue Split)
-            </h3>
-          </div>
-          <WaterfallVisualizer />
-          <TrancheClaimCards />
-        </div>
-
-        {/* Covenant Protection Curve Section */}
-        <div id="covenant-section" className="space-y-3 pt-2">
-          <div className="flex items-center gap-2">
-            <MaterialIcon name="show_chart" size={16} className="text-[var(--text-muted)]" />
-            <h3 className="text-[14px] font-semibold text-[var(--text-main)]">
-              Covenant Floor vs Realisasi Pembayaran Kumulatif
-            </h3>
-          </div>
-          <CovenantChart />
-        </div>
-
-        {/* Jury Control Deck Section */}
-        <div id="scenarios-section" className="space-y-3 pt-2">
-          <div className="flex items-center gap-2">
-            <MaterialIcon name="smart_display" size={16} className="text-[var(--text-muted)]" />
-            <h3 className="text-[14px] font-semibold text-[var(--text-main)]">
-              Jury Scenario Controller Deck (Skenario Stress-Test S1, S4, S6)
-            </h3>
-          </div>
-          <ScenarioControllerPanel />
-        </div>
-      </section>
-    </div>
-  );
-};
+import React, { useState } from "react";
+import Link from "next/link";
+import { useProtocol } from "@/context/ProtocolContext";
 
 export default function HomePage() {
+  const { currentMonth } = useProtocol();
+
+  // State for interactive tenant fit-out calculator
+  const [estimatedRevenue, setEstimatedRevenue] = useState<number>(70000000); // Rp 70 Jt / bln
+  const [selectedCategory, setSelectedCategory] = useState<string>("ALL");
+
+  const formatIDR = (val: number) =>
+    new Intl.NumberFormat("id-ID", {
+      style: "currency",
+      currency: "IDR",
+      maximumFractionDigits: 0,
+    }).format(val);
+
+  // Calculator outputs based on 80:15:5 economic model
+  const calcTenantKeep = Math.round(estimatedRevenue * 0.8);
+  const calcInvestorTake = Math.round(estimatedRevenue * 0.15);
+  const calcLandlordRent = Math.round(estimatedRevenue * 0.05);
+  const capexTarget = 150000000;
+  const seniorCap = 150000000;
+  const estMonthsToPayoff = Math.max(1, Math.ceil(seniorCap / calcInvestorTake));
+
+  // Showcase Ruko Properties
+  const rukoListings = [
+    {
+      id: "RU-01",
+      name: "Ruko Kampus UNEJ (Pilot Aktif)",
+      address: "Jl. Kalimantan No. 12, Sumbersari, Jember",
+      status: "LIVE_ACTIVE",
+      statusBadge: "Protokol Berjalan",
+      tenant: "Kedai Kopi Melati (F&B Coffee)",
+      capex: 150000000,
+      size: "2 Lantai · 140 m²",
+      seniorFunded: 100,
+      roiTarget: "1.25x Senior Cap",
+      takeRate: "80% Kasir / 15% Investor / 5% Sewa",
+      imageUrl: "https://images.unsplash.com/photo-1554118811-1e0d58224f24?auto=format&fit=crop&w=600&q=80",
+      category: "ACTIVE",
+      roleLinks: [
+        { label: "Buka Portal Tenant", href: "/tenant", color: "text-emerald-400" },
+        { label: "Buka Portal Investor", href: "/investor", color: "text-blue-400" },
+      ],
+    },
+    {
+      id: "RU-02",
+      name: "Ruko Tegal Boto Sentra",
+      address: "Jl. Jawa No. 45, Sumbersari, Jember",
+      status: "OPEN_TENANT",
+      statusBadge: "Tersedia untuk Penyewa",
+      tenant: "Dicari: F&B / Bakery / Roastery",
+      capex: 135000000,
+      size: "2 Lantai · 120 m²",
+      seniorFunded: 100,
+      roiTarget: "1.25x Cap (Rp 135M)",
+      takeRate: "Bagi Hasil 15% QRIS (Tanpa Bunga Bank)",
+      imageUrl: "https://images.unsplash.com/photo-1559925393-8be0ec4767c8?auto=format&fit=crop&w=600&q=80",
+      category: "VACANT",
+      actionText: "Ajukan Sewa & Fit-Out",
+      actionHref: "/tenant",
+    },
+    {
+      id: "RU-03",
+      name: "Ruko Komersial Roxy Mall Area",
+      address: "Jl. Gajah Mada No. 88, Kaliwates, Jember",
+      status: "FUNDING_OPEN",
+      statusBadge: "Pendanaan Terbuka 68%",
+      tenant: "Calon: Kitchen Hub & Artisan Tea",
+      capex: 180000000,
+      size: "3 Lantai · 210 m²",
+      seniorFunded: 68,
+      roiTarget: "1.25x Cap · First-Loss Protected",
+      takeRate: "Senior Tranche Rp 144M + Junior Rp 36M",
+      imageUrl: "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=600&q=80",
+      category: "FUNDING",
+      actionText: "Danai sebagai Investor",
+      actionHref: "/investor",
+    },
+  ];
+
+  const filteredRukos =
+    selectedCategory === "ALL"
+      ? rukoListings
+      : rukoListings.filter((r) => r.category === selectedCategory);
+
+  // Role portal definitions
+  const roleCards = [
+    {
+      role: "Penyewa Kedai",
+      sub: "Operator F&B / Tenant",
+      href: "/tenant",
+      color: "emerald",
+      icon: "storefront",
+      badge: "Kas Bersih & Kasir",
+      desc: "Kelola kas harian 80%, catat transaksi QRIS, pantau status kepatuhan covenant, dan deposit jaminan Rp 15M.",
+    },
+    {
+      role: "Investor Senior",
+      sub: "Luar / Tranche Senior",
+      href: "/investor",
+      color: "blue",
+      icon: "trending_up",
+      badge: "Prioritas #1 (1.25x)",
+      desc: "Pantau pengembalian pokok Rp 120M & target cap Rp 150M. Dilindungi modal junior 20% + tombol tarik kas vault.",
+    },
+    {
+      role: "Pemilik Ruko",
+      sub: "Landlord Properti Fisik",
+      href: "/landlord",
+      color: "amber",
+      icon: "domain",
+      badge: "Sewa 5% & Junior 20%",
+      desc: "Pantau sewa variabel 5% berkelanjutan, subordinasi modal junior Rp 30M, dan persetujuan termin renovasi fisik.",
+    },
+    {
+      role: "Inspektur Fisik",
+      sub: "Verifikator & Kontraktor",
+      href: "/inspector",
+      color: "purple",
+      icon: "verified",
+      badge: "Multisig 2-of-3",
+      desc: "Verifikasi 3 termin fisik capex renovasi ruko dengan bukti hash SHA-256 dan otorisasi pencairan escrow.",
+    },
+    {
+      role: "Jury Demo Control",
+      sub: "Evaluasi & Mesin Waktu",
+      href: "/demo",
+      color: "cyan",
+      icon: "tune",
+      badge: "Simulator 24 Bulan",
+      desc: "Uji coba mesin waktu 24 bulan, stres skenario S1/S4/S6 (kebocoran kas & default), kurva floor, dan audit on-chain.",
+    },
+  ];
+
   return (
-    <AppProvider>
-      <Shell>
-        <DashboardMainContent />
-      </Shell>
-    </AppProvider>
+    <div className="min-h-screen bg-[#0A0A0A] text-white">
+      {/* 1. PUBLIC TOP NAVBAR */}
+      <header className="sticky top-0 z-50 backdrop-blur-md bg-[#0A0A0A]/85 border-b border-white/10 px-4 sm:px-8 py-3.5">
+        <div className="max-w-7xl mx-auto flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <Link href="/" className="flex items-center gap-2 group">
+              <div className="w-8 h-8 rounded-lg bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400 group-hover:scale-105 transition">
+                <span className="material-symbols-outlined text-lg">domain</span>
+              </div>
+              <span className="text-base font-bold tracking-tight text-white font-mono">
+                EUTHIAL<span className="text-emerald-400">.</span>
+              </span>
+            </Link>
+            <span className="hidden sm:inline-block text-[10px] font-mono px-2 py-0.5 rounded border border-white/10 bg-white/5 text-white/50">
+              FitOut Vault
+            </span>
+          </div>
+
+          <nav className="hidden md:flex items-center gap-6 text-xs font-mono text-white/60">
+            <a href="#katalog-ruko" className="hover:text-white transition">Katalog Ruko</a>
+            <a href="#kalkulator-keekonomian" className="hover:text-white transition">Kalkulator Bagi Hasil</a>
+            <a href="#cara-kerja" className="hover:text-white transition">Cara Kerja</a>
+            <a href="#portal-sistem" className="hover:text-emerald-400 transition">Portal Stakeholder</a>
+          </nav>
+
+          <div className="flex items-center gap-2">
+            <a
+              href="#portal-sistem"
+              className="py-1.5 px-3 rounded-lg border border-white/15 bg-white/5 hover:bg-white/10 text-white font-mono text-xs transition flex items-center gap-1.5"
+            >
+              <span className="material-symbols-outlined text-[14px]">login</span>
+              <span>Pilih Role</span>
+            </a>
+            <Link
+              href="/demo"
+              className="py-1.5 px-3.5 rounded-lg bg-emerald-500 hover:bg-emerald-400 text-black font-mono font-semibold text-xs shadow-md shadow-emerald-500/20 active:scale-95 transition flex items-center gap-1"
+            >
+              <span className="material-symbols-outlined text-[15px]">play_circle</span>
+              <span className="hidden sm:inline">Launch</span> Demo Deck
+            </Link>
+          </div>
+        </div>
+      </header>
+
+      {/* MAIN CONTAINER */}
+      <main className="max-w-6xl mx-auto px-4 sm:px-6 py-12 space-y-20">
+        {/* 2. HERO SECTION */}
+        <section className="text-center pt-6 md:pt-12 space-y-6">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-emerald-500/30 bg-emerald-500/10 text-emerald-300 text-xs font-mono">
+            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+            Platform Verifiable RBF untuk Fit-Out Ruko Komersial · Pilot Jember
+          </div>
+
+          <h1 className="text-3xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-white max-w-4xl mx-auto leading-tight">
+            Ubah Ruko Kosong Menjadi Kedai Produktif{" "}
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-teal-300 to-cyan-400">
+              Tanpa Beban Modal Renovasi di Muka
+            </span>
+          </h1>
+
+          <p className="text-sm sm:text-base text-white/60 max-w-2xl mx-auto leading-relaxed">
+            <strong>Euthial (FitOut Vault)</strong> membuka jalan buntu properti mangkrak. Renovasi didanai bersama oleh Investor dan Pemilik Ruko, dengan pengembalian terverifikasi otomatis via split kasir QRIS.
+          </p>
+
+          {/* Hero CTAs */}
+          <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
+            <a
+              href="#katalog-ruko"
+              className="py-3 px-6 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-black font-semibold text-xs font-mono transition shadow-lg shadow-emerald-500/20 active:scale-95 flex items-center gap-2"
+            >
+              <span className="material-symbols-outlined text-[17px]">storefront</span>
+              Jelajahi Ruko Tersedia
+            </a>
+            <a
+              href="#portal-sistem"
+              className="py-3 px-5 rounded-xl border border-white/15 bg-white/5 hover:bg-white/10 text-white font-medium text-xs font-mono transition flex items-center gap-2"
+            >
+              <span className="material-symbols-outlined text-[17px]">dashboard</span>
+              Masuk Dashboard Sistem (5 Role)
+            </a>
+            <Link
+              href="/demo"
+              className="py-3 px-5 rounded-xl border border-cyan-500/30 bg-cyan-500/10 hover:bg-cyan-500/20 text-cyan-300 font-mono text-xs flex items-center gap-2 transition"
+            >
+              <span className="material-symbols-outlined text-[17px]">tune</span>
+              Jury Mission Control
+            </Link>
+          </div>
+
+          {/* Trust Metric Strip */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 pt-8 max-w-4xl mx-auto text-left">
+            <div className="p-4 rounded-xl border border-white/10 bg-[#121212]">
+              <div className="text-[11px] font-mono text-white/40">DANA RENOVASI ESCROW</div>
+              <div className="text-xl font-bold font-mono text-white mt-0.5">Rp 150 Juta</div>
+              <div className="text-[10px] text-emerald-400">Rilis per Termin Multisig</div>
+            </div>
+            <div className="p-4 rounded-xl border border-white/10 bg-[#121212]">
+              <div className="text-[11px] font-mono text-white/40">PROTEKSI SENIOR</div>
+              <div className="text-xl font-bold font-mono text-white mt-0.5">1.25x Return Cap</div>
+              <div className="text-[10px] text-blue-400">First-Loss Buffer Junior 20%</div>
+            </div>
+            <div className="p-4 rounded-xl border border-white/10 bg-[#121212]">
+              <div className="text-[11px] font-mono text-white/40">KAS OPERASIONAL TENANT</div>
+              <div className="text-xl font-bold font-mono text-white mt-0.5">80% Omzet Kasir</div>
+              <div className="text-[10px] text-emerald-400">Langsung Diterima Penyewa</div>
+            </div>
+            <div className="p-4 rounded-xl border border-white/10 bg-[#121212]">
+              <div className="text-[11px] font-mono text-white/40">SEWA VARIABEL PEMILIK</div>
+              <div className="text-xl font-bold font-mono text-white mt-0.5">5% Turnover Rent</div>
+              <div className="text-[10px] text-amber-400">Adil Mengikuti Keramaian</div>
+            </div>
+          </div>
+        </section>
+
+        {/* 3. SHOWCASE KATALOG RUKO (PRODUCT CARDS) */}
+        <section id="katalog-ruko" className="space-y-6 pt-4 scroll-mt-24">
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-white/10 pb-4">
+            <div>
+              <div className="text-xs font-mono text-emerald-400 uppercase tracking-wider mb-1">
+                Katalog Properti & Peluang Bisnis
+              </div>
+              <h2 className="text-2xl sm:text-3xl font-bold text-white flex items-center gap-2">
+                Pilihan Ruko Siap Pakai di Jember
+              </h2>
+              <p className="text-xs text-white/50 mt-1">
+                Penyewa baru dapat memilih lokasi ruko strategis dan mengajukan permohonan pembiayaan fit-out tanpa agunan sertifikat.
+              </p>
+            </div>
+
+            {/* Filter Tabs */}
+            <div className="flex items-center gap-1.5 bg-[#141414] p-1 rounded-lg border border-white/10 text-xs font-mono">
+              {[
+                { id: "ALL", label: "Semua Unit" },
+                { id: "ACTIVE", label: "Sedang Berjalan" },
+                { id: "VACANT", label: "Siap Disewa" },
+                { id: "FUNDING", label: "Buka Pendanaan" },
+              ].map((tab) => (
+                <button
+                  key={tab.id}
+                  onClick={() => setSelectedCategory(tab.id)}
+                  className={`px-3 py-1.5 rounded-md transition ${
+                    selectedCategory === tab.id
+                      ? "bg-white/15 text-white font-semibold"
+                      : "text-white/40 hover:text-white"
+                  }`}
+                >
+                  {tab.label}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* 3 Product Cards */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {filteredRukos.map((ruko) => (
+              <div
+                key={ruko.id}
+                className="rounded-2xl border border-white/10 bg-[#121212] overflow-hidden flex flex-col justify-between hover:border-white/20 transition group"
+              >
+                <div>
+                  {/* Photo with Overlay */}
+                  <div className="relative h-48 w-full bg-[#1e1e1e] overflow-hidden">
+                    <img
+                      src={ruko.imageUrl}
+                      alt={ruko.name}
+                      className="w-full h-full object-cover group-hover:scale-105 transition duration-500 opacity-80"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-[#121212] via-transparent to-black/40" />
+                    <div className="absolute top-3 left-3">
+                      <span
+                        className={`text-[10px] font-mono font-semibold px-2.5 py-1 rounded-md border ${
+                          ruko.status === "LIVE_ACTIVE"
+                            ? "bg-emerald-500/20 border-emerald-500/40 text-emerald-300"
+                            : ruko.status === "OPEN_TENANT"
+                            ? "bg-amber-500/20 border-amber-500/40 text-amber-300"
+                            : "bg-blue-500/20 border-blue-500/40 text-blue-300"
+                        }`}
+                      >
+                        {ruko.statusBadge}
+                      </span>
+                    </div>
+                    <div className="absolute bottom-2 left-3 text-xs font-mono text-white/80">
+                      {ruko.size}
+                    </div>
+                  </div>
+
+                  {/* Property Details */}
+                  <div className="p-5 space-y-3.5">
+                    <div>
+                      <h3 className="text-base font-bold text-white group-hover:text-emerald-300 transition">
+                        {ruko.name}
+                      </h3>
+                      <p className="text-xs text-white/50 flex items-center gap-1 mt-0.5">
+                        <span className="material-symbols-outlined text-[13px] text-white/40">
+                          location_on
+                        </span>
+                        {ruko.address}
+                      </p>
+                    </div>
+
+                    <div className="p-3.5 rounded-xl bg-white/[0.03] border border-white/5 space-y-1.5 text-xs font-mono">
+                      <div className="flex justify-between">
+                        <span className="text-white/40">Tenant:</span>
+                        <span className="text-white font-medium">{ruko.tenant}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-white/40">Estimasi Fit-Out:</span>
+                        <span className="text-emerald-400 font-semibold">{formatIDR(ruko.capex)}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-white/40">Bagi Hasil:</span>
+                        <span className="text-white/80">{ruko.roiTarget}</span>
+                      </div>
+                    </div>
+
+                    {ruko.status === "FUNDING_OPEN" && (
+                      <div className="space-y-1">
+                        <div className="flex justify-between text-[11px] font-mono text-white/50">
+                          <span>Progress Pendanaan:</span>
+                          <span className="text-blue-400 font-bold">{ruko.seniorFunded}%</span>
+                        </div>
+                        <div className="w-full bg-white/5 rounded-full h-1.5 overflow-hidden">
+                          <div
+                            className="bg-blue-400 h-full rounded-full"
+                            style={{ width: `${ruko.seniorFunded}%` }}
+                          />
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                {/* Footer Action */}
+                <div className="p-5 pt-0">
+                  {ruko.roleLinks ? (
+                    <div className="grid grid-cols-2 gap-2 pt-2 border-t border-white/5">
+                      {ruko.roleLinks.map((btn, i) => (
+                        <Link
+                          key={i}
+                          href={btn.href}
+                          className="py-2 px-2 rounded-lg bg-white/5 hover:bg-white/10 text-[11px] font-mono text-center text-white/80 hover:text-white transition"
+                        >
+                          {btn.label}
+                        </Link>
+                      ))}
+                    </div>
+                  ) : (
+                    <Link
+                      href={ruko.actionHref || "/tenant"}
+                      className="w-full py-2.5 px-3 rounded-xl bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/30 text-emerald-300 font-mono text-xs flex items-center justify-center gap-1.5 transition"
+                    >
+                      <span>{ruko.actionText}</span>
+                      <span className="material-symbols-outlined text-[14px]">arrow_forward</span>
+                    </Link>
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* 4. KALKULATOR KEEKONOMIAN PENYEWA */}
+        <section id="kalkulator-keekonomian" className="p-6 sm:p-8 rounded-2xl border border-white/10 bg-[#121212] space-y-6 scroll-mt-24">
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-white/10 pb-4">
+            <div>
+              <div className="text-xs font-mono text-emerald-400 uppercase tracking-wider mb-1">
+                Simulasi Keekonomian
+              </div>
+              <h2 className="text-xl sm:text-2xl font-bold text-white flex items-center gap-2">
+                Kalkulator Bagi Hasil vs Pinjaman Bank Konvensional
+              </h2>
+              <p className="text-xs text-white/50 mt-1">
+                Bandingkan bagaimana skema bagi hasil 80:15:5 melindungi kas kedai Anda tanpa beban bunga pinjaman bank.
+              </p>
+            </div>
+            <div className="text-right">
+              <span className="text-xs font-mono text-white/40 block">Estimasi Omzet Bulanan:</span>
+              <span className="text-2xl font-bold font-mono text-emerald-400">
+                {formatIDR(estimatedRevenue)}
+              </span>
+              <span className="text-[11px] text-white/40 block">~{formatIDR(Math.round(estimatedRevenue / 30))} per hari</span>
+            </div>
+          </div>
+
+          {/* Slider */}
+          <div className="space-y-2">
+            <input
+              type="range"
+              min={30000000}
+              max={150000000}
+              step={5000000}
+              value={estimatedRevenue}
+              onChange={(e) => setEstimatedRevenue(Number(e.target.value))}
+              className="w-full h-2 bg-white/10 rounded-lg appearance-none cursor-pointer accent-emerald-400"
+            />
+            <div className="flex justify-between text-[11px] font-mono text-white/30">
+              <span>Rp 30 Jt (Skenario Sepi)</span>
+              <span>Rp 70 Jt (Kedai Normal)</span>
+              <span>Rp 150 Jt (Sangat Ramai)</span>
+            </div>
+          </div>
+
+          {/* 3 Outcome Boxes */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-2">
+            <div className="p-4 rounded-xl border border-emerald-500/20 bg-emerald-500/5 space-y-1">
+              <div className="text-[11px] font-mono text-emerald-400 uppercase font-semibold">
+                80% Kas Bersih Tetap Milik Anda
+              </div>
+              <div className="text-xl font-bold font-mono text-white">
+                {formatIDR(calcTenantKeep)}
+              </div>
+              <p className="text-[11px] text-white/50 leading-relaxed">
+                Uang bebas pakai untuk belanja biji kopi, susu, gaji barista, utilitas listrik, dan profit bersih kedai.
+              </p>
+            </div>
+
+            <div className="p-4 rounded-xl border border-blue-500/20 bg-blue-500/5 space-y-1">
+              <div className="text-[11px] font-mono text-blue-300 uppercase font-semibold">
+                15% Pelunasan Fit-Out (Senior)
+              </div>
+              <div className="text-xl font-bold font-mono text-white">
+                {formatIDR(calcInvestorTake)}
+              </div>
+              <p className="text-[11px] text-white/50 leading-relaxed">
+                Otomatis terpotong dari QRIS. Estimasi modal renovasi lunas dalam <strong>~{estMonthsToPayoff} bulan</strong>.
+              </p>
+            </div>
+
+            <div className="p-4 rounded-xl border border-amber-500/20 bg-amber-500/5 space-y-1">
+              <div className="text-[11px] font-mono text-amber-300 uppercase font-semibold">
+                5% Sewa Variabel Pemilik Ruko
+              </div>
+              <div className="text-xl font-bold font-mono text-white">
+                {formatIDR(calcLandlordRent)}
+              </div>
+              <p className="text-[11px] text-white/50 leading-relaxed">
+                Turnover Rent adil: Jika omzet kedai sedang turun, biaya sewa ruko ikut mengecil secara proporsional.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        {/* 5. CARA KERJA PROTOKOL (3 LANGKAH) */}
+        <section id="cara-kerja" className="space-y-6 pt-4 scroll-mt-24">
+          <div className="text-center space-y-2">
+            <div className="text-xs font-mono text-emerald-400 uppercase tracking-wider">
+              Arsitektur & Alur Kerja
+            </div>
+            <h2 className="text-2xl sm:text-3xl font-bold text-white">
+              Bagaimana FitOut Vault Bekerja?
+            </h2>
+            <p className="text-xs text-white/50 max-w-xl mx-auto">
+              Tiga pihak disatukan dalam satu smart contract yang aman, transparan, dan dapat diverifikasi secara on-chain.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="p-5 rounded-2xl border border-white/10 bg-[#121212] space-y-3">
+              <div className="w-9 h-9 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-emerald-400 font-mono font-bold text-sm">
+                01
+              </div>
+              <h3 className="text-base font-bold text-white">Pilih Ruko & Ajukan Fit-Out</h3>
+              <p className="text-xs text-white/50 leading-relaxed">
+                Penyewa memilih lokasi ruko kosong di Jember dan mengajukan rencana anggaran biaya (RAB) renovasi ke protokol.
+              </p>
+            </div>
+
+            <div className="p-5 rounded-2xl border border-white/10 bg-[#121212] space-y-3">
+              <div className="w-9 h-9 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-blue-400 font-mono font-bold text-sm">
+                02
+              </div>
+              <h3 className="text-base font-bold text-white">Pendanaan & Rilis Escrow 2-of-3</h3>
+              <p className="text-xs text-white/50 leading-relaxed">
+                Investor luar mendanai Tranche Senior (80%) dan Pemilik Ruko mendanai Junior (20%). Dana renovasi dicairkan per termin setelah diverifikasi inspektur.
+              </p>
+            </div>
+
+            <div className="p-5 rounded-2xl border border-white/10 bg-[#121212] space-y-3">
+              <div className="w-9 h-9 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-amber-400 font-mono font-bold text-sm">
+                03
+              </div>
+              <h3 className="text-base font-bold text-white">Operasi & Bagi Hasil QRIS</h3>
+              <p className="text-xs text-white/50 leading-relaxed">
+                Kedai mulai buka. Setiap transaksi kasir QRIS otomatis displit 80% ke rekening kedai, 15% ke investor, dan 5% ke pemilik ruko tanpa risiko penipuan.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        {/* 6. CONSOLE AKSES MASUK STAKEHOLDER (5 ROLE PORTALS) */}
+        <section id="portal-sistem" className="space-y-6 pt-6 scroll-mt-24">
+          <div className="text-center space-y-2">
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border border-white/10 bg-white/5 text-white/60 text-xs font-mono">
+              <span className="material-symbols-outlined text-[14px]">shield_person</span>
+              Console Sistem Berdasarkan Hak Akses
+            </div>
+            <h2 className="text-2xl sm:text-3xl font-bold text-white">
+              Pilih Portal Sesuai Peran Anda
+            </h2>
+            <p className="text-xs text-white/50 max-w-xl mx-auto">
+              Masuk langsung ke antarmuka operasional peran yang telah terhubung ke simulator keuangan reaktif 24 bulan.
+            </p>
+          </div>
+
+          {/* 5 Distinct Cards for Roles */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {roleCards.map((card, idx) => (
+              <Link
+                key={idx}
+                href={card.href}
+                className="group p-5 rounded-2xl border border-white/10 bg-[#121212] hover:border-white/20 hover:bg-[#161616] transition-all duration-200 flex flex-col justify-between space-y-4"
+              >
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between">
+                    <div
+                      className={`w-10 h-10 rounded-xl flex items-center justify-center ${
+                        card.color === "emerald"
+                          ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20"
+                          : card.color === "blue"
+                          ? "bg-blue-500/10 text-blue-400 border border-blue-500/20"
+                          : card.color === "amber"
+                          ? "bg-amber-500/10 text-amber-400 border border-amber-500/20"
+                          : card.color === "purple"
+                          ? "bg-purple-500/10 text-purple-400 border border-purple-500/20"
+                          : "bg-cyan-500/10 text-cyan-400 border border-cyan-500/20"
+                      }`}
+                    >
+                      <span className="material-symbols-outlined text-xl">{card.icon}</span>
+                    </div>
+                    <span className="text-[10px] font-mono px-2 py-0.5 rounded border border-white/10 text-white/50 bg-white/5">
+                      {card.badge}
+                    </span>
+                  </div>
+
+                  <div>
+                    <h3 className="text-lg font-bold text-white group-hover:text-emerald-400 transition flex items-center gap-1.5">
+                      {card.role}
+                      <span className="material-symbols-outlined text-sm opacity-0 group-hover:opacity-100 transition-transform group-hover:translate-x-1">
+                        arrow_forward
+                      </span>
+                    </h3>
+                    <p className="text-xs font-mono text-white/40">{card.sub}</p>
+                  </div>
+
+                  <p className="text-xs text-white/50 leading-relaxed">{card.desc}</p>
+                </div>
+
+                <div className="pt-3 border-t border-white/5 flex items-center justify-between text-xs font-mono text-white/40 group-hover:text-white transition">
+                  <span>Buka Console {card.role}</span>
+                  <span className="material-symbols-outlined text-[15px]">arrow_right_alt</span>
+                </div>
+              </Link>
+            ))}
+          </div>
+        </section>
+
+        {/* 7. PUBLIC FOOTER */}
+        <footer className="pt-12 border-t border-white/10 text-center text-xs font-mono text-white/40 space-y-2">
+          <p>Euthial · Verifiable Revenue-Based Financing for Commercial Shop-house (Ruko) Fit-outs</p>
+          <p className="text-[11px] text-white/20">
+            Ethereum Jakarta 2026 Hackathon · Target Implementasi Pilot: Jember, Jawa Timur
+          </p>
+        </footer>
+      </main>
+    </div>
   );
 }

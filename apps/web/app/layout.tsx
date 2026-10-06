@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
+import { Providers } from "../components/layout/Providers";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -32,8 +33,10 @@ export default function RootLayout({
           href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
         />
       </head>
-      <body className="font-sans antialiased bg-[var(--app-bg)] text-[var(--text-main)] overflow-hidden transition-colors duration-200">
-        {children}
+      <body className="font-sans antialiased bg-[#0A0A0A] text-white min-h-screen overflow-x-hidden selection:bg-emerald-500/30 selection:text-emerald-200">
+        <Providers>
+          {children}
+        </Providers>
       </body>
     </html>
   );

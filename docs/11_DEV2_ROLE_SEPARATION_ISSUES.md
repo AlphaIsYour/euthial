@@ -83,10 +83,10 @@ Membangun pondasi routing multi-portal, menyiapkan layer data bersama (`Protocol
    - Pill melayang di pojok kanan-bawah layar untuk beralih peran instan saat presentasi di hadapan juri.
 
 #### ✅ Acceptance Criteria (DoD):
-- [ ] Root route `/` menampilkan 5 kartu portal dengan desain terstandarisasi EnoTools.
-- [ ] State simulasi tersentralisasi di `ProtocolContext`, bukan mock statis per komponen terisolasi.
-- [ ] Berpindah rute mempertahankan data bulan dan skenario yang sedang diuji.
-- [ ] Tombol pintas `FloatingRoleSwitcher` berfungsi mulus di semua halaman portal.
+- [x] Root route `/` menampilkan 5 kartu portal dengan desain terstandarisasi EnoTools.
+- [x] State simulasi tersentralisasi di `ProtocolContext`, bukan mock statis per komponen terisolasi.
+- [x] Berpindah rute mempertahankan data bulan dan skenario yang sedang diuji.
+- [x] Tombol pintas `FloatingRoleSwitcher` berfungsi mulus di semua halaman portal.
 
 ---
 
@@ -115,9 +115,9 @@ Membangun portal khusus pengusaha kedai kopi (*Kedai Kopi Melati*) yang berfokus
    - Bebas dari metrik share vault investor, pembagian return junior, dan kode solidity.
 
 #### ✅ Acceptance Criteria (DoD):
-- [ ] URL `/tenant` berdiri mandiri dengan data reaktif dari `ProtocolContext`.
-- [ ] Nilai kas harian dan sisa deposit jaminan berubah dinamis saat skenario di `/demo` dimanipulasi.
-- [ ] Tombol cure shortfall berfungsi dan memperbarui status covenant secara matematis.
+- [x] URL `/tenant` berdiri mandiri dengan data reaktif dari `ProtocolContext`.
+- [x] Nilai kas harian dan sisa deposit jaminan berubah dinamis saat skenario di `/demo` dimanipulasi.
+- [x] Tombol cure shortfall berfungsi dan memperbarui status covenant secara matematis.
 
 ---
 
@@ -141,9 +141,9 @@ Membangun portal khusus pemodal luar (Senior Tranche) untuk memantau pemulihan p
    - Tombol `[View On-Chain Vault Contract]`: Membuka explorer Sepolia / detail address `SeniorTrancheVault`.
 
 #### ✅ Acceptance Criteria (DoD):
-- [ ] URL `/investor` berdiri mandiri dengan data live dari `ProtocolContext`.
-- [ ] Menampilkan transisi status: *Amortizing* $\rightarrow$ *Fully Repaid (1.25x)* secara jelas saat mencapai target.
-- [ ] Tombol `Withdraw Cash` memperbarui kas vault dan mencatat riwayat transaksi.
+- [x] URL `/investor` berdiri mandiri dengan data live dari `ProtocolContext`.
+- [x] Menampilkan transisi status: *Amortizing* $\rightarrow$ *Fully Repaid (1.25x)* secara jelas saat mencapai target.
+- [x] Tombol `Withdraw Cash` memperbarui kas vault dan mencatat riwayat transaksi.
 
 ---
 
@@ -168,9 +168,9 @@ Membangun portal khusus pemilik aset fisik ruko untuk memantau sewa bagi hasil (
    - Tombol `[Cairkan Turnover Rent]`: Menarik akumulasi sewa 5% yang telah terkumpul.
 
 #### ✅ Acceptance Criteria (DoD):
-- [ ] URL `/landlord` berdiri mandiri dengan data sewa 5% yang terus bertambah seiring omzet.
-- [ ] Status Tranche Junior dengan akurat mencerminkan aturan subordinasi (mulai dibayar HANYA setelah Senior selesai).
-- [ ] Pemilik ruko dapat memberikan persetujuan termin renovasi.
+- [x] URL `/landlord` berdiri mandiri dengan data sewa 5% yang terus bertambah seiring omzet.
+- [x] Status Tranche Junior dengan akurat mencerminkan aturan subordinasi (mulai dibayar HANYA setelah Senior selesai).
+- [x] Pemilik ruko dapat memberikan persetujuan termin renovasi.
 
 ---
 
@@ -195,9 +195,9 @@ Membangun portal khusus pengawas independen dan kontraktor pelaksana untuk verif
    - Tombol `[Beri Persetujuan Inspektur (Sign Milestone)]`: Memenuhi kuorum tanda tangan dan mengubah status termin menjadi `RELEASED`.
 
 #### ✅ Acceptance Criteria (DoD):
-- [ ] URL `/inspector` memvisualisasikan papan 3 termin secara runut.
-- [ ] Dana termin tidak dapat cair jika kuorum tanda tangan belum mencapai 2-of-3.
-- [ ] Catatan bukti fisik terdokumentasi rapi dengan hash integritas.
+- [x] URL `/inspector` memvisualisasikan papan 3 termin secara runut.
+- [x] Dana termin tidak dapat cair jika kuorum tanda tangan belum mencapai 2-of-3.
+- [x] Catatan bukti fisik terdokumentasi rapi dengan hash integritas.
 
 ---
 
@@ -223,6 +223,6 @@ Membangun arena pengujian juri hackathon untuk mendemonstrasikan keandalan proto
 4. **Grafik Real-Time Covenant Floor vs Realisasi Pembayaran.**
 
 #### ✅ Acceptance Criteria (DoD):
-- [ ] URL `/demo` menjadi pusat komando simulasi juri yang responsif.
-- [ ] Menjalankan skenario langsung mempengaruhi angka pada rute `/tenant`, `/investor`, dan `/landlord`.
-- [ ] Audit log event membuktikan transparansi mekanika RBF tanpa data tiruan statis.
+- [x] URL `/demo` menjadi pusat komando simulasi juri yang responsif.
+- [x] Menjalankan skenario langsung mempengaruhi angka pada rute `/tenant`, `/investor`, dan `/landlord`.
+- [x] Audit log event membuktikan transparansi mekanika RBF tanpa data tiruan statis.
