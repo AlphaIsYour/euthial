@@ -19,6 +19,8 @@ export const metadata: Metadata = {
   description: "Verifiable Revenue-Based Financing protocol for shop-house fit-outs with dual-tranche ERC-4626 and EIP-712 settlement attestations.",
 };
 
+import { Providers } from "../components/layout/Providers";
+
 export default function RootLayout({
   children,
 }: {
@@ -33,7 +35,9 @@ export default function RootLayout({
         />
       </head>
       <body className="font-sans antialiased bg-[var(--app-bg)] text-[var(--text-main)] overflow-hidden transition-colors duration-200">
-        {children}
+        <Providers>
+          {children}
+        </Providers>
       </body>
     </html>
   );

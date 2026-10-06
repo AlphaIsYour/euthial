@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { Sidebar } from "./Sidebar";
 import { Header } from "./Header";
 import { SearchModal } from "./SearchModal";
-
+import { FloatingRoleSwitcher } from "../navigation/FloatingRoleSwitcher";
 import { useApp } from "../../context/AppContext";
 
 export const Shell: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -38,6 +38,9 @@ export const Shell: React.FC<{ children: React.ReactNode }> = ({ children }) => 
 
       {/* Global Search Command Palette (Ctrl+K / ⌘K) */}
       <SearchModal isOpen={isSearchOpen} onClose={() => setIsSearchOpen(false)} />
+
+      {/* Floating Demo Navigation Pill */}
+      <FloatingRoleSwitcher />
     </div>
   );
 };
