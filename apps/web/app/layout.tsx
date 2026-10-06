@@ -25,14 +25,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={`${inter.variable} ${jetbrainsMono.variable}`}>
+    <html lang="en" className={`${inter.variable} ${jetbrainsMono.variable}`} data-theme="dark">
       <head>
         <link
           rel="stylesheet"
           href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
         />
       </head>
-      <body className="font-sans antialiased bg-[#0A0A0A] text-white overflow-hidden">
+      <body className="font-sans antialiased bg-[var(--app-bg)] text-[var(--text-main)] overflow-hidden transition-colors duration-200">
         {children}
       </body>
     </html>

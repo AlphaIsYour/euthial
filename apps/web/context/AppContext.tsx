@@ -1,6 +1,6 @@
 "use client";
 
-import React, { createContext, useContext, useState } from "react";
+import React, { createContext, useContext, useState, useEffect } from "react";
 
 export type UserRole = "INVESTOR" | "LANDLORD" | "TENANT" | "INSPECTOR";
 
@@ -31,12 +31,43 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [isWalletConnected, setIsWalletConnected] = useState(true);
   const [address] = useState("0x70997970C51812dc3A010C7d01b50e0d17dc79C8");
 
-  const toggleSidebar = () => setIsSidebarCollapsed((prev) => !prev);
+  useEffect(() => {
+    // Read saved theme on client mount
+    if (typeof window !== "undefined") {
+      const savedTheme = localStorage.getItem("euthial-theme") as "dark" | "light" | null;
+      const initial = savedTheme || "dark";
+      setTheme(initial);
+      document.documentElement.setAttribute("data-theme", initial);
+      if (initial === "light") {
+        document.documentElement.classList.add("light");
+        document.documentElement.classList.remove("dark");
+      } else {
+        document.documentElement.classList.add("dark");
+        document.documentElement.classList.remove("light");
+      }
+    }
+  }, []);
+
+  const toggleSidebar = () => {
+    setIsSidebarCollapsed((prev) => !prev);
+  };
 
   const toggleTheme = () => {
-    const next = theme === "dark" ? "light" : "dark";
-    setTheme(next);
-    document.documentElement.setAttribute("data-theme", next);
+    setTheme((prev) => {
+      const next = prev === "dark" ? "light" : "dark";
+      if (typeof window !== "undefined") {
+        localStorage.setItem("euthial-theme", next);
+        document.documentElement.setAttribute("data-theme", next);
+        if (next === "light") {
+          document.documentElement.classList.add("light");
+          document.documentElement.classList.remove("dark");
+        } else {
+          document.documentElement.classList.add("dark");
+          document.documentElement.classList.remove("light");
+        }
+      }
+      return next;
+    });
   };
 
   const connectWallet = () => setIsWalletConnected(true);

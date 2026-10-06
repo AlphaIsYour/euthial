@@ -1,34 +1,43 @@
 "use client";
 
-import React from "react";
-import { DisclaimerBanner } from "./DisclaimerBanner";
+import React, { useState } from "react";
 import { Sidebar } from "./Sidebar";
 import { Header } from "./Header";
+import { SearchModal } from "./SearchModal";
+
+import { useApp } from "../../context/AppContext";
 
 export const Shell: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const { isSidebarCollapsed } = useApp();
+
   return (
-    <div className="h-screen w-screen bg-[#0A0A0A] text-white flex flex-col overflow-hidden font-sans select-none">
-      {/* 1. Permanent Top Disclaimer Banner (NN-09) */}
-      <DisclaimerBanner />
+    <div className="h-screen w-screen overflow-hidden flex flex-row bg-[var(--sidebar-bg)] text-[var(--text-main)] font-sans select-none">
+      {/* 1. Left Sidebar: normal 240px, collapsed 64px, bg var(--sidebar-bg) */}
+      <Sidebar onOpenSearch={() => setIsSearchOpen(true)} />
 
-      {/* 2. Main Viewport (Sidebar + Main Panel) */}
-      <div className="flex-1 flex overflow-hidden">
-        {/* Collapsible Left Sidebar */}
-        <Sidebar />
+      {/* 2. Main Area: padding-top: 16px, background same as sidebar */}
+      <div className="flex-1 min-w-0 pt-4 bg-[var(--sidebar-bg)] overflow-hidden flex flex-col">
+        {/* Main Panel: height calc(100vh - 16px), overflow hidden, border-l border-t only, rounded-tl-[14px] ONLY */}
+        <div className="relative flex-1 h-[calc(100vh-16px)] bg-[var(--panel-bg)] border-l border-t border-[var(--border-soft)] rounded-tl-[14px] rounded-tr-none rounded-br-none rounded-bl-none overflow-hidden flex flex-col">
+          {/* Panel Header: Absolute top, h-12 (48px), z-30, solid panel header, border-b, px-4 (16px) */}
+          <Header onOpenSearch={() => setIsSearchOpen(true)} />
 
-        {/* Right Main Panel with Top-Left Radius 14px & Dotted Grid */}
-        <main className="flex-1 flex flex-col min-w-0 bg-[#0A0A0A] border-l border-[rgba(207,207,207,0.10)] rounded-tl-[14px] overflow-hidden">
-          {/* Sticky 48px Header */}
-          <Header />
-
-          {/* Scrollable Content Container with Dotted Grid */}
-          <div className="flex-1 overflow-y-auto p-4 sm:p-6 dotted-bg relative">
-            <div className="max-w-7xl mx-auto space-y-6">
+          {/* Scrollable Content Container: height 100%, overflow-y auto, px-6 (24px), pt-16 (64px), pb-6 (24px) */}
+          <main className="h-full overflow-y-auto px-6 pt-[64px] pb-6 dotted-bg relative">
+            <div
+              className={`mx-auto space-y-8 transition-[max-width] duration-300 ease-out ${
+                isSidebarCollapsed ? "max-w-[1440px]" : "max-w-7xl"
+              }`}
+            >
               {children}
             </div>
-          </div>
-        </main>
+          </main>
+        </div>
       </div>
+
+      {/* Global Search Command Palette (Ctrl+K / ⌘K) */}
+      <SearchModal isOpen={isSearchOpen} onClose={() => setIsSearchOpen(false)} />
     </div>
   );
 };
