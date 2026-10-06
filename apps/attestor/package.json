@@ -7,6 +7,8 @@
     "demo:reset": "echo 'TODO: Run forge script DeployAndSeed then seed attestor config'",
     "demo:run": "tsx src/runner.ts"
   },
-  "dependencies": {},
-  "devDependencies": {}
+  "dependencies": {
+    "@euthial/sim": "workspace:*",
+    "viem": "^2.57.3"
+  }
 }

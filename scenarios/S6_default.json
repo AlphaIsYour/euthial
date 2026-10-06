@@ -17,7 +17,7 @@
   "expectedOutcome": {
     "seniorRepaidByMonth": null,
     "juniorRepaidByMonth": null,
-    "finalPhase": "LIQUIDATION",
+    "finalPhase": "STEP_IN",
     "bondUsed": 12800000,
     "stepInTriggered": true,
     "testIds": ["T-15", "T-16"]
