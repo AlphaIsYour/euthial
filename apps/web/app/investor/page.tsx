@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { useProtocol } from "@/context/ProtocolContext";
+import { useWeb3 } from "@/context/Web3Context";
 
 export default function InvestorPortalPage() {
   const {
@@ -19,6 +20,7 @@ export default function InvestorPortalPage() {
     auditLogs,
   } = useProtocol();
 
+  const web3 = useWeb3();
   const [withdrawSuccessMsg, setWithdrawSuccessMsg] = useState<string | null>(null);
 
   // Constants
@@ -36,10 +38,10 @@ export default function InvestorPortalPage() {
       maximumFractionDigits: 0,
     }).format(val);
 
-  const handleWithdraw = () => {
+  const handleWithdraw = async () => {
     if (idleCashSenior <= 0) return;
     const amount = idleCashSenior;
-    withdrawSeniorCash();
+    await web3.withdrawSeniorCash(amount);
     setWithdrawSuccessMsg(`Berhasil menarik ${formatIDR(amount)} ke wallet investor!`);
     setTimeout(() => setWithdrawSuccessMsg(null), 4000);
   };
@@ -104,7 +106,9 @@ export default function InvestorPortalPage() {
             <span className="material-symbols-outlined text-sm text-emerald-400">check_circle</span>
             <span>{withdrawSuccessMsg}</span>
           </div>
-          <span className="text-[10px] text-white/40">TX HASH: 0x9c31...4e81</span>
+          <span className="text-[10px] text-white/40">
+            {web3.lastTxHash ? `TX HASH: ${web3.lastTxHash.slice(0, 10)}...` : "TX SIMULATED"}
+          </span>
         </div>
       )}
 

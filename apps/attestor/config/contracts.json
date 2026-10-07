@@ -1,0 +1,48 @@
+{
+  "chainId": 11155111,
+  "network": "Sepolia Testnet",
+  "contracts": {
+    "mockIdr": "0xa15bbC055e382e830e20D756c2d1bB595c2B1a91",
+    "fitOutAgreement": "0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC",
+    "seniorVault": "0x70997970C51812dc3A010C7d01b50e0d17dc79C8",
+    "juniorVault": "0x15d34AAf54267DB7D7c367839AAf71A00a2C6A65",
+    "waterfallRouter": "0x90F79bf6EB2c4f870365E785982E1f101E93b906"
+  },
+  "roles": {
+    "deployer": "0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80",
+    "landlord": "0x70997970C51812dc3A010C7d01b50e0d17dc79C8",
+    "tenant": "0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC",
+    "contractor": "0x90F79bf6EB2c4f870365E785982E1f101E93b906",
+    "inspector": "0x15d34AAf54267DB7D7c367839AAf71A00a2C6A65",
+    "attestor": "0x976EA74026E726554dB657fA54763abd0C3a0aa9"
+  },
+  "state": {
+    "phase": "OPERATING",
+    "budgetIDR": 150000000,
+    "seniorPrincipalIDR": 120000000,
+    "juniorPrincipalIDR": 30000000,
+    "bondAmountIDR": 15000000,
+    "seniorCapIDR": 150000000,
+    "juniorCapIDR": 42000000,
+    "milestones": [
+      {
+        "id": 1,
+        "title": "Pembongkaran & Struktur Dasar",
+        "amountIDR": 50000000,
+        "status": "RELEASED"
+      },
+      {
+        "id": 2,
+        "title": "Instalasi Interior, Bar & ME",
+        "amountIDR": 60000000,
+        "status": "RELEASED"
+      },
+      {
+        "id": 3,
+        "title": "Finishing, Façade & Peralatan",
+        "amountIDR": 40000000,
+        "status": "RELEASED"
+      }
+    ]
+  }
+}

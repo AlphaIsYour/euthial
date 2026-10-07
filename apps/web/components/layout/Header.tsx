@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { useApp } from "../../context/AppContext";
+import { useWeb3 } from "../../context/Web3Context";
 import { MaterialIcon } from "../ui/MaterialIcon";
 
 interface HeaderProps {
@@ -12,13 +13,18 @@ export const Header: React.FC<HeaderProps> = ({ onOpenSearch }) => {
   const {
     isSidebarCollapsed,
     toggleSidebar,
+    theme,
+    toggleTheme,
+  } = useApp();
+
+  const {
     isWalletConnected,
     connectWallet,
     disconnectWallet,
     address,
-    theme,
-    toggleTheme,
-  } = useApp();
+    isSepolia,
+    networkConfig,
+  } = useWeb3();
 
   const [isFullscreen, setIsFullscreen] = useState(false);
 
@@ -86,10 +92,18 @@ export const Header: React.FC<HeaderProps> = ({ onOpenSearch }) => {
         {/* Network & Prototype Badge */}
         <div className="hidden lg:flex items-center gap-2 px-2.5 py-1 rounded-md bg-[var(--card-bg)] border border-[var(--border-soft)] text-[11px] font-mono text-[var(--text-muted)]">
           <span className="flex h-1.5 w-1.5 relative">
-            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-            <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-emerald-500"></span>
+            <span
+              className={`animate-ping absolute inline-flex h-full w-full rounded-full ${
+                isSepolia ? "bg-emerald-400" : "bg-amber-400"
+              } opacity-75`}
+            ></span>
+            <span
+              className={`relative inline-flex rounded-full h-1.5 w-1.5 ${
+                isSepolia ? "bg-emerald-500" : "bg-amber-500"
+              }`}
+            ></span>
           </span>
-          <span className="text-[var(--text-main)] font-medium">Sepolia</span>
+          <span className="text-[var(--text-main)] font-medium">{networkConfig.name}</span>
           <span className="text-[var(--text-muted)] opacity-60">·</span>
           <span>Pilot #01</span>
         </div>

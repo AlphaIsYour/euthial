@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "demo:reset": "echo 'TODO: Run forge script DeployAndSeed then seed attestor config'",
+    "demo:reset": "tsx src/demo_reset.ts",
     "demo:run": "tsx src/runner.ts",
     "attest:day": "tsx src/cli_attest.ts"
   },
