@@ -4,15 +4,17 @@
   "private": true,
   "description": "Verifiable Revenue-Based Financing for Commercial Ruko Fit-Outs",
   "scripts": {
-    "dev": "pnpm --filter web dev",
-    "build": "pnpm --filter web build",
+    "dev": "pnpm --filter @euthial/web dev",
+    "build": "pnpm --filter @euthial/web build",
     "test:contracts": "cd contracts && forge test",
     "test:sim": "pnpm --filter @euthial/sim test",
     "test:all": "pnpm test:contracts && pnpm test:sim",
     "contracts:compile": "cd contracts && forge build",
     "contracts:deploy": "cd contracts && forge script script/DeployAndSeed.s.sol --broadcast",
-    "demo:reset": "pnpm --filter attestor demo:reset",
-    "demo:run": "pnpm --filter attestor demo:run"
+    "demo:reset": "pnpm --filter @euthial/attestor demo:reset",
+    "demo:run": "pnpm --filter @euthial/attestor demo:run",
+    "attest:day": "pnpm --filter @euthial/attestor attest:day",
+    "attest:multisig": "pnpm --filter @euthial/attestor attest:multisig"
   },
   "keywords": [
     "ethereum",
@@ -25,5 +27,10 @@
     "fintech"
   ],
   "author": "Euthial Team",
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^26.6.4",
+    "tsx": "^4.23.15",
+    "typescript": "^7.0.2"
+  }
 }

@@ -4,9 +4,13 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "demo:reset": "echo 'TODO: Run forge script DeployAndSeed then seed attestor config'",
-    "demo:run": "tsx src/runner.ts"
+    "demo:reset": "tsx src/demo_reset.ts",
+    "demo:run": "tsx src/runner.ts",
+    "attest:day": "tsx src/cli_attest.ts",
+    "attest:multisig": "tsx src/cli_multi_attest.ts"
   },
-  "dependencies": {},
-  "devDependencies": {}
+  "dependencies": {
+    "@euthial/sim": "workspace:*",
+    "viem": "^2.57.3"
+  }
 }

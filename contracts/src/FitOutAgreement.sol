@@ -16,7 +16,7 @@ contract FitOutAgreement is ReentrancyGuard {
 
     struct Milestone { uint16 bps; MilestoneStatus status; bool landlordApproved; bool tenantApproved; bool inspectorApproved; uint8 approvalCount; }
 
-    IERC20 public immutable asset; address public immutable router; address public immutable seniorVault; address public immutable juniorVault;
+    IERC20 public immutable asset; address public router; address public immutable seniorVault; address public immutable juniorVault;
     address public immutable landlord; address public immutable tenant; address public immutable contractor; address public immutable inspector; address public immutable arbiter;
     uint256 public immutable budget; uint256 public immutable seniorPrincipal; uint256 public immutable juniorPrincipal;
     uint16 public immutable seniorMultipleBps; uint16 public immutable juniorMultipleBps;
@@ -48,7 +48,7 @@ contract FitOutAgreement is ReentrancyGuard {
         uint16 seniorMultipleBps_, uint16 juniorMultipleBps_, uint32 targetTenorDays_, uint32 maxTenorDays_, uint16 floorRatioBps_,
         uint16 toleranceBps_, uint16 cureDays_, uint16 maxExcusedDays_, uint64 fundraiseDeadline_, uint64 buildDeadline_, uint32 leaseEndDay_
     ) {
-        if (asset_ == address(0) || router_ == address(0) || seniorVault_ == address(0) || juniorVault_ == address(0) ||
+        if (asset_ == address(0) || seniorVault_ == address(0) || juniorVault_ == address(0) ||
             landlord_ == address(0) || tenant_ == address(0) || contractor_ == address(0) || inspector_ == address(0) || arbiter_ == address(0)) revert InvalidAddress();
         if (budget_ == 0 || seniorPrincipal_ == 0 || juniorPrincipal_ == 0 || seniorPrincipal_ + juniorPrincipal_ != budget_) revert InvalidBudget();
         if (seniorMultipleBps_ < 10000 || juniorMultipleBps_ < seniorMultipleBps_ || targetTenorDays_ == 0 || maxTenorDays_ < targetTenorDays_ || floorRatioBps_ > 10000 || cureDays_ == 0) revert InvalidBudget();
@@ -166,6 +166,13 @@ contract FitOutAgreement is ReentrancyGuard {
         if (state != State.FAILED_REFUND && state != State.ABORTED_REFUND && state != State.CLOSED) revert InvalidState();
         uint256 refund = bondBalance; if (refund == 0) return; bondBalance = 0; bondRefunded += refund;
         asset.safeTransfer(tenant, refund); emit BondRefunded(tenant, refund); }
+
+    function setRouter(address router_) external {
+        if (msg.sender != arbiter && msg.sender != landlord) revert Unauthorized();
+        if (router != address(0)) revert("Router already set");
+        if (router_ == address(0)) revert InvalidAddress();
+        router = router_;
+    }
 
     function bondConservation() external view returns (bool) { return bondBalance + bondDrawn + bondRefunded == bondDeposited; }
     function logicalDays() external view returns (uint256) { return _calculateLogicalDays(); }
