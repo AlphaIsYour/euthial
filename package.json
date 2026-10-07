@@ -13,7 +13,8 @@
     "contracts:deploy": "cd contracts && forge script script/DeployAndSeed.s.sol --broadcast",
     "demo:reset": "pnpm --filter @euthial/attestor demo:reset",
     "demo:run": "pnpm --filter @euthial/attestor demo:run",
-    "attest:day": "pnpm --filter @euthial/attestor attest:day"
+    "attest:day": "pnpm --filter @euthial/attestor attest:day",
+    "attest:multisig": "pnpm --filter @euthial/attestor attest:multisig"
   },
   "keywords": [
     "ethereum",
