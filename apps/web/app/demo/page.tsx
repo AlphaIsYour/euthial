@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useProtocol, ScenarioPreset } from "@/context/ProtocolContext";
 import { CovenantChart } from "@/components/charts/CovenantChart";
 import { WaterfallVisualizer } from "@/components/waterfall/WaterfallVisualizer";
+import { CryptographicProofCard } from "@/components/contracts/CryptographicProofCard";
 
 export default function DemoMissionControlPage() {
   const {
@@ -350,6 +351,9 @@ export default function DemoMissionControlPage() {
         <WaterfallVisualizer />
         <CovenantChart />
       </div>
+
+      {/* Cryptographic EIP-712 Proof Inspector (Issue #29) */}
+      <CryptographicProofCard />
 
       {/* Real-Time Audit Log Feed */}
       <div className="p-5 rounded-xl border border-white/10 bg-[#121212] space-y-3">
