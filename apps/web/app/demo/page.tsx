@@ -30,6 +30,8 @@ export default function DemoMissionControlPage() {
     landlordRent,
     idleCashSenior,
     bondBalance,
+    rollingBondReserve,
+    juniorReservePool,
     covenantStatus,
     milestones,
     auditLogs,
@@ -265,7 +267,7 @@ export default function DemoMissionControlPage() {
             <div className="text-[11px] text-white/40 space-y-0.5">
               <div>Kas Bersih (80%)</div>
               <div className="text-white/60">
-                Deposit Bond: <strong className="text-emerald-400">{formatIDR(bondBalance)}</strong>
+                Total Bond: <strong className="text-emerald-400">{formatIDR(bondBalance + rollingBondReserve)}</strong>
               </div>
               <div className="text-white/60">
                 Covenant:{" "}
@@ -320,7 +322,7 @@ export default function DemoMissionControlPage() {
             <div className="text-[11px] text-white/40 space-y-0.5">
               <div>Akumulasi Sewa (5%)</div>
               <div className="text-white/60">
-                Junior Repaid: <strong className="text-amber-300">{formatIDR(juniorRepaid)}</strong>
+                Buffer Likuiditas: <strong className="text-amber-300">{formatIDR(juniorReservePool)}</strong>
               </div>
               <div className="text-white/60">Target Junior: {formatIDR(juniorClaimCap)}</div>
             </div>

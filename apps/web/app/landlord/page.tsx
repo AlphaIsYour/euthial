@@ -10,6 +10,7 @@ export default function LandlordPortalPage() {
   const {
     currentMonth,
     landlordRent,
+    juniorReservePool,
     juniorRepaid,
     juniorClaimCap,
     seniorRepaid,
@@ -108,7 +109,7 @@ export default function LandlordPortalPage() {
 
       {/* Row 1: Primary Metrics */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        {/* Card 1: Sewa Diterima (Turnover Rent 5%) */}
+        {/* Card 1: Sewa Diterima (Turnover Rent 5%) & Buffer */}
         <div className="p-4 rounded-xl border border-amber-500/20 bg-amber-500/5 space-y-2">
           <div className="flex items-center justify-between">
             <span className="text-[11px] font-mono text-amber-300 uppercase tracking-wider">
@@ -121,8 +122,9 @@ export default function LandlordPortalPage() {
           <div className="text-xl font-bold font-mono text-amber-200">
             {formatIDR(landlordRent)}
           </div>
-          <div className="text-[11px] text-white/40">
-            Mengalir langsung dari setiap transaksi QRIS kasir kedai
+          <div className="text-[11px] text-white/40 flex items-center justify-between">
+            <span>Buffer Likuiditas (40%):</span>
+            <span className="text-amber-300 font-mono font-medium">{formatIDR(juniorReservePool)}</span>
           </div>
         </div>
 

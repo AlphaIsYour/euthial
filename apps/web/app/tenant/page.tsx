@@ -16,6 +16,8 @@ export default function TenantPortalPage() {
     grossMonthly,
     tenantCash,
     bondBalance,
+    rollingBondReserve,
+    totalReserveAvailable,
     covenantStatus,
     simulateDailySale,
   } = protocol;
@@ -98,14 +100,19 @@ export default function TenantPortalPage() {
             </span>
           </div>
 
-          {/* Card 2: Escrow Bond */}
+          {/* Card 2: Escrow Bond & Rolling Reserve */}
           <div className="bg-[#141414] p-4 rounded-card border border-[rgba(207,207,207,0.08)]">
-            <span className="text-[11px] font-mono text-[#8A8A8A]">SALDO UANG JAMINAN (BOND)</span>
+            <div className="flex items-center justify-between">
+              <span className="text-[11px] font-mono text-[#8A8A8A]">TOTAL JAMINAN (MULTI-TIER)</span>
+              <span className="text-[10px] font-mono text-cyan-400 bg-cyan-500/10 px-1 py-0.5 rounded border border-cyan-500/20">
+                +{(rollingBondReserve / 1_000_000).toFixed(1)}M Rolling
+              </span>
+            </div>
             <div className="text-lg font-mono font-bold text-emerald-400 mt-1">
-              {formatIDR(bondBalance)}
+              {formatIDR(bondBalance + rollingBondReserve)}
             </div>
             <span className="text-[10px] text-[#71717A] font-mono">
-              {bondBalance === 15000000 ? "100% Saldo Utuh di Escrow" : "Telah Ditarik Sebagian"}
+              Base: {formatIDR(bondBalance)} · Rolling: {formatIDR(rollingBondReserve)}
             </span>
           </div>
 

@@ -2,6 +2,9 @@ import fs from 'fs';
 import path from 'path';
 import {
   createDefaultAgreementParams,
+  initializeAgreement,
+  settlePeriod,
+  toTokens,
   runScenario,
   formatIDR,
   fromTokens,
@@ -104,16 +107,45 @@ function verifyScenario(filename: string): SimulationRunResult {
   return result;
 }
 
+function verifyMultiTierReserve() {
+  console.log(`\n======================================================`);
+  console.log(`▶ Verifying Issue #31: Multi-Tier Reserve Architecture`);
+  console.log(`======================================================`);
+
+  const params = createDefaultAgreementParams();
+  params.enableDynamicBond = true;
+  const state = initializeAgreement(params);
+
+  // Simulate 3 months of 130% high performance (> 115% threshold)
+  for (let m = 1; m <= 3; m++) {
+    const gross = toTokens(92_000_000);
+    settlePeriod(state, { dayId: m * 30, periodDays: 30, grossRecorded: gross }, params);
+  }
+
+  console.log(`Rolling Bond Reserve Accumulated: ${formatIDR(state.rollingBondReserve)}`);
+  console.log(`Junior Reserve Pool Accumulated:  ${formatIDR(state.juniorReservePool)}`);
+
+  if (state.rollingBondReserve === 0n) {
+    throw new Error(`[Issue #31 Error] Rolling bond reserve should accumulate on high revenue days!`);
+  }
+  if (state.juniorReservePool === 0n) {
+    throw new Error(`[Issue #31 Error] Junior reserve pool should accumulate from landlord rent!`);
+  }
+
+  console.log(`✅ Issue #31 Multi-Tier Reserve: Rolling Bond & Landlord Buffer accumulated successfully!`);
+}
+
 function runAll() {
   console.log("======================================================");
-  console.log("  EUTHIAL SCENARIO VERIFICATION SUITE (ISSUE #28)     ");
+  console.log("  EUTHIAL SCENARIO VERIFICATION SUITE (ISSUE #28 & #31)");
   console.log("======================================================");
 
   try {
     verifyScenario('S1_normal.json');
     verifyScenario('S4_leakage30.json');
     verifyScenario('S6_default.json');
-    console.log(`\n🎉 ALL SCENARIOS PASSED MATHEMATICAL INTEGRITY VERIFICATION!`);
+    verifyMultiTierReserve();
+    console.log(`\n🎉 ALL SCENARIOS & MULTI-TIER RESERVES PASSED VERIFICATION!`);
   } catch (err: any) {
     console.error(`\n❌ VERIFICATION FAILED:`, err.message);
     process.exit(1);
