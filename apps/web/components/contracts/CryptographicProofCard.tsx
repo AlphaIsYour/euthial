@@ -197,6 +197,81 @@ export function CryptographicProofCard() {
           </div>
         </div>
       </div>
+
+      {/* 2-of-3 Threshold Multisig Nodes Matrix (Issue #33) */}
+      <div className="p-4 rounded-lg bg-black/50 border border-white/10 space-y-3 font-mono">
+        <div className="flex items-center justify-between pb-2 border-b border-white/5">
+          <div className="flex items-center gap-2">
+            <span className="material-symbols-outlined text-base text-cyan-400">group_work</span>
+            <span className="text-xs font-bold text-white">2-of-3 Threshold Multisig Consensus Nodes</span>
+          </div>
+          <span className="text-[10px] font-bold text-cyan-300 bg-cyan-500/10 border border-cyan-500/30 px-2 py-0.5 rounded">
+            QUORUM: 2 OF 3 VALIDATED
+          </span>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-2 text-xs">
+          {/* Node 1 */}
+          <div className="p-2.5 rounded bg-white/[0.02] border border-emerald-500/30 space-y-1">
+            <div className="flex items-center justify-between text-[10px]">
+              <span className="text-white/50">NODE 1: PJP GATEWAY</span>
+              <span className="text-emerald-400 font-bold">✓ SIGNED</span>
+            </div>
+            <div className="text-[11px] text-white truncate font-medium">Midtrans / DOKU Webhook</div>
+            <div className="text-[10px] text-white/40 truncate">0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266</div>
+          </div>
+
+          {/* Node 2 */}
+          <div className="p-2.5 rounded bg-white/[0.02] border border-emerald-500/30 space-y-1">
+            <div className="flex items-center justify-between text-[10px]">
+              <span className="text-white/50">NODE 2: BANK ESCROW</span>
+              <span className="text-emerald-400 font-bold">✓ SIGNED</span>
+            </div>
+            <div className="text-[11px] text-white truncate font-medium">Bank Mandiri SNAP BI API</div>
+            <div className="text-[10px] text-white/40 truncate">0x70997970C51812dc3A010C7d01b50e0d17dc79C8</div>
+          </div>
+
+          {/* Node 3 */}
+          <div className="p-2.5 rounded bg-white/[0.02] border border-white/10 space-y-1">
+            <div className="flex items-center justify-between text-[10px]">
+              <span className="text-white/50">NODE 3: WATCHER</span>
+              <span className="text-amber-400 font-bold">STANDBY</span>
+            </div>
+            <div className="text-[11px] text-white truncate font-medium">Chainlink / Gelato Watcher</div>
+            <div className="text-[10px] text-white/40 truncate">0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC</div>
+          </div>
+        </div>
+      </div>
+
+      {/* zkTLS / TLSNotary Zero-Knowledge Verification Box (Issue #33) */}
+      <div className="p-3.5 rounded-lg bg-black/50 border border-purple-500/30 space-y-2 font-mono">
+        <div className="flex items-center justify-between text-[11px]">
+          <div className="flex items-center gap-2 text-purple-300 font-bold">
+            <span className="material-symbols-outlined text-sm">lock_outline</span>
+            <span>zkTLS / TLSNotary Internet Banking Verification</span>
+          </div>
+          <span className="text-[10px] text-purple-300 bg-purple-500/10 border border-purple-500/30 px-2 py-0.5 rounded">
+            ZERO CREDENTIAL LEAKAGE
+          </span>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-[10px] text-white/60">
+          <div>
+            <span className="text-white/40 block">Bank Institution & API:</span>
+            <span className="text-white">PT Bank Mandiri (Persero) Tbk · SNAP BI Open Banking</span>
+          </div>
+          <div>
+            <span className="text-white/40 block">Proof Scheme:</span>
+            <span className="text-purple-300">TLSNotary Protocol v0.3 (Groth16 zk-SNARK)</span>
+          </div>
+          <div className="md:col-span-2 pt-1">
+            <span className="text-white/40 block mb-0.5">TLS Session Transcript Hash:</span>
+            <div className="p-1.5 rounded bg-black border border-white/10 text-purple-300 break-all select-all text-[10px]">
+              0x7dc1bceed73b3597990e6a5bea0913850bb107d3dcb1c58dccb03cd852131151
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

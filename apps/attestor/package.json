@@ -6,7 +6,8 @@
   "scripts": {
     "demo:reset": "tsx src/demo_reset.ts",
     "demo:run": "tsx src/runner.ts",
-    "attest:day": "tsx src/cli_attest.ts"
+    "attest:day": "tsx src/cli_attest.ts",
+    "attest:multisig": "tsx src/cli_multi_attest.ts"
   },
   "dependencies": {
     "@euthial/sim": "workspace:*",
