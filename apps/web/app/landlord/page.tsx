@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import Link from "next/link";
 import { useProtocol } from "@/context/ProtocolContext";
 import { useWeb3 } from "@/context/Web3Context";
+import { PhysicalStepInCard } from "@/components/legal/PhysicalStepInCard";
 
 export default function LandlordPortalPage() {
   const {
@@ -346,6 +347,9 @@ export default function LandlordPortalPage() {
           </div>
         </div>
       </div>
+
+      {/* Physical Step-In & Legal IoT Gateway (Issue #32) */}
+      <PhysicalStepInCard />
 
       {/* Row 3: Audit Event Logs for Landlord */}
       <div className="p-5 rounded-xl border border-white/10 bg-[#121212] space-y-3">

@@ -8,6 +8,7 @@ import { WaterfallVisualizer } from "@/components/waterfall/WaterfallVisualizer"
 import { CryptographicProofCard } from "@/components/contracts/CryptographicProofCard";
 import { UtilityTriangulationCard } from "@/components/fraud/UtilityTriangulationCard";
 import { CustomerRebateScanner } from "@/components/fraud/CustomerRebateScanner";
+import { PhysicalStepInCard } from "@/components/legal/PhysicalStepInCard";
 
 export default function DemoMissionControlPage() {
   const {
@@ -362,6 +363,9 @@ export default function DemoMissionControlPage() {
         <UtilityTriangulationCard />
         <CustomerRebateScanner />
       </div>
+
+      {/* Physical Step-In & Legal IoT Gateway (Issue #32) */}
+      <PhysicalStepInCard />
 
       {/* Real-Time Audit Log Feed */}
       <div className="p-5 rounded-xl border border-white/10 bg-[#121212] space-y-3">
