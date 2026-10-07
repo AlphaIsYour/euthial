@@ -3,6 +3,8 @@
 import React, { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { MaterialIcon } from "../ui/MaterialIcon";
+import { LanguageModeToggle } from "../ui/LanguageModeToggle";
+import { WalletConnectButton } from "../auth/WalletConnectButton";
 
 interface RoleLink {
   label: string;
@@ -40,6 +42,13 @@ const ROLE_PORTALS: RoleLink[] = [
     href: "/inspector",
     icon: "verified",
     badge: "Milestone",
+  },
+  {
+    label: "Pelaksana Kontraktor",
+    sub: "Penerima Termin Renovasi",
+    href: "/contractor",
+    icon: "construction",
+    badge: "Pencairan",
   },
   {
     label: "Jury Demo Console",
@@ -249,6 +258,16 @@ export const LandingHeader: React.FC = () => {
                   </div>
                 </div>
               )}
+            </div>
+
+            {/* Plain Language Mode Toggle */}
+            <div className="hidden sm:flex items-center">
+              <LanguageModeToggle />
+            </div>
+
+            {/* Wallet Connect Button */}
+            <div className="hidden sm:flex items-center">
+              <WalletConnectButton />
             </div>
 
             {/* Solid Institutional Black Launch Console Button */}

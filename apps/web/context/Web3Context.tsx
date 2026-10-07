@@ -1,21 +1,12 @@
 "use client";
 
 import React, { createContext, useContext, useState, useEffect } from "react";
-import {
-  createPublicClient,
-  createWalletClient,
-  custom,
-  http,
-  type Address,
-  type Hex,
-  parseUnits,
-} from "viem";
-import { sepolia } from "viem/chains";
+import { useAccount, useDisconnect, useWalletClient, useChainId } from "wagmi";
+import { type Address, parseUnits } from "viem";
 import { NETWORKS, DEFAULT_CHAIN_ID, type NetworkContracts } from "../contracts/addresses";
 import {
   FITOUT_AGREEMENT_ABI,
   TRANCHE_VAULT_ABI,
-  MOCK_IDR_ABI,
 } from "../contracts/abis";
 import { useProtocol } from "./ProtocolContext";
 
@@ -43,88 +34,28 @@ const Web3Context = createContext<Web3ContextType | undefined>(undefined);
 
 export const Web3Provider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const protocol = useProtocol();
-  const [isWalletConnected, setIsWalletConnected] = useState<boolean>(false);
-  const [address, setAddress] = useState<string | null>(null);
-  const [chainId, setChainId] = useState<number | null>(DEFAULT_CHAIN_ID);
+  const { address: wagmiAddress, isConnected } = useAccount();
+  const { disconnect } = useDisconnect();
+  const activeChainId = useChainId();
+  const { data: walletClient } = useWalletClient();
+
   const [txStatus, setTxStatus] = useState<TxStatus>("idle");
   const [lastTxHash, setLastTxHash] = useState<string | null>(null);
   const [txMessage, setTxMessage] = useState<string | null>(null);
 
-  const networkConfig = NETWORKS[chainId || DEFAULT_CHAIN_ID] || NETWORKS[DEFAULT_CHAIN_ID];
-  const isSepolia = chainId === 11155111;
+  const effectiveChainId = activeChainId || DEFAULT_CHAIN_ID;
+  const networkConfig = NETWORKS[effectiveChainId] || NETWORKS[DEFAULT_CHAIN_ID];
+  const isSepolia = effectiveChainId === 11155111;
 
-  // Check existing wallet connection on mount
-  useEffect(() => {
-    if (typeof window !== "undefined" && (window as any).ethereum) {
-      const eth = (window as any).ethereum;
-      eth
-        .request({ method: "eth_accounts" })
-        .then((accounts: string[]) => {
-          if (accounts && accounts.length > 0) {
-            setAddress(accounts[0]);
-            setIsWalletConnected(true);
-          }
-        })
-        .catch(() => {});
-
-      eth
-        .request({ method: "eth_chainId" })
-        .then((hexChainId: string) => {
-          const parsed = parseInt(hexChainId, 16);
-          setChainId(parsed);
-        })
-        .catch(() => {});
-
-      const handleAccountsChanged = (accs: string[]) => {
-        if (accs.length > 0) {
-          setAddress(accs[0]);
-          setIsWalletConnected(true);
-        } else {
-          setAddress(null);
-          setIsWalletConnected(false);
-        }
-      };
-
-      const handleChainChanged = (hexChain: string) => {
-        setChainId(parseInt(hexChain, 16));
-      };
-
-      eth.on("accountsChanged", handleAccountsChanged);
-      eth.on("chainChanged", handleChainChanged);
-
-      return () => {
-        if (eth.removeListener) {
-          eth.removeListener("accountsChanged", handleAccountsChanged);
-          eth.removeListener("chainChanged", handleChainChanged);
-        }
-      };
-    }
-  }, []);
+  const address = wagmiAddress || null;
+  const isWalletConnected = isConnected;
 
   const connectWallet = async () => {
-    if (typeof window !== "undefined" && (window as any).ethereum) {
-      try {
-        const eth = (window as any).ethereum;
-        const accounts = await eth.request({ method: "eth_requestAccounts" });
-        if (accounts && accounts.length > 0) {
-          setAddress(accounts[0]);
-          setIsWalletConnected(true);
-          const currentChain = await eth.request({ method: "eth_chainId" });
-          setChainId(parseInt(currentChain, 16));
-        }
-      } catch (err: any) {
-        console.warn("User rejected wallet connection or error:", err);
-      }
-    } else {
-      // Fallback mock wallet for seamless browser demo
-      setAddress("0x70997970C51812dc3A010C7d01b50e0d17dc79C8");
-      setIsWalletConnected(true);
-    }
+    // RainbowKit / Wagmi handles connection UI via ConnectButton
   };
 
   const disconnectWallet = () => {
-    setIsWalletConnected(false);
-    setAddress(null);
+    disconnect();
   };
 
   const resetTxStateAfterDelay = () => {
@@ -139,14 +70,8 @@ export const Web3Provider: React.FC<{ children: React.ReactNode }> = ({ children
     setTxStatus("submitting");
     setTxMessage(`Menyetor uang jaminan Rp ${amount.toLocaleString("id-ID")}...`);
 
-    if (isWalletConnected && (window as any).ethereum && address) {
+    if (isWalletConnected && walletClient && address) {
       try {
-        const walletClient = createWalletClient({
-          chain: sepolia,
-          transport: custom((window as any).ethereum),
-        });
-
-        // Convert to 6 decimals
         const tokenAmount = parseUnits(amount.toString(), 6);
         const hash = await walletClient.writeContract({
           address: networkConfig.contracts.fitOutAgreement,
@@ -179,13 +104,8 @@ export const Web3Provider: React.FC<{ children: React.ReactNode }> = ({ children
     setTxStatus("submitting");
     setTxMessage(`Menyetor pelunasan cure shortfall Rp ${amount.toLocaleString("id-ID")}...`);
 
-    if (isWalletConnected && (window as any).ethereum && address) {
+    if (isWalletConnected && walletClient && address) {
       try {
-        const walletClient = createWalletClient({
-          chain: sepolia,
-          transport: custom((window as any).ethereum),
-        });
-
         const tokenAmount = parseUnits(amount.toString(), 6);
         const hash = await walletClient.writeContract({
           address: networkConfig.contracts.fitOutAgreement,
@@ -217,13 +137,8 @@ export const Web3Provider: React.FC<{ children: React.ReactNode }> = ({ children
     setTxStatus("submitting");
     setTxMessage(`Menarik kas dividen investor Rp ${amount.toLocaleString("id-ID")}...`);
 
-    if (isWalletConnected && (window as any).ethereum && address) {
+    if (isWalletConnected && walletClient && address) {
       try {
-        const walletClient = createWalletClient({
-          chain: sepolia,
-          transport: custom((window as any).ethereum),
-        });
-
         const tokenAmount = parseUnits(amount.toString(), 6);
         const hash = await walletClient.writeContract({
           address: networkConfig.contracts.seniorVault,
@@ -255,13 +170,8 @@ export const Web3Provider: React.FC<{ children: React.ReactNode }> = ({ children
     setTxStatus("submitting");
     setTxMessage(`Menandatangani persetujuan termin fisik #${id}...`);
 
-    if (isWalletConnected && (window as any).ethereum && address) {
+    if (isWalletConnected && walletClient && address) {
       try {
-        const walletClient = createWalletClient({
-          chain: sepolia,
-          transport: custom((window as any).ethereum),
-        });
-
         const hash = await walletClient.writeContract({
           address: networkConfig.contracts.fitOutAgreement,
           abi: FITOUT_AGREEMENT_ABI,
@@ -292,7 +202,7 @@ export const Web3Provider: React.FC<{ children: React.ReactNode }> = ({ children
       value={{
         isWalletConnected,
         address,
-        chainId,
+        chainId: effectiveChainId,
         networkConfig,
         isSepolia,
         txStatus,
@@ -341,7 +251,7 @@ export const Web3Provider: React.FC<{ children: React.ReactNode }> = ({ children
                 {txStatus === "confirmed"
                   ? "TRANSAKSI ON-CHAIN TERKONFIRMASI"
                   : txStatus === "submitting"
-                  ? "MENUNGGU SIGNATURE METAMASK..."
+                  ? "MENUNGGU SIGNATURE WALLET..."
                   : txStatus === "simulated"
                   ? "MODE SIMULASI RESPONSIF"
                   : "TRANSAKSI GAGAL"}

@@ -7,6 +7,7 @@ import { MaterialIcon } from "../../components/ui/MaterialIcon";
 import { useProtocol } from "../../context/ProtocolContext";
 import { useWeb3 } from "../../context/Web3Context";
 import { CryptographicProofCard } from "../../components/contracts/CryptographicProofCard";
+import { ActionCenter } from "../../components/ui/ActionCenter";
 
 export default function InspectorPortalPage() {
   const {
@@ -98,6 +99,9 @@ export default function InspectorPortalPage() {
   return (
     <Shell>
       <div className="space-y-6">
+        {/* Action Center - Urgent & Pending Alerts (#88) */}
+        <ActionCenter />
+
         {/* 1. Context Banner (Consistent with /tenant, /investor, /landlord) */}
         <div className="p-4 sm:p-5 rounded-card bg-white dark:bg-black border border-indigo-500/20 flex flex-col md:flex-row md:items-center justify-between gap-4 shadow-xs">
           <div className="flex items-center gap-3">

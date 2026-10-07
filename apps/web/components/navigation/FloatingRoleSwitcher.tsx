@@ -11,6 +11,7 @@ const portals = [
   { href: "/tenant", label: "Tenant", icon: "storefront", color: "text-emerald-400" },
   { href: "/investor", label: "Investor", icon: "trending_up", color: "text-blue-400" },
   { href: "/landlord", label: "Landlord", icon: "real_estate_agent", color: "text-purple-400" },
+  { href: "/contractor", label: "Kontraktor", icon: "construction", color: "text-orange-400" },
   { href: "/inspector", label: "Inspektur", icon: "engineering", color: "text-amber-400" },
   { href: "/demo", label: "Jury Demo", icon: "play_circle", color: "text-red-400" },
 ];
