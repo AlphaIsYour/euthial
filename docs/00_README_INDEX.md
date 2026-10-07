@@ -43,6 +43,7 @@
 | 11 | `11_DEV2_ROLE_SEPARATION_ISSUES.md` | Arsitektur pemisahan portal 5 peran & spesifikasi Issue #20-#25 | Frontend, Fullstack |
 | 12 | `12_PRODUCT_BRAINSTORMING_AND_FAQ.md` | Rangkuman brainstorming: alur kasir/QRIS, uang tunai, & opsi branding | Produk, Bisnis, Semua |
 | 13 | `13_SECURITY_AND_ECONOMIC_MITIGATIONS.md` | Mitigasi keamanan & ekonomi: solusi 4 celah kritis (Bond, Step-In, Oracle, QR Bypass) | Keamanan, Kontrak, Tim |
+| 14 | `14_PANDUAN_KONSEP_DAN_ISTILAH_BISNIS.md` | Panduan lengkap konsep & istilah bisnis (Fit-Out, RBF, Waterfall, Covenant, Skenario) ramah pemula | Semua / Bisnis / Pemula |
 
 **Urutan baca.**
 - Smart contract dev: 00 → 04 → 02 (bagian formula) → 05 → 07 (matriks tes) → 06.
