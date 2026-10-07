@@ -18,8 +18,8 @@ export const Shell: React.FC<{ children: React.ReactNode }> = ({ children }) => 
 
       {/* 2. Main Area: padding-top: 16px, background same as sidebar */}
       <div className="flex-1 min-w-0 pt-4 bg-[var(--sidebar-bg)] overflow-hidden flex flex-col">
-        {/* Main Panel: height calc(100vh - 16px), overflow hidden, border-l border-t only, rounded-tl-[14px] ONLY */}
-        <div className="relative flex-1 h-[calc(100vh-16px)] bg-[var(--panel-bg)] border-l border-t border-[var(--border-soft)] rounded-tl-[14px] rounded-tr-none rounded-br-none rounded-bl-none overflow-hidden flex flex-col">
+        {/* Main Panel: height calc(100vh - 16px), overflow hidden, border-l border-t only, rounded-tl-[12px] ONLY */}
+        <div className="relative flex-1 h-[calc(100vh-16px)] bg-[var(--panel-bg)] border-l border-t border-[var(--border-soft)] rounded-tl-[12px] rounded-tr-none rounded-br-none rounded-bl-none overflow-hidden flex flex-col">
           {/* Panel Header: Absolute top, h-12 (48px), z-30, solid panel header, border-b, px-4 (16px) */}
           <Header onOpenSearch={() => setIsSearchOpen(true)} />
 

@@ -87,17 +87,19 @@ export const CovenantChart: React.FC = () => {
   `;
 
   return (
-    <div className="bg-[#1A1A1A] border border-[rgba(207,207,207,0.10)] rounded-card p-4 sm:p-5">
+    <div className="bg-white dark:bg-black border border-slate-200/90 dark:border-white/10 rounded-xl p-5 sm:p-6 shadow-xs space-y-4">
       {/* Chart Title & Legend */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-[rgba(207,207,207,0.08)]">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-slate-100 dark:border-white/10">
         <div>
           <div className="flex items-center gap-2">
-            <MaterialIcon name="show_chart" size={18} className="text-blue-400" />
-            <h3 className="text-sm font-semibold text-white">
+            <div className="w-7 h-7 rounded-lg bg-blue-50 dark:bg-blue-500/10 border border-blue-200/80 dark:border-blue-500/20 flex items-center justify-center text-blue-600 dark:text-blue-400 shrink-0">
+              <MaterialIcon name="show_chart" size={16} />
+            </div>
+            <h3 className="text-base font-semibold text-slate-900 dark:text-white tracking-tight">
               Covenant Floor vs Realisasi Pembayaran Kumulatif
             </h3>
           </div>
-          <p className="text-xs text-[#8A8A8A] mt-0.5">
+          <p className="text-xs text-slate-500 dark:text-[#8A8A8A] mt-1 font-normal leading-relaxed">
             Perbandingan garis batas lantai pembayaran minimum (Floor) terhadap akumulasi riil settlement
           </p>
         </div>
@@ -105,18 +107,18 @@ export const CovenantChart: React.FC = () => {
         {/* Legend */}
         <div className="flex items-center gap-4 text-xs font-mono">
           <div className="flex items-center gap-1.5">
-            <span className="w-3 h-0.5 bg-blue-500 rounded"></span>
-            <span className="text-[#E4E4E7]">Realisasi Investor</span>
+            <span className="w-3 h-0.5 bg-blue-600 dark:bg-blue-400 rounded"></span>
+            <span className="text-slate-700 dark:text-slate-300 font-medium">Realisasi Investor</span>
           </div>
           <div className="flex items-center gap-1.5">
-            <span className="w-3 border-b border-dashed border-[#8A8A8A]"></span>
-            <span className="text-[#8A8A8A]">Target Floor(d)</span>
+            <span className="w-3 border-b border-dashed border-slate-400 dark:border-slate-500"></span>
+            <span className="text-slate-500 dark:text-[#8A8A8A]">Target Floor(d)</span>
           </div>
         </div>
       </div>
 
       {/* Responsive SVG Chart */}
-      <div className="relative mt-4 w-full overflow-x-auto">
+      <div className="relative mt-2 w-full overflow-x-auto">
         <svg
           viewBox={`0 0 ${chartWidth} ${chartHeight}`}
           className="w-full h-56 select-none overflow-visible"
@@ -131,14 +133,17 @@ export const CovenantChart: React.FC = () => {
                   y1={y}
                   x2={chartWidth - paddingX}
                   y2={y}
-                  stroke="rgba(207,207,207,0.06)"
+                  stroke="currentColor"
+                  className="text-slate-200 dark:text-white/10"
                   strokeWidth="1"
+                  strokeDasharray="2 2"
                 />
                 <text
                   x={paddingX - 8}
                   y={y + 3}
                   textAnchor="end"
-                  fill="#52525B"
+                  fill="currentColor"
+                  className="text-slate-400 dark:text-[#8A8A8A]"
                   fontSize="9"
                   fontFamily="monospace"
                 >
@@ -149,13 +154,14 @@ export const CovenantChart: React.FC = () => {
           })}
 
           {/* Area fill under paid curve */}
-          <path d={areaPath} fill="rgba(59, 130, 246, 0.08)" />
+          <path d={areaPath} className="fill-blue-600/10 dark:fill-blue-500/15" />
 
           {/* Floor Target Line (Dashed) */}
           <path
             d={floorPath}
             fill="none"
-            stroke="#71717A"
+            stroke="currentColor"
+            className="text-slate-400 dark:text-slate-500"
             strokeWidth="2"
             strokeDasharray="4 4"
           />
@@ -164,7 +170,8 @@ export const CovenantChart: React.FC = () => {
           <path
             d={paidPath}
             fill="none"
-            stroke="#3B82F6"
+            stroke="currentColor"
+            className="text-blue-600 dark:text-blue-400"
             strokeWidth="2.5"
             strokeLinecap="round"
           />
@@ -184,7 +191,8 @@ export const CovenantChart: React.FC = () => {
                     y1={paddingY}
                     x2={cx}
                     y2={chartHeight - paddingY}
-                    stroke="rgba(255,255,255,0.2)"
+                    stroke="currentColor"
+                    className="text-slate-400 dark:text-slate-500"
                     strokeWidth="1"
                     strokeDasharray="2 2"
                   />
@@ -194,8 +202,7 @@ export const CovenantChart: React.FC = () => {
                   cx={cx}
                   cy={cy}
                   r={isHovered ? 5 : 3.5}
-                  fill="#3B82F6"
-                  stroke="#0A0A0A"
+                  className="fill-blue-600 dark:fill-blue-400 stroke-white dark:stroke-black"
                   strokeWidth="2"
                   onMouseEnter={() => setHoveredPoint(d)}
                 />
@@ -205,7 +212,8 @@ export const CovenantChart: React.FC = () => {
                   x={cx}
                   y={chartHeight - paddingY + 16}
                   textAnchor="middle"
-                  fill="#71717A"
+                  fill="currentColor"
+                  className="text-slate-500 dark:text-[#8A8A8A]"
                   fontSize="9"
                   fontFamily="monospace"
                 >
@@ -218,17 +226,17 @@ export const CovenantChart: React.FC = () => {
 
         {/* Hover Tooltip Card */}
         {hoveredPoint && (
-          <div className="absolute top-2 right-2 bg-[#27272A] border border-[rgba(207,207,207,0.15)] rounded-md p-2 text-xs font-mono shadow-xl z-20 pointer-events-none">
-            <div className="text-white font-bold mb-1">
+          <div className="absolute top-2 right-2 bg-white dark:bg-black border border-slate-200 dark:border-white/15 rounded-xl p-3 text-xs font-mono shadow-md z-20 pointer-events-none">
+            <div className="text-slate-900 dark:text-white font-bold mb-1">
               Bulan Ke-{hoveredPoint.month} (Hari {hoveredPoint.day})
             </div>
-            <div className="text-blue-400">
+            <div className="text-blue-600 dark:text-blue-400 font-semibold">
               Realisasi: {formatIDR(hoveredPoint.cumulativePaid)}
             </div>
-            <div className="text-[#A1A1AA]">
+            <div className="text-slate-500 dark:text-[#8A8A8A]">
               Target Floor: {formatIDR(hoveredPoint.floor)}
             </div>
-            <div className="text-emerald-400 text-[10px] mt-0.5 font-sans font-semibold">
+            <div className="text-emerald-600 dark:text-emerald-400 text-[10px] mt-0.5 font-sans font-semibold">
               Surplus: {formatIDR(hoveredPoint.cumulativePaid - hoveredPoint.floor)}
             </div>
           </div>

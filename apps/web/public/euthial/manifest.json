@@ -1,0 +1,12 @@
+{
+  "prefix": "frame",
+  "extension": "webp",
+  "digits": 4,
+  "startIndex": 1,
+  "count": 200,
+  "width": 1920,
+  "height": 1080,
+  "samplingFps": 19.9833,
+  "sourceDuration": 10.0,
+  "totalBytes": 8984256
+}

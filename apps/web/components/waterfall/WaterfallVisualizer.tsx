@@ -25,39 +25,41 @@ export const WaterfallVisualizer: React.FC = () => {
   };
 
   return (
-    <div className="bg-[#1A1A1A] border border-[rgba(207,207,207,0.10)] rounded-card p-4 sm:p-5">
+    <div className="bg-white dark:bg-black border border-slate-200/90 dark:border-white/10 rounded-xl p-5 sm:p-6 space-y-5 shadow-xs">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-[rgba(207,207,207,0.08)]">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-slate-100 dark:border-white/10">
         <div>
           <div className="flex items-center gap-2">
-            <MaterialIcon name="waterfall_chart" size={18} className="text-blue-400" />
-            <h2 className="text-sm font-semibold text-white tracking-tight">
+            <div className="w-7 h-7 rounded-lg bg-blue-50 dark:bg-blue-500/10 border border-blue-200/80 dark:border-blue-500/20 flex items-center justify-center text-blue-600 dark:text-blue-400 shrink-0">
+              <MaterialIcon name="waterfall_chart" size={16} />
+            </div>
+            <h2 className="text-base font-semibold text-slate-900 dark:text-white tracking-tight">
               Waterfall Split Visualizer (QRIS Settlement)
             </h2>
           </div>
-          <p className="text-xs text-[#8A8A8A] mt-0.5">
+          <p className="text-xs text-slate-500 dark:text-[#8A8A8A] mt-1 font-normal leading-relaxed">
             Simulasi pembagian omzet kotor otomatis antara Penyewa, Investor, dan Pemilik Ruko
           </p>
         </div>
 
         {/* Period Selector Toggle */}
-        <div className="flex items-center gap-1 bg-[#141414] p-1 rounded-md border border-[rgba(207,207,207,0.08)] text-xs">
+        <div className="flex items-center gap-1 bg-slate-100 dark:bg-[#0A0A0A] p-1 rounded-lg border border-slate-200/80 dark:border-white/10 text-xs font-mono">
           <button
             onClick={() => setPeriod("daily")}
-            className={`px-2.5 py-1 rounded transition-colors ${
+            className={`px-3 py-1 rounded-md transition-all ${
               period === "daily"
-                ? "bg-[#27272A] text-white font-medium shadow-sm"
-                : "text-[#8A8A8A] hover:text-white"
+                ? "bg-white dark:bg-[#141414] text-slate-900 dark:text-white font-semibold shadow-xs"
+                : "text-slate-500 dark:text-[#8A8A8A] hover:text-slate-800 dark:hover:text-white"
             }`}
           >
             Harian
           </button>
           <button
             onClick={() => setPeriod("monthly")}
-            className={`px-2.5 py-1 rounded transition-colors ${
+            className={`px-3 py-1 rounded-md transition-all ${
               period === "monthly"
-                ? "bg-[#27272A] text-white font-medium shadow-sm"
-                : "text-[#8A8A8A] hover:text-white"
+                ? "bg-white dark:bg-[#141414] text-slate-900 dark:text-white font-semibold shadow-xs"
+                : "text-slate-500 dark:text-[#8A8A8A] hover:text-slate-800 dark:hover:text-white"
             }`}
           >
             Bulanan (30 Hari)
@@ -66,12 +68,12 @@ export const WaterfallVisualizer: React.FC = () => {
       </div>
 
       {/* Gross Revenue Input / Slider */}
-      <div className="my-4 p-3.5 bg-[#141414] rounded-md border border-[rgba(207,207,207,0.06)]">
-        <div className="flex justify-between items-center mb-2">
-          <span className="text-xs text-[#A1A1AA]">
+      <div className="p-4 bg-slate-50/80 dark:bg-[#0A0A0A] rounded-xl border border-slate-200/80 dark:border-white/10 space-y-2.5">
+        <div className="flex justify-between items-center">
+          <span className="text-xs font-medium text-slate-600 dark:text-[#A1A1AA]">
             Omzet Kotor Kasir / QRIS Settlement ({period === "monthly" ? "30 Hari" : "1 Hari"}):
           </span>
-          <span className="text-sm font-mono font-bold text-white">
+          <span className="text-base font-mono font-bold text-slate-900 dark:text-white">
             {formatIDR(effectiveGross)}
           </span>
         </div>
@@ -82,9 +84,9 @@ export const WaterfallVisualizer: React.FC = () => {
           step={50000}
           value={dailyGross}
           onChange={(e) => setDailyGross(Number(e.target.value))}
-          className="w-full accent-blue-500 h-1.5 bg-[#27272A] rounded-lg cursor-pointer"
+          className="w-full accent-blue-600 dark:accent-blue-500 h-2 bg-slate-200 dark:bg-[#141414] rounded-lg cursor-pointer"
         />
-        <div className="flex justify-between text-[10px] font-mono text-[#71717A] mt-1">
+        <div className="flex justify-between text-[11px] font-mono text-slate-400 dark:text-[#71717A]">
           <span>Min: Rp 1.000.000 / hari</span>
           <span>Baseline: Rp 2.370.370 / hari</span>
           <span>Max: Rp 5.000.000 / hari</span>
@@ -92,25 +94,25 @@ export const WaterfallVisualizer: React.FC = () => {
       </div>
 
       {/* Proportional Split Bar */}
-      <div className="space-y-2 mb-4">
-        <div className="flex justify-between text-xs text-[#8A8A8A]">
+      <div className="space-y-2">
+        <div className="flex justify-between text-xs text-slate-500 dark:text-[#8A8A8A] font-mono">
           <span>Proporsi Alokasi Kas</span>
-          <span className="font-mono text-[11px]">Formula: 80% + 15% + 5% = 100%</span>
+          <span className="text-[11px] font-semibold text-slate-700 dark:text-zinc-300">Formula: 80% + 15% + 5% = 100%</span>
         </div>
-        <div className="w-full h-4 rounded-md overflow-hidden flex bg-[#27272A] p-0.5 gap-0.5">
+        <div className="w-full h-4 rounded-lg overflow-hidden flex bg-slate-100 dark:bg-[#0A0A0A] p-0.5 gap-0.5 border border-slate-200/80 dark:border-white/10">
           <div
             style={{ width: "80%" }}
-            className="h-full bg-emerald-500/80 rounded-l transition-all duration-300 relative group cursor-pointer"
+            className="h-full bg-emerald-500 rounded-l transition-all duration-300 relative group cursor-pointer"
             title="80% Retained Tenant"
           />
           <div
             style={{ width: "15%" }}
-            className="h-full bg-blue-500/90 transition-all duration-300 relative group cursor-pointer"
+            className="h-full bg-blue-500 transition-all duration-300 relative group cursor-pointer"
             title="15% Investor Payout"
           />
           <div
             style={{ width: "5%" }}
-            className="h-full bg-purple-500/90 rounded-r transition-all duration-300 relative group cursor-pointer"
+            className="h-full bg-purple-500 rounded-r transition-all duration-300 relative group cursor-pointer"
             title="5% Landlord Turnover Rent"
           />
         </div>
@@ -119,49 +121,49 @@ export const WaterfallVisualizer: React.FC = () => {
       {/* Distribution Breakdown Cards (3 Columns) */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
         {/* 1. Tenant Retained (80%) */}
-        <div className="p-3 bg-[#141414] rounded-md border border-emerald-500/20">
-          <div className="flex items-center justify-between text-xs mb-1">
-            <span className="text-emerald-400 font-medium">Tenant Retained</span>
-            <span className="font-mono text-emerald-400/90 bg-emerald-500/10 px-1.5 py-0.5 rounded text-[11px]">
+        <div className="p-4 bg-emerald-50/50 dark:bg-emerald-950/20 rounded-xl border border-emerald-200/80 dark:border-emerald-500/20 space-y-1.5">
+          <div className="flex items-center justify-between text-xs">
+            <span className="text-emerald-800 dark:text-emerald-400 font-semibold">Tenant Retained</span>
+            <span className="font-mono text-emerald-700 dark:text-emerald-400 bg-emerald-100/80 dark:bg-emerald-500/10 px-2 py-0.5 rounded text-[11px] font-bold border border-transparent dark:border-emerald-500/20">
               80%
             </span>
           </div>
-          <div className="text-base font-mono font-bold text-white tracking-tight">
+          <div className="text-lg font-mono font-bold text-emerald-950 dark:text-emerald-300 tracking-tight">
             {formatIDR(tenantRetained)}
           </div>
-          <div className="text-[11px] text-[#71717A] mt-1 leading-relaxed">
+          <div className="text-[11px] text-emerald-700/90 dark:text-emerald-400/80 leading-relaxed font-normal">
             Kas operasional tenant (HPP, bahan baku, gaji pegawai kedai).
           </div>
         </div>
 
         {/* 2. Investor Take (15%) */}
-        <div className="p-3 bg-[#141414] rounded-md border border-blue-500/20">
-          <div className="flex items-center justify-between text-xs mb-1">
-            <span className="text-blue-400 font-medium">Investor Repayment</span>
-            <span className="font-mono text-blue-400/90 bg-blue-500/10 px-1.5 py-0.5 rounded text-[11px]">
+        <div className="p-4 bg-blue-50/50 dark:bg-blue-950/20 rounded-xl border border-blue-200/80 dark:border-blue-500/20 space-y-1.5">
+          <div className="flex items-center justify-between text-xs">
+            <span className="text-blue-800 dark:text-blue-400 font-semibold">Investor Repayment</span>
+            <span className="font-mono text-blue-700 dark:text-blue-400 bg-blue-100/80 dark:bg-blue-500/10 px-2 py-0.5 rounded text-[11px] font-bold border border-transparent dark:border-blue-500/20">
               15%
             </span>
           </div>
-          <div className="text-base font-mono font-bold text-white tracking-tight">
+          <div className="text-lg font-mono font-bold text-blue-950 dark:text-blue-300 tracking-tight">
             {formatIDR(investorTake)}
           </div>
-          <div className="text-[11px] text-[#71717A] mt-1 leading-relaxed">
-            Mengalir ke <strong className="text-blue-300">Senior Vault</strong> hingga Rp150M tercapai, lalu ke Junior Vault.
+          <div className="text-[11px] text-blue-700/90 dark:text-blue-400/80 leading-relaxed font-normal">
+            Mengalir ke <strong className="text-blue-900 dark:text-blue-200">Senior Vault</strong> hingga Rp150M tercapai, lalu ke Junior.
           </div>
         </div>
 
         {/* 3. Landlord Turnover Rent (5%) */}
-        <div className="p-3 bg-[#141414] rounded-md border border-purple-500/20">
-          <div className="flex items-center justify-between text-xs mb-1">
-            <span className="text-purple-400 font-medium">Turnover Rent</span>
-            <span className="font-mono text-purple-400/90 bg-purple-500/10 px-1.5 py-0.5 rounded text-[11px]">
+        <div className="p-4 bg-purple-50/50 dark:bg-purple-950/20 rounded-xl border border-purple-200/80 dark:border-purple-500/20 space-y-1.5">
+          <div className="flex items-center justify-between text-xs">
+            <span className="text-purple-800 dark:text-purple-400 font-semibold">Turnover Rent</span>
+            <span className="font-mono text-purple-700 dark:text-purple-400 bg-purple-100/80 dark:bg-purple-500/10 px-2 py-0.5 rounded text-[11px] font-bold border border-transparent dark:border-purple-500/20">
               5%
             </span>
           </div>
-          <div className="text-base font-mono font-bold text-white tracking-tight">
+          <div className="text-lg font-mono font-bold text-purple-950 dark:text-purple-300 tracking-tight">
             {formatIDR(landlordRent)}
           </div>
-          <div className="text-[11px] text-[#71717A] mt-1 leading-relaxed">
+          <div className="text-[11px] text-purple-700/90 dark:text-purple-400/80 leading-relaxed font-normal">
             Sewa variabel pemilik ruko. Mengalir terus tanpa henti tiap settlement.
           </div>
         </div>

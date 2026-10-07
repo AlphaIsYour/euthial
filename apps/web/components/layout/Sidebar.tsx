@@ -99,8 +99,12 @@ export const Sidebar: React.FC<{ onOpenSearch?: () => void }> = () => {
           {!isSidebarCollapsed ? (
             <div className="flex items-center gap-2.5 overflow-hidden w-full">
               {/* 28x28 Logo / Profile Icon */}
-              <div className="w-7 h-7 rounded-lg bg-blue-600 flex items-center justify-center font-mono font-bold text-xs text-white shrink-0 shadow-sm">
-                E
+              <div className="w-7 h-7 rounded-lg bg-white border border-[var(--border-soft)] p-0.5 flex items-center justify-center shrink-0 shadow-xs">
+                <img
+                  src="/euthial.png"
+                  alt="Euthial Protocol"
+                  className="w-full h-full object-contain"
+                />
               </div>
               <div className="flex flex-col truncate">
                 <span className="font-semibold text-[13px] tracking-tight text-[var(--text-main)] leading-tight truncate">
@@ -119,8 +123,12 @@ export const Sidebar: React.FC<{ onOpenSearch?: () => void }> = () => {
               title="Maximize Sidebar (Expand)"
               className="w-9 h-9 rounded-lg mx-auto flex items-center justify-center hover:bg-[var(--hover-bg)] transition-colors group"
             >
-              <div className="w-7 h-7 rounded-lg bg-blue-600 flex items-center justify-center font-mono font-bold text-xs text-white shrink-0 shadow-sm group-hover:scale-105 transition-transform">
-                E
+              <div className="w-7 h-7 rounded-lg bg-white border border-[var(--border-soft)] p-0.5 flex items-center justify-center shrink-0 shadow-xs group-hover:scale-105 transition-transform">
+                <img
+                  src="/euthial.png"
+                  alt="Euthial Protocol"
+                  className="w-full h-full object-contain"
+                />
               </div>
             </button>
           )}
