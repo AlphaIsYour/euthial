@@ -53,6 +53,11 @@ interface ProtocolContextType {
   seniorClaimCap: number;
   juniorClaimCap: number;
 
+  // Issue #31: Multi-Tier Dynamic Reserve Architecture
+  rollingBondReserve: number;
+  juniorReservePool: number;
+  totalReserveAvailable: number;
+
   // Protocol Constants & Progress Metrics
   totalCapex: number;
   seniorPrincipal: number;
@@ -180,6 +185,8 @@ export const ProtocolProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   let landlordRent = 0;
   let tenantCash = 0;
   let bondDrawn = 0;
+  let rollingBondReserve = 0;
+  let juniorReservePool = 0;
   let covenantStatus: CovenantStatus = "HEALTHY";
 
   for (let m = 1; m <= currentMonth; m++) {
@@ -194,6 +201,14 @@ export const ProtocolProvider: React.FC<{ children: React.ReactNode }> = ({ chil
 
     tenantCash += mTenant;
     landlordRent += mLandlordRent;
+
+    // Issue #31 Multi-Tier Reserve Accumulation
+    if (mFactor >= 1.0) {
+      const ret = Math.round(mTenant * 0.03); // 3% dynamic retention
+      rollingBondReserve = Math.min(35000000, rollingBondReserve + ret);
+    }
+    const lBuf = Math.round(mLandlordRent * 0.40); // 40% landlord buffer pool
+    juniorReservePool = Math.min(10000000, juniorReservePool + lBuf);
 
     if (seniorRepaid < seniorClaimCap) {
       const needed = seniorClaimCap - seniorRepaid;
@@ -232,6 +247,7 @@ export const ProtocolProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   }
 
   const bondBalance = Math.max(0, initialBond - bondDrawn);
+  const totalReserveAvailable = bondBalance + rollingBondReserve + juniorReservePool;
   const idleCashSenior = hasWithdrawn ? 0 : Math.round(seniorRepaid * 0.12);
   const remainingSeniorClaim = Math.max(0, seniorClaimCap - seniorRepaid);
   const remainingJuniorClaim = Math.max(0, juniorClaimCap - juniorRepaid);
@@ -428,6 +444,9 @@ export const ProtocolProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         covenantStatus,
         seniorClaimCap,
         juniorClaimCap,
+        rollingBondReserve,
+        juniorReservePool,
+        totalReserveAvailable,
         totalCapex,
         seniorPrincipal,
         juniorPrincipal,
@@ -476,6 +495,8 @@ export const useTenantData = () => {
     initialBond: p.initialBond,
     bondBalance: p.bondBalance,
     bondDrawn: p.bondDrawn,
+    rollingBondReserve: p.rollingBondReserve,
+    totalReserveAvailable: p.totalReserveAvailable,
     covenantStatus: p.covenantStatus,
     simulateDailySale: p.simulateDailySale,
     cureTopUp: p.cureTopUp,
@@ -511,6 +532,7 @@ export const useLandlordData = () => {
     currentMonth: p.currentMonth,
     activeScenario: p.activeScenario,
     landlordRent: p.landlordRent,
+    juniorReservePool: p.juniorReservePool,
     juniorPrincipal: p.juniorPrincipal,
     juniorClaimCap: p.juniorClaimCap,
     juniorRepaid: p.juniorRepaid,
@@ -554,6 +576,9 @@ export const useJuryDeck = () => {
     tenantCash: p.tenantCash,
     bondBalance: p.bondBalance,
     bondDrawn: p.bondDrawn,
+    rollingBondReserve: p.rollingBondReserve,
+    juniorReservePool: p.juniorReservePool,
+    totalReserveAvailable: p.totalReserveAvailable,
     auditLogs: p.auditLogs,
   };
 };
