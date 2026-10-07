@@ -189,6 +189,69 @@ contract FitOutAgreementTest is Test {
         agreement.startFundraising();
     }
 
+    function test_AccessControl_startBuild_Unauthorized() public {
+        vm.prank(landlord);
+        agreement.startFundraising();
+
+        address rando = makeAddr("rando");
+        vm.expectRevert(FitOutAgreement.Unauthorized.selector);
+        vm.prank(rando);
+        agreement.startBuild();
+    }
+
+    function test_AccessControl_failFundraising_Unauthorized() public {
+        vm.prank(landlord);
+        agreement.startFundraising();
+
+        address rando = makeAddr("rando");
+        vm.expectRevert(FitOutAgreement.Unauthorized.selector);
+        vm.prank(rando);
+        agreement.failFundraising();
+    }
+
+    function test_AccessControl_abortBuild_Unauthorized() public {
+        vm.prank(landlord);
+        agreement.startFundraising();
+
+        vm.startPrank(tenant);
+        token.approve(address(agreement), BOND_AMOUNT);
+        agreement.depositBond();
+        vm.stopPrank();
+
+        vm.prank(landlord);
+        agreement.startBuild();
+
+        address rando = makeAddr("rando");
+        vm.expectRevert(FitOutAgreement.Unauthorized.selector);
+        vm.prank(rando);
+        agreement.abortBuild();
+    }
+
+    function test_AccessControl_startOperating_Unauthorized() public {
+        vm.prank(landlord);
+        agreement.startFundraising();
+
+        vm.startPrank(tenant);
+        token.approve(address(agreement), BOND_AMOUNT);
+        agreement.depositBond();
+        vm.stopPrank();
+
+        vm.prank(landlord);
+        agreement.startBuild();
+
+        address rando = makeAddr("rando");
+        vm.expectRevert(FitOutAgreement.Unauthorized.selector);
+        vm.prank(rando);
+        agreement.startOperating();
+    }
+
+    function test_AccessControl_setRouter_RouterAlreadySet() public {
+        // Router was already set in setUp()
+        vm.expectRevert(FitOutAgreement.RouterAlreadySet.selector);
+        vm.prank(landlord);
+        agreement.setRouter(address(0x1234));
+    }
+
     function signSettlement(WaterfallRouter.Settlement memory s) internal view returns (bytes memory) {
         bytes32 structHash = keccak256(abi.encode(
             router.getSettlementTypehash(), s.dayId, s.periodDays, s.grossRecorded, s.txCount, s.evidenceHash

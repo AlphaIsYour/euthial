@@ -238,16 +238,16 @@ contract WaterfallRouter is EIP712, ReentrancyGuard {
 
             // Distribute to senior vault
             if (split.toSenior > 0) {
-                asset.safeApprove(seniorVault, split.toSenior);
+                asset.forceApprove(seniorVault, split.toSenior);
                 ITrancheVault(seniorVault).onRepayment(split.toSenior);
-                asset.safeApprove(seniorVault, 0);
+                asset.forceApprove(seniorVault, 0);
             }
 
             // Distribute to junior vault
             if (split.toJunior > 0) {
-                asset.safeApprove(juniorVault, split.toJunior);
+                asset.forceApprove(juniorVault, split.toJunior);
                 ITrancheVault(juniorVault).onRepayment(split.toJunior);
-                asset.safeApprove(juniorVault, 0);
+                asset.forceApprove(juniorVault, 0);
             }
 
             // Verify router balance is unchanged (INV-02)

@@ -40,7 +40,7 @@ contract FitOutAgreement is ReentrancyGuard {
 
     error InvalidState(); error Unauthorized(); error InvalidAddress(); error InvalidBudget(); error BondAlreadyDeposited(); error BondNotDeposited();
     error MilestoneAlreadyReleased(); error InsufficientApprovals(); error MilestoneOutOfOrder(); error ExcusedDaysExceeded();
-    error InvalidExcusedRange(); error DeadlinePassed(); error DeadlineNotPassed(); error MilestonesIncomplete();
+    error InvalidExcusedRange(); error DeadlinePassed(); error DeadlineNotPassed(); error MilestonesIncomplete(); error RouterAlreadySet();
 
     constructor(
         address asset_, address router_, address seniorVault_, address juniorVault_, address landlord_, address tenant_,
@@ -69,12 +69,16 @@ contract FitOutAgreement is ReentrancyGuard {
     function depositBond() external nonReentrant { if (msg.sender != tenant) revert Unauthorized(); if (state != State.FUNDRAISING) revert InvalidState();
         if (bondDeposited > 0) revert BondAlreadyDeposited(); bondDeposited = bondAmount; bondBalance = bondAmount;
         asset.safeTransferFrom(msg.sender, address(this), bondAmount); emit BondDeposited(msg.sender, bondAmount); }
-    function startBuild() external nonReentrant { if (state != State.FUNDRAISING) revert InvalidState(); if (block.timestamp > fundraiseDeadline) revert DeadlinePassed();
+    function startBuild() external nonReentrant { if (msg.sender != landlord && msg.sender != tenant && msg.sender != arbiter) revert Unauthorized();
+        if (state != State.FUNDRAISING) revert InvalidState(); if (block.timestamp > fundraiseDeadline) revert DeadlinePassed();
         if (bondDeposited == 0) revert BondNotDeposited(); _transitionState(State.BUILDING); }
-    function failFundraising() external { if (state != State.FUNDRAISING) revert InvalidState(); if (block.timestamp <= fundraiseDeadline) revert DeadlineNotPassed(); _transitionState(State.FAILED_REFUND); }
-    function abortBuild() external { if (state != State.BUILDING) revert InvalidState(); if (block.timestamp <= buildDeadline) revert DeadlineNotPassed();
+    function failFundraising() external { if (msg.sender != landlord && msg.sender != tenant && msg.sender != arbiter) revert Unauthorized();
+        if (state != State.FUNDRAISING) revert InvalidState(); if (block.timestamp <= fundraiseDeadline) revert DeadlineNotPassed(); _transitionState(State.FAILED_REFUND); }
+    function abortBuild() external { if (msg.sender != landlord && msg.sender != arbiter) revert Unauthorized();
+        if (state != State.BUILDING) revert InvalidState(); if (block.timestamp <= buildDeadline) revert DeadlineNotPassed();
         if (nextMilestone >= 3) revert InvalidState(); _transitionState(State.ABORTED_REFUND); }
-    function startOperating() external { if (state != State.BUILDING) revert InvalidState(); if (nextMilestone < 3) revert MilestonesIncomplete(); _transitionState(State.OPERATING); }
+    function startOperating() external { if (msg.sender != landlord && msg.sender != tenant && msg.sender != arbiter) revert Unauthorized();
+        if (state != State.BUILDING) revert InvalidState(); if (nextMilestone < 3) revert MilestonesIncomplete(); _transitionState(State.OPERATING); }
     function close() external { if (msg.sender != landlord && msg.sender != arbiter) revert Unauthorized(); if (state != State.RESIDUAL) revert InvalidState(); _transitionState(State.CLOSED); }
     function startLiquidation() external { if (msg.sender != arbiter) revert Unauthorized(); if (state != State.STEP_IN) revert InvalidState(); _transitionState(State.LIQUIDATING); }
     function finalizeLiquidation() external nonReentrant { if (msg.sender != arbiter) revert Unauthorized(); if (state != State.LIQUIDATING) revert InvalidState();
@@ -138,13 +142,19 @@ contract FitOutAgreement is ReentrancyGuard {
         if (shortfall <= tolerance) { CovenantStatus prevStatus = covenantStatus; covenantStatus = CovenantStatus.HEALTHY;
             emit CovenantStatusChanged(prevStatus, covenantStatus); emit CureResolved(cumulativeInvestorPaid); return; }
         uint256 draw = Math.min(shortfall, bondBalance);
-        if (draw > 0) { bondBalance -= draw; bondDrawn += draw; emit BondDrawn(draw, bondBalance); asset.safeApprove(router, draw); }
+        if (draw > 0) { bondBalance -= draw; bondDrawn += draw; emit BondDrawn(draw, bondBalance); asset.forceApprove(router, draw); }
         breachCount++; CovenantStatus prevStatus = covenantStatus; covenantStatus = CovenantStatus.BREACHED; emit CovenantStatusChanged(prevStatus, covenantStatus);
         uint256 claimPaid = IWaterfallRouter(router).claimPaidTotal();
         if (claimPaid >= totalClaim) { _transitionState(State.RESIDUAL); covenantStatus = CovenantStatus.HEALTHY; emit ResidualReached(lastDayId, claimPaid); return; }
         uint256 remainingShortfall = cureTarget > claimPaid ? cureTarget - claimPaid : 0;
-        if (remainingShortfall > tolerance || breachCount >= 2) { _transitionState(State.STEP_IN); emit StepInTriggered("Bond insufficient or consecutive breaches", remainingShortfall); }
-        else { covenantStatus = CovenantStatus.HEALTHY; breachCount = 0; }
+        if (remainingShortfall > tolerance || breachCount >= 2) {
+            _transitionState(State.STEP_IN);
+            emit StepInTriggered("Bond insufficient or consecutive breaches", remainingShortfall);
+            return;
+        } else {
+            covenantStatus = CovenantStatus.HEALTHY;
+            breachCount = 0;
+        }
     }
 
     function _calculateLogicalDays() internal view returns (uint256) { if (lastDayId < startDay) return 0;
@@ -169,7 +179,7 @@ contract FitOutAgreement is ReentrancyGuard {
 
     function setRouter(address router_) external {
         if (msg.sender != arbiter && msg.sender != landlord) revert Unauthorized();
-        if (router != address(0)) revert("Router already set");
+        if (router != address(0)) revert RouterAlreadySet();
         if (router_ == address(0)) revert InvalidAddress();
         router = router_;
     }
