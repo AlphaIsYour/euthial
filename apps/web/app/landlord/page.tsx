@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { useProtocol } from "@/context/ProtocolContext";
+import { useWeb3 } from "@/context/Web3Context";
 
 export default function LandlordPortalPage() {
   const {
@@ -17,6 +18,7 @@ export default function LandlordPortalPage() {
     auditLogs,
   } = useProtocol();
 
+  const web3 = useWeb3();
   const [feedbackMsg, setFeedbackMsg] = useState<string | null>(null);
 
   // Constants
@@ -33,8 +35,8 @@ export default function LandlordPortalPage() {
       maximumFractionDigits: 0,
     }).format(val);
 
-  const handleApproveMilestone = (id: number, title: string) => {
-    approveLandlordMilestone(id);
+  const handleApproveMilestone = async (id: number, title: string) => {
+    await web3.approveMilestone(id);
     setFeedbackMsg(`Persetujuan Pemilik Ruko untuk Termin #${id} ("${title}") berhasil dikonfirmasi!`);
     setTimeout(() => setFeedbackMsg(null), 4500);
   };

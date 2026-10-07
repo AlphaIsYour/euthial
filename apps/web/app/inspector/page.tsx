@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { useProtocol } from "@/context/ProtocolContext";
+import { useWeb3 } from "@/context/Web3Context";
 
 export default function InspectorPortalPage() {
   const {
@@ -12,6 +13,7 @@ export default function InspectorPortalPage() {
     auditLogs,
   } = useProtocol();
 
+  const web3 = useWeb3();
   const [selectedMilestoneId, setSelectedMilestoneId] = useState<number>(3);
   const [evidenceHashInput, setEvidenceHashInput] = useState<string>("0xa21df7e59bc438901b44");
   const [signStatusMsg, setSignStatusMsg] = useState<string | null>(null);
@@ -30,9 +32,10 @@ export default function InspectorPortalPage() {
     .reduce((acc, m) => acc + m.amount, 0);
   const progressPct = Math.round((releasedCapex / totalCapex) * 100);
 
-  const handleSign = (e: React.FormEvent) => {
+  const handleSign = async (e: React.FormEvent) => {
     e.preventDefault();
     const hash = evidenceHashInput.trim() || "0x" + Math.random().toString(16).substring(2, 10);
+    await web3.approveMilestone(selectedMilestoneId);
     signInspectorMilestone(selectedMilestoneId, hash);
     setSignStatusMsg(
       `Berhasil menandatangani Termin #${selectedMilestoneId} dengan bukti hash ${hash.slice(0, 10)}...!`
@@ -99,7 +102,9 @@ export default function InspectorPortalPage() {
             <span className="material-symbols-outlined text-sm text-purple-400">check_circle</span>
             <span>{signStatusMsg}</span>
           </div>
-          <span className="text-[10px] text-white/40">ESCROW UNLOCKED (2/3 SIGNATURES)</span>
+          <span className="text-[10px] text-white/40">
+            {web3.lastTxHash ? `TX HASH: ${web3.lastTxHash.slice(0, 10)}...` : "ESCROW UNLOCKED (2/3 SIGNATURES)"}
+          </span>
         </div>
       )}
 
@@ -305,7 +310,11 @@ export default function InspectorPortalPage() {
               </div>
               <div className="flex justify-between">
                 <span>Public Key:</span>
-                <span className="text-purple-300">0x742d...44e1</span>
+                <span className="text-purple-300">
+                  {web3.address
+                    ? `${web3.address.slice(0, 6)}...${web3.address.slice(-4)}`
+                    : "0x742d...44e1"}
+                </span>
               </div>
             </div>
 

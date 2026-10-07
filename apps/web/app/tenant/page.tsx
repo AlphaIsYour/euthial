@@ -4,20 +4,21 @@ import React, { useState } from "react";
 import { Shell } from "../../components/layout/Shell";
 import { MaterialIcon } from "../../components/ui/MaterialIcon";
 import { useProtocol } from "../../context/ProtocolContext";
+import { useWeb3 } from "../../context/Web3Context";
 import { WaterfallVisualizer } from "../../components/waterfall/WaterfallVisualizer";
 import { CustomerRebateScanner } from "../../components/fraud/CustomerRebateScanner";
 
 export default function TenantPortalPage() {
+  const protocol = useProtocol();
+  const web3 = useWeb3();
   const {
     currentMonth,
     grossMonthly,
     tenantCash,
     bondBalance,
     covenantStatus,
-    cureTopUp,
-    depositBond,
     simulateDailySale,
-  } = useProtocol();
+  } = protocol;
 
   const [dailySaleInput, setDailySaleInput] = useState<number>(2500000);
   const [saleProcessed, setSaleProcessed] = useState<boolean>(false);
@@ -210,8 +211,8 @@ export default function TenantPortalPage() {
 
             <div className="flex flex-wrap items-center gap-2 pt-2">
               <button
-                onClick={() => {
-                  depositBond(5000000);
+                onClick={async () => {
+                  await web3.depositBond(5000000);
                   setTopUpDone(true);
                   setTimeout(() => setTopUpDone(false), 2000);
                 }}
@@ -222,7 +223,7 @@ export default function TenantPortalPage() {
               </button>
 
               <button
-                onClick={() => cureTopUp(3200000)}
+                onClick={() => web3.cureTopUp(3200000)}
                 disabled={covenantStatus === "HEALTHY"}
                 className={`px-3.5 py-2 text-xs font-semibold rounded-md border flex items-center gap-1.5 transition-colors ${
                   covenantStatus !== "HEALTHY"
