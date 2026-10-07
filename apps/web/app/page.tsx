@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { useProtocol } from "@/context/ProtocolContext";
+import { CustomerRebateScanner } from "@/components/fraud/CustomerRebateScanner";
 
 export default function HomePage() {
   const { currentMonth } = useProtocol();
@@ -525,6 +526,11 @@ export default function HomePage() {
               </p>
             </div>
           </div>
+        </section>
+
+        {/* 5.5. FITUR AUDIT PARTISIPATIF PELANGGAN (ISSUE #34) */}
+        <section id="customer-rebate" className="pt-2">
+          <CustomerRebateScanner />
         </section>
 
         {/* 6. CONSOLE AKSES MASUK STAKEHOLDER (5 ROLE PORTALS) */}

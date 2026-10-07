@@ -5,6 +5,7 @@ import { Shell } from "../../components/layout/Shell";
 import { MaterialIcon } from "../../components/ui/MaterialIcon";
 import { useProtocol } from "../../context/ProtocolContext";
 import { WaterfallVisualizer } from "../../components/waterfall/WaterfallVisualizer";
+import { CustomerRebateScanner } from "../../components/fraud/CustomerRebateScanner";
 
 export default function TenantPortalPage() {
   const {
@@ -242,6 +243,9 @@ export default function TenantPortalPage() {
 
         {/* Waterfall Proportion Visualizer */}
         <WaterfallVisualizer />
+
+        {/* Customer Tokenized Rebate & Anti-Rogue QR Scanner (Issue #34) */}
+        <CustomerRebateScanner />
       </div>
     </Shell>
   );

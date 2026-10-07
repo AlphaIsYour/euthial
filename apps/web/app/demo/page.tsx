@@ -6,6 +6,8 @@ import { useProtocol, ScenarioPreset } from "@/context/ProtocolContext";
 import { CovenantChart } from "@/components/charts/CovenantChart";
 import { WaterfallVisualizer } from "@/components/waterfall/WaterfallVisualizer";
 import { CryptographicProofCard } from "@/components/contracts/CryptographicProofCard";
+import { UtilityTriangulationCard } from "@/components/fraud/UtilityTriangulationCard";
+import { CustomerRebateScanner } from "@/components/fraud/CustomerRebateScanner";
 
 export default function DemoMissionControlPage() {
   const {
@@ -354,6 +356,12 @@ export default function DemoMissionControlPage() {
 
       {/* Cryptographic EIP-712 Proof Inspector (Issue #29) */}
       <CryptographicProofCard />
+
+      {/* Anti-Fraud Defense Matrix (Issue #34) */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <UtilityTriangulationCard />
+        <CustomerRebateScanner />
+      </div>
 
       {/* Real-Time Audit Log Feed */}
       <div className="p-5 rounded-xl border border-white/10 bg-[#121212] space-y-3">
