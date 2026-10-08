@@ -146,6 +146,16 @@ export const Header: React.FC<HeaderProps> = ({ onOpenSearch }) => {
           <MaterialIcon name={theme === "dark" ? "light_mode" : "dark_mode"} size={16} />
         </button>
 
+        {/* Auth Link Button */}
+        <a
+          href="/login"
+          title="Masuk / Daftar Akun"
+          className="h-8 px-2.5 rounded-[8px] border border-[var(--border-soft)] bg-[var(--card-bg)] hover:bg-[var(--hover-bg)] text-xs font-mono text-[var(--text-muted)] hover:text-[var(--text-main)] flex items-center gap-1.5 transition-colors shrink-0"
+        >
+          <MaterialIcon name="person" size={15} />
+          <span className="hidden md:inline">Akun</span>
+        </a>
+
         {/* RainbowKit + SIWE Connect Button (#58, #87) */}
         <div className="ml-1">
           <WalletConnectButton />
