@@ -24,8 +24,17 @@ export const config = createConfig({
   connectors,
   chains: [sepolia, foundry],
   transports: {
-    [sepolia.id]: http(process.env.NEXT_PUBLIC_SEPOLIA_RPC || "https://rpc.sepolia.org"),
-    [foundry.id]: http("http://127.0.0.1:8545"),
+    [sepolia.id]: http(
+      process.env.NEXT_PUBLIC_SEPOLIA_RPC || "https://ethereum-sepolia-rpc.publicnode.com",
+      {
+        timeout: 8000,
+        retryCount: 1,
+      }
+    ),
+    [foundry.id]: http("http://127.0.0.1:8545", {
+      timeout: 3000,
+      retryCount: 0,
+    }),
   },
   ssr: true,
 });
