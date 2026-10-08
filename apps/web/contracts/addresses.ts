@@ -7,6 +7,7 @@ export interface NetworkContracts {
   blockExplorer: string;
   contracts: {
     mockIDR: Address;
+    euthialIDR: Address;
     seniorVault: Address;
     juniorVault: Address;
     fitOutAgreement: Address;
@@ -23,6 +24,7 @@ export const NETWORKS: Record<number, NetworkContracts> = {
     blockExplorer: "https://sepolia.etherscan.io",
     contracts: {
       mockIDR: "0x51E5dB7a216D8c50dC4b917036a4613B9B74F3b0" as Address,
+      euthialIDR: "0x51E5dB7a216D8c50dC4b917036a4613B9B74F3b0" as Address,
       seniorVault: "0x3F616b3f713e54b6C374b595b118b6348Eb01150" as Address,
       juniorVault: "0x288cf2B69B7c14a24A69A27F19656461FE187b50" as Address,
       fitOutAgreement: "0x89D2E1643c59a35e00fB10283b7E42588147E840" as Address,
@@ -37,6 +39,7 @@ export const NETWORKS: Record<number, NetworkContracts> = {
     blockExplorer: "http://localhost:3000",
     contracts: {
       mockIDR: "0x5FbDB2315678afecb367f032d93F642f64180aa3" as Address,
+      euthialIDR: "0x5FbDB2315678afecb367f032d93F642f64180aa3" as Address,
       seniorVault: "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512" as Address,
       juniorVault: "0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0" as Address,
       fitOutAgreement: "0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9" as Address,
