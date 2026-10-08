@@ -3,7 +3,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { MaterialIcon } from "../ui/MaterialIcon";
-import { LanguageModeToggle } from "../ui/LanguageModeToggle";
 import { WalletConnectButton } from "../auth/WalletConnectButton";
 
 interface RoleLink {
@@ -60,292 +59,359 @@ const ROLE_PORTALS: RoleLink[] = [
 ];
 
 export const LandingHeader: React.FC = () => {
-  const [bannerVisible, setBannerVisible] = useState(true);
   const [roleMenuOpen, setRoleMenuOpen] = useState(false);
+  const [locationMenuOpen, setLocationMenuOpen] = useState(false);
+  const [selectedLocation, setSelectedLocation] = useState("Jember (Pilot)");
+  const [searchQuery, setSearchQuery] = useState("");
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
   const roleDropdownRef = useRef<HTMLDivElement>(null);
-  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const locationDropdownRef = useRef<HTMLDivElement>(null);
 
-  // Smooth hover handlers with safe mouse leave delay
-  const handleMouseEnter = () => {
-    if (timeoutRef.current) {
-      clearTimeout(timeoutRef.current);
-    }
-    setRoleMenuOpen(true);
-  };
-
-  const handleMouseLeave = () => {
-    timeoutRef.current = setTimeout(() => {
-      setRoleMenuOpen(false);
-    }, 150);
-  };
-
-  // Close role dropdown when clicking outside
+  // Close dropdowns when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (
-        roleDropdownRef.current &&
-        !roleDropdownRef.current.contains(event.target as Node)
-      ) {
+      if (roleDropdownRef.current && !roleDropdownRef.current.contains(event.target as Node)) {
         setRoleMenuOpen(false);
+      }
+      if (locationDropdownRef.current && !locationDropdownRef.current.contains(event.target as Node)) {
+        setLocationMenuOpen(false);
       }
     };
     document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-      if (timeoutRef.current) clearTimeout(timeoutRef.current);
-    };
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
+  const handleSearchSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    const el = document.getElementById("katalog-ruko");
+    if (el) {
+      el.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
   return (
-    <>
-      {/* 1. SLENDER ANNOUNCEMENT TOP BAR (WARM YELLOW WITH UNDERLINED CTA & DISMISS BUTTON) */}
-      {bannerVisible && (
-        <div className="w-full bg-[#FEFCE8] border-b border-[#FEF08A] text-xs text-[#713F12] py-2 px-6 sm:px-8 lg:px-12 relative z-50">
-          <div className="max-w-7xl mx-auto flex items-center justify-between gap-4">
-            <div className="flex items-center gap-2 truncate">
-              <span className="truncate font-normal text-amber-950">
-                Pilot Perdana Ruko Gajah Mada Jember kini aktif di Base Sepolia Testnet.
+    <header className="sticky top-0 z-40 bg-white border-b border-slate-200/90 shadow-[0_1px_3px_rgba(0,0,0,0.03)] select-none">
+      {/* ========================================================= */}
+      {/* LAPIS 1 (BARIS UTAMA): LOGO, SEARCH BAR LEBAR, NOTIF & LOGIN/REGISTER CTA */}
+      {/* ========================================================= */}
+      <div className="border-b border-slate-100 px-4 sm:px-6 lg:px-10 py-2.5">
+        <div className="max-w-7xl mx-auto flex items-center justify-between gap-4">
+          {/* SISI KIRI: LOGO RESMI EUTHIAL */}
+          <Link href="/" className="flex items-center gap-2.5 shrink-0 group">
+            <div className="w-8 h-8 rounded-lg bg-white border border-slate-200 p-0.5 flex items-center justify-center shrink-0 shadow-xs group-hover:border-slate-300 transition-colors">
+              <img
+                src="/euthial.png"
+                alt="Euthial Protocol"
+                className="w-full h-full object-contain"
+              />
+            </div>
+            <div className="flex flex-col">
+              <span className="text-[17px] font-bold tracking-tight text-slate-950 leading-none">
+                Euthial
               </span>
-              <Link
-                href="/demo"
-                className="font-medium text-amber-950 underline underline-offset-4 decoration-amber-500/70 hover:decoration-amber-950 transition-colors shrink-0 hidden sm:inline-flex items-center gap-0.5 ml-1"
-              >
-                <span>Buka Demo Console</span>
-                <span className="text-[11px]">→</span>
-              </Link>
+              <span className="text-[10px] font-mono tracking-tight text-slate-500 leading-tight">
+                Verifiable RBF
+              </span>
             </div>
+          </Link>
 
-            <div className="flex items-center gap-3 shrink-0">
-              <Link
-                href="/demo"
-                className="font-medium text-amber-950 underline underline-offset-4 decoration-amber-500/70 hover:decoration-amber-950 transition-colors inline-flex sm:hidden items-center gap-0.5"
-              >
-                <span>Demo Console →</span>
-              </Link>
-
+          {/* SISI TENGAH: SEARCH BAR FINTECH ELEGANT (SEPERTI REFERENSI USER) */}
+          <form
+            onSubmit={handleSearchSubmit}
+            className="flex-1 max-w-2xl mx-2 sm:mx-6 hidden md:block"
+          >
+            <div className="relative flex items-center">
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Cari ruko, pool investasi, milestone kontraktor, atau dokumen legal..."
+                className="w-full h-10 pl-4 pr-11 rounded-lg border border-slate-200 bg-slate-50/70 hover:bg-slate-50 focus:bg-white text-xs text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-slate-400 focus:ring-1 focus:ring-slate-400 transition-all"
+              />
               <button
-                type="button"
-                onClick={() => setBannerVisible(false)}
-                className="p-1 -mr-1 rounded-md text-amber-800/70 hover:text-amber-950 hover:bg-amber-200/60 transition-colors flex items-center justify-center cursor-pointer"
-                aria-label="Tutup pengumuman"
-                title="Tutup pengumuman"
+                type="submit"
+                title="Cari"
+                className="absolute right-1.5 w-7 h-7 rounded-md flex items-center justify-center text-slate-400 hover:text-slate-700 hover:bg-slate-200/50 transition-colors"
               >
-                <MaterialIcon name="close" size={13} />
+                <MaterialIcon name="search" size={17} />
               </button>
             </div>
-          </div>
-        </div>
-      )}
+          </form>
 
-      {/* 2. PLUME-STYLE MINIMALIST NAVBAR (EXACT WIDTH MATCH WITH PAGE CONTENT) */}
-      <header className="sticky top-0 z-40 backdrop-blur-md bg-white/90 border-b border-slate-200/90 px-6 sm:px-8 lg:px-12 py-3.5 transition-all shadow-[0_1px_2px_rgba(0,0,0,0.02)]">
-        <div className="max-w-7xl mx-auto flex items-center justify-between">
-          {/* Left: Brand & Monogram */}
-          <div className="flex items-center gap-3">
-            <Link href="/" className="flex items-center gap-2.5 group">
-              <div className="w-6 h-6 rounded-lg bg-white flex items-center justify-center shrink-0">
-                <img
-                  src="/euthial.png"
-                  alt="Euthial Protocol"
-                  className="w-full h-full object-contain"
-                />
-              </div>
-              <div className="flex items-center gap-2">
-                <span className="text-base font-semibold tracking-[-0.02em] text-slate-950">
-                  Euthial
-                </span>
-                <span className="hidden sm:inline-block text-[10px] uppercase font-mono tracking-wider px-2 py-0.5 rounded border border-slate-200 bg-slate-100 text-slate-600">
-                  RBF Protocol
-                </span>
-              </div>
-            </Link>
-          </div>
-
-          {/* Center: Main Institutional Links */}
-          <nav className="hidden md:flex items-center gap-8 text-sm font-normal text-slate-600">
-            <a
+          {/* SISI KANAN: NOTIFIKASI, PORTFOLIO, TOMBOL MASUK & DAFTAR, WALLET */}
+          <div className="flex items-center gap-2 sm:gap-2.5 shrink-0">
+            {/* Icon Keranjang / Portofolio dengan Badge */}
+            <Link
               href="#katalog-ruko"
-              className="hover:text-slate-950 transition-colors duration-150"
+              title="Portofolio Aset Ruko"
+              className="relative w-8 h-8 rounded-lg border border-slate-200 flex items-center justify-center text-slate-600 hover:text-slate-950 hover:bg-slate-50 transition-colors"
             >
-              Katalog Ruko
-            </a>
-            <a
-              href="#kalkulator-keekonomian"
-              className="hover:text-slate-950 transition-colors duration-150"
-            >
-              Simulasi & Model
-            </a>
-            <a
-              href="#cara-kerja"
-              className="hover:text-slate-950 transition-colors duration-150"
-            >
-              Cara Kerja
-            </a>
-            <a
-              href="#portal-sistem"
-              className="hover:text-slate-950 transition-colors duration-150"
-            >
-              Arsitektur
-            </a>
-          </nav>
+              <MaterialIcon name="storefront" size={16} />
+              <span className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-slate-900 text-white text-[9px] font-bold flex items-center justify-center">
+                3
+              </span>
+            </Link>
 
-          {/* Right: Streamlined Actions with Hover Popover */}
-          <div className="flex items-center gap-2.5">
-            {/* Streamlined Role Selector Dropdown with HOVER TRIGGER */}
-            <div
-              className="relative"
-              ref={roleDropdownRef}
-              onMouseEnter={handleMouseEnter}
-              onMouseLeave={handleMouseLeave}
-            >
+            {/* Icon Notifikasi dengan Dot Badge */}
+            <div className="relative">
               <button
                 type="button"
-                onClick={() => setRoleMenuOpen(!roleMenuOpen)}
-                className={`px-3 py-2 rounded-xl border text-xs font-medium transition-all flex items-center gap-1.5 ${roleMenuOpen
-                  ? "border-slate-300 bg-slate-100 text-slate-950 shadow-sm"
-                  : "border-slate-200 bg-slate-50 hover:bg-slate-100 hover:border-slate-300 text-slate-700 hover:text-slate-950"
-                  }`}
-                aria-expanded={roleMenuOpen}
+                title="Pemberitahuan Protokol"
+                className="relative w-8 h-8 rounded-lg border border-slate-200 flex items-center justify-center text-slate-600 hover:text-slate-950 hover:bg-slate-50 transition-colors"
               >
-                <MaterialIcon name="account_tree" size={13} className="text-slate-500" />
-                <span>Portal Peran</span>
-                <MaterialIcon
-                  name="expand_more"
-                  size={12}
-                  className={`text-slate-500 transition-transform duration-200 ${roleMenuOpen ? "rotate-180" : ""}`}
-                />
+                <MaterialIcon name="notifications" size={16} />
+                <span className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-emerald-600 text-white text-[9px] font-bold flex items-center justify-center">
+                  2
+                </span>
               </button>
-
-              {/* Role Dropdown Popover */}
-              {roleMenuOpen && (
-                <div
-                  className="absolute right-0 mt-1.5 w-72 rounded-xl border border-slate-200 bg-white shadow-xl p-2 z-50 animate-in fade-in zoom-in-95 duration-150"
-                  onMouseEnter={handleMouseEnter}
-                  onMouseLeave={handleMouseLeave}
-                >
-                  <div className="px-3 py-2 border-b border-slate-100 mb-1">
-                    <p className="text-[11px] font-mono uppercase tracking-wider text-slate-500">
-                      Pilih Antarmuka Stakeholder
-                    </p>
-                  </div>
-                  <div className="space-y-1">
-                    {ROLE_PORTALS.map((portal) => (
-                      <Link
-                        key={portal.href}
-                        href={portal.href}
-                        onClick={() => setRoleMenuOpen(false)}
-                        className="flex items-center justify-between p-2.5 rounded-xl hover:bg-slate-50 transition group text-left"
-                      >
-                        <div className="flex items-center gap-2.5">
-                          <div className="w-6 h-6 rounded-md bg-slate-100 border border-slate-200 flex items-center justify-center text-slate-600 group-hover:text-emerald-700 group-hover:border-emerald-300 group-hover:bg-emerald-50 transition">
-                            <MaterialIcon name={portal.icon} size={13} />
-                          </div>
-                          <div>
-                            <p className="text-xs font-medium text-slate-800 group-hover:text-slate-950 leading-tight">
-                              {portal.label}
-                            </p>
-                            <p className="text-[11px] text-slate-500 leading-tight">
-                              {portal.sub}
-                            </p>
-                          </div>
-                        </div>
-                        <span className="text-[10px] font-mono px-1.5 py-0.5 rounded border border-slate-200 bg-slate-50 text-slate-600">
-                          {portal.badge}
-                        </span>
-                      </Link>
-                    ))}
-                  </div>
-                </div>
-              )}
             </div>
 
-            {/* Plain Language Mode Toggle */}
-            <div className="hidden sm:flex items-center">
-              <LanguageModeToggle />
-            </div>
+            <div className="h-5 w-[1px] bg-slate-200 mx-1 hidden sm:block" />
 
-            {/* Wallet Connect Button */}
-            <div className="hidden sm:flex items-center">
+            {/* TOMBOL MASUK (LOGIN) - PROMINENT GHOST/OUTLINE */}
+            <Link
+              href="/login"
+              className="h-8 px-3.5 rounded-lg border border-slate-300 hover:border-slate-400 text-xs font-semibold text-slate-800 hover:text-slate-950 bg-white hover:bg-slate-50 transition-all flex items-center gap-1.5 shadow-2xs"
+            >
+              <MaterialIcon name="login" size={14} className="text-slate-500" />
+              <span>Masuk</span>
+            </Link>
+
+            {/* TOMBOL DAFTAR (REGISTER) - SOLID BLACK/SLATE-900 */}
+            <Link
+              href="/register"
+              className="h-8 px-3.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-xs font-semibold text-white shadow-2xs transition-all flex items-center gap-1.5 active:scale-[0.98]"
+            >
+              <MaterialIcon name="person_add" size={14} />
+              <span>Daftar</span>
+            </Link>
+
+            {/* Web3 Wallet Compact Connect */}
+            <div className="hidden xl:block ml-1">
               <WalletConnectButton />
             </div>
 
-            {/* Solid Institutional Black Launch Console Button */}
-            <Link
-              href="/demo"
-              className="py-2 px-4 rounded-xl bg-slate-950 hover:bg-slate-800 text-white font-medium text-xs sm:text-sm shadow-sm transition active:scale-[0.98] flex items-center gap-1.5"
-            >
-              <MaterialIcon name="terminal" size={13} />
-              <span>Launch Console</span>
-            </Link>
-
-            {/* Mobile Hamburger Button */}
+            {/* Tombol Hamburger Mobile */}
             <button
               type="button"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="md:hidden p-2 rounded-xl border border-slate-200 bg-slate-50 text-slate-700 hover:text-slate-950 hover:bg-slate-100 transition"
-              aria-label="Toggle mobile menu"
+              className="md:hidden w-8 h-8 rounded-lg border border-slate-200 bg-slate-50 flex items-center justify-center text-slate-700 hover:text-slate-950"
+              aria-label="Menu"
             >
               <MaterialIcon name={mobileMenuOpen ? "close" : "menu"} size={16} />
             </button>
           </div>
         </div>
+      </div>
 
-        {/* Mobile Navigation Drawer */}
-        {mobileMenuOpen && (
-          <div className="md:hidden pt-4 pb-2 border-t border-slate-200 mt-3 space-y-3">
-            <div className="flex flex-col space-y-1 text-sm text-slate-700">
-              <a
-                href="#katalog-ruko"
-                onClick={() => setMobileMenuOpen(false)}
-                className="px-3 py-2 rounded-lg hover:bg-slate-100 hover:text-slate-950"
-              >
-                Katalog Ruko
-              </a>
-              <a
-                href="#kalkulator-keekonomian"
-                onClick={() => setMobileMenuOpen(false)}
-                className="px-3 py-2 rounded-lg hover:bg-slate-100 hover:text-slate-950"
-              >
-                Simulasi & Model
-              </a>
-              <a
-                href="#cara-kerja"
-                onClick={() => setMobileMenuOpen(false)}
-                className="px-3 py-2 rounded-lg hover:bg-slate-100 hover:text-slate-950"
-              >
-                Cara Kerja
-              </a>
-              <a
-                href="#portal-sistem"
-                onClick={() => setMobileMenuOpen(false)}
-                className="px-3 py-2 rounded-lg hover:bg-slate-100 hover:text-slate-950"
-              >
-                Arsitektur & Role
-              </a>
-            </div>
+      {/* ========================================================= */}
+      {/* LAPIS 2 (SUB-NAVIGASI): KATEGORI/PERAN, MENU DENGAN DIVIDER, PILIH LOKASI */}
+      {/* ========================================================= */}
+      <div className="px-4 sm:px-6 lg:px-10 py-1.5 bg-slate-50/60 hidden md:block text-xs font-medium text-slate-600">
+        <div className="max-w-7xl mx-auto flex items-center justify-between">
+          {/* SISI KIRI: DROPDOWN KATEGORI & PORTAL PERAN */}
+          <div className="relative" ref={roleDropdownRef}>
+            <button
+              type="button"
+              onClick={() => setRoleMenuOpen(!roleMenuOpen)}
+              className="px-2.5 py-1 rounded-md hover:bg-slate-200/60 text-slate-800 font-semibold flex items-center gap-1.5 transition-colors"
+            >
+              <MaterialIcon name="grid_view" size={14} className="text-slate-600" />
+              <span>Kategori & Portal</span>
+              <MaterialIcon
+                name="expand_more"
+                size={14}
+                className={`text-slate-500 transition-transform duration-200 ${
+                  roleMenuOpen ? "rotate-180" : ""
+                }`}
+              />
+            </button>
 
-            <div className="pt-2 border-t border-slate-200">
-              <p className="px-3 py-1 text-[11px] font-mono uppercase text-slate-500">
-                Pintu Masuk Stakeholder
-              </p>
-              <div className="grid grid-cols-2 gap-1.5 pt-1">
-                {ROLE_PORTALS.map((portal) => (
-                  <Link
-                    key={portal.href}
-                    href={portal.href}
-                    onClick={() => setMobileMenuOpen(false)}
-                    className="p-2 rounded-lg bg-slate-50 border border-slate-200 text-xs text-slate-700 hover:text-slate-950 hover:bg-slate-100 flex items-center gap-1.5"
-                  >
-                    <MaterialIcon name={portal.icon} size={13} className="text-emerald-600" />
-                    <span className="truncate">{portal.label}</span>
-                  </Link>
-                ))}
+            {/* Dropdown Menu Portal */}
+            {roleMenuOpen && (
+              <div className="absolute left-0 mt-1.5 w-64 rounded-xl border border-slate-200 bg-white shadow-lg p-1.5 z-50 animate-in fade-in duration-100">
+                <div className="px-2.5 py-1.5 border-b border-slate-100 mb-1">
+                  <span className="text-[10px] font-mono uppercase tracking-wider text-slate-400">
+                    Akses Dashboard Peran
+                  </span>
+                </div>
+                <div className="space-y-0.5">
+                  {ROLE_PORTALS.map((portal) => (
+                    <Link
+                      key={portal.href}
+                      href={portal.href}
+                      onClick={() => setRoleMenuOpen(false)}
+                      className="flex items-center justify-between p-2 rounded-lg hover:bg-slate-50 transition text-left group"
+                    >
+                      <div className="flex items-center gap-2">
+                        <MaterialIcon
+                          name={portal.icon}
+                          size={15}
+                          className="text-slate-500 group-hover:text-slate-900"
+                        />
+                        <div>
+                          <div className="text-xs font-medium text-slate-800 group-hover:text-slate-950 leading-tight">
+                            {portal.label}
+                          </div>
+                          <div className="text-[10px] text-slate-400 leading-tight">
+                            {portal.sub}
+                          </div>
+                        </div>
+                      </div>
+                      <span className="text-[10px] font-mono px-1.5 py-0.2 rounded border border-slate-200 bg-slate-50 text-slate-600">
+                        {portal.badge}
+                      </span>
+                    </Link>
+                  ))}
+                </div>
               </div>
-            </div>
+            )}
           </div>
-        )}
-      </header>
-    </>
+
+          {/* SISI TENGAH: MENU HORIZONTAL DENGAN DIVIDER (SEPERTI GAMBAR CONTOH) */}
+          <nav className="flex items-center gap-2.5 text-xs text-slate-600 font-normal">
+            <a
+              href="#katalog-ruko"
+              className="hover:text-slate-950 transition-colors"
+            >
+              Katalog Ruko
+            </a>
+            <span className="text-slate-300">|</span>
+            <a
+              href="#kalkulator-keekonomian"
+              className="hover:text-slate-950 transition-colors"
+            >
+              Simulasi RBF
+            </a>
+            <span className="text-slate-300">|</span>
+            <a
+              href="#cara-kerja"
+              className="hover:text-slate-950 transition-colors"
+            >
+              Cara Kerja
+            </a>
+            <span className="text-slate-300">|</span>
+            <a
+              href="#portal-sistem"
+              className="hover:text-slate-950 transition-colors"
+            >
+              Arsitektur Smart Contract
+            </a>
+            <span className="text-slate-300">|</span>
+            <Link
+              href="/contractor"
+              className="hover:text-slate-950 transition-colors"
+            >
+              Mitra Kontraktor
+            </Link>
+            <span className="text-slate-300">|</span>
+            <Link
+              href="/demo"
+              className="hover:text-slate-950 transition-colors text-slate-900 font-medium"
+            >
+              Jury Console
+            </Link>
+          </nav>
+
+          {/* SISI KANAN: PILIH LOKASI & STATUS TESTNET */}
+          <div className="relative flex items-center gap-3" ref={locationDropdownRef}>
+            <div className="flex items-center gap-1.5 text-[11px] text-slate-500 font-mono">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+              <span>Base Sepolia</span>
+            </div>
+
+            <button
+              type="button"
+              onClick={() => setLocationMenuOpen(!locationMenuOpen)}
+              className="flex items-center gap-1 text-xs text-slate-700 hover:text-slate-950 font-medium transition-colors cursor-pointer"
+            >
+              <MaterialIcon name="location_on" size={13} className="text-sky-600" />
+              <span>{selectedLocation}</span>
+              <MaterialIcon name="expand_more" size={13} className="text-slate-400" />
+            </button>
+
+            {locationMenuOpen && (
+              <div className="absolute right-0 top-full mt-1 w-44 rounded-xl border border-slate-200 bg-white shadow-lg p-1 z-50 animate-in fade-in duration-100">
+                <div className="px-2 py-1 text-[10px] font-mono text-slate-400 uppercase">
+                  Pilih Area Pilot
+                </div>
+                {["Jember (Pilot)", "Surabaya (Upcoming)", "Jakarta (Upcoming)"].map(
+                  (loc) => (
+                    <button
+                      key={loc}
+                      type="button"
+                      onClick={() => {
+                        setSelectedLocation(loc);
+                        setLocationMenuOpen(false);
+                      }}
+                      className={`w-full text-left px-2 py-1.5 rounded-lg text-xs transition ${
+                        selectedLocation === loc
+                          ? "bg-slate-100 font-semibold text-slate-900"
+                          : "text-slate-600 hover:bg-slate-50 hover:text-slate-900"
+                      }`}
+                    >
+                      {loc}
+                    </button>
+                  )
+                )}
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+
+      {/* MOBILE DRAWER */}
+      {mobileMenuOpen && (
+        <div className="md:hidden border-t border-slate-200 bg-white p-4 space-y-3">
+          <form onSubmit={handleSearchSubmit}>
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Cari ruko, pool, atau milestone..."
+              className="w-full h-9 px-3 rounded-lg border border-slate-200 text-xs bg-slate-50"
+            />
+          </form>
+          <div className="flex flex-col space-y-2 text-xs text-slate-700 pt-1">
+            <a
+              href="#katalog-ruko"
+              onClick={() => setMobileMenuOpen(false)}
+              className="py-1.5 px-2 rounded-lg hover:bg-slate-100"
+            >
+              Katalog Ruko
+            </a>
+            <a
+              href="#kalkulator-keekonomian"
+              onClick={() => setMobileMenuOpen(false)}
+              className="py-1.5 px-2 rounded-lg hover:bg-slate-100"
+            >
+              Simulasi RBF
+            </a>
+            <a
+              href="#cara-kerja"
+              onClick={() => setMobileMenuOpen(false)}
+              className="py-1.5 px-2 rounded-lg hover:bg-slate-100"
+            >
+              Cara Kerja
+            </a>
+            <Link
+              href="/contractor"
+              onClick={() => setMobileMenuOpen(false)}
+              className="py-1.5 px-2 rounded-lg hover:bg-slate-100"
+            >
+              Portal Kontraktor
+            </Link>
+            <Link
+              href="/demo"
+              onClick={() => setMobileMenuOpen(false)}
+              className="py-1.5 px-2 rounded-lg hover:bg-slate-100 font-semibold text-slate-950"
+            >
+              Launch Console
+            </Link>
+          </div>
+        </div>
+      )}
+    </header>
   );
 };

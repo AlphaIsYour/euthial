@@ -7,101 +7,116 @@ export default function AuthLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="min-h-screen w-full bg-[#0A0A0A] text-zinc-100 flex flex-col lg:flex-row font-sans selection:bg-blue-600 selection:text-white">
-      {/* LEFT PANEL: BRANDING & PROTOCOL HIGHLIGHTS (Hidden on small screens) */}
-      <div className="hidden lg:flex lg:w-1/2 p-12 bg-gradient-to-br from-[#121212] via-[#0D0D0D] to-[#080808] border-r border-white/10 flex-col justify-between relative overflow-hidden">
-        {/* Subtle decorative glow */}
-        <div className="absolute -top-32 -left-32 w-96 h-96 bg-blue-600/10 rounded-full blur-3xl pointer-events-none" />
-        <div className="absolute -bottom-32 -right-32 w-96 h-96 bg-purple-600/10 rounded-full blur-3xl pointer-events-none" />
-
-        {/* Top: Logo & Title */}
-        <div className="space-y-4 relative z-10">
+    <div className="h-screen max-h-screen w-full bg-slate-50 text-slate-900 flex flex-col lg:flex-row font-sans selection:bg-slate-900 selection:text-white overflow-hidden">
+      {/* SISI KIRI: BRANDING PROTOKOL & INFORMASI PILOT (CLEAN LIGHT THEME) */}
+      <div className="hidden lg:flex lg:w-1/2 p-10 xl:p-14 bg-white border-r border-slate-200/80 flex-col justify-between relative overflow-hidden">
+        {/* Top: Logo Asli Euthial & Judul */}
+        <div className="space-y-6 relative z-10">
           <Link href="/" className="inline-flex items-center gap-3 group">
-            <div className="w-10 h-10 rounded-[12px] bg-blue-600 flex items-center justify-center text-white font-black font-mono shadow-lg shadow-blue-600/30 group-hover:scale-105 transition-transform">
-              E
+            <div className="w-9 h-9 rounded-lg bg-white border border-slate-200 p-0.5 flex items-center justify-center shrink-0 shadow-xs group-hover:border-slate-300 transition-colors">
+              <img
+                src="/euthial.png"
+                alt="Euthial Protocol"
+                className="w-full h-full object-contain"
+              />
             </div>
             <div>
-              <div className="font-bold text-lg text-white tracking-tight">EUTHIAL</div>
-              <div className="text-[10px] font-mono text-zinc-400 uppercase tracking-widest">
-                Protocol Architecture
+              <div className="font-bold text-base text-slate-950 tracking-tight leading-none">
+                EUTHIAL
+              </div>
+              <div className="text-[10px] font-mono text-slate-500 uppercase tracking-wider mt-0.5">
+                Verifiable RBF Protocol
               </div>
             </div>
           </Link>
 
-          <div className="pt-8 space-y-3">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-xs font-mono">
-              <span className="w-2 h-2 rounded-full bg-blue-400 animate-pulse" />
-              Verifiable Revenue-Based Financing (RBF)
+          <div className="pt-4 space-y-3">
+            <div className="inline-flex items-center gap-2 px-2.5 py-1 rounded-md bg-slate-100 border border-slate-200 text-slate-700 text-xs font-mono">
+              <span className="w-2 h-2 rounded-full bg-emerald-500" />
+              Pilot Komersial #01 · Jember
             </div>
-            <h1 className="text-3xl font-extrabold text-white tracking-tight leading-tight">
+            <h1 className="text-2xl xl:text-3xl font-extrabold text-slate-950 tracking-tight leading-snug">
               Infrastruktur Pembiayaan Ruko Berbasis Omzet Terverifikasi.
             </h1>
-            <p className="text-sm text-zinc-400 leading-relaxed max-w-lg">
-              Smart contract wasit digital yang menyelaraskan kepentingan Pemilik Aset, Pengelola Ritel UMKM, Kontraktor, dan Investor Modal dengan kepastian hukum dan audit on-chain instan.
+            <p className="text-xs xl:text-sm text-slate-600 leading-relaxed max-w-lg">
+              Smart contract wasit digital yang menyelaraskan kepentingan Pemilik Aset, Pengelola Ritel UMKM, Kontraktor, dan Investor Modal dengan audit on-chain instan.
             </p>
           </div>
         </div>
 
-        {/* Middle: Key Guarantees Carousel/Cards */}
-        <div className="grid grid-cols-2 gap-3 relative z-10 my-8">
-          <div className="p-4 rounded-[12px] bg-[#151515] border border-white/10 space-y-1">
-            <span className="text-xs font-mono text-blue-400 font-bold">WATERFALL 80:15:5</span>
-            <div className="text-xs text-zinc-300">
-              Setoran harian QRIS dipotong otomatis tanpa manipulasi pembukuan.
+        {/* Middle: Key Protocol Guarantees (Clean Subtle Cards) */}
+        <div className="grid grid-cols-2 gap-3 relative z-10 my-4">
+          <div className="p-3.5 rounded-lg bg-slate-50 border border-slate-200/80 space-y-1">
+            <div className="text-[11px] font-mono font-bold text-slate-900">
+              WATERFALL 80:15:5
+            </div>
+            <div className="text-[11px] text-slate-600 leading-relaxed">
+              Setoran kasir POS QRIS dipotong otomatis harian tanpa rekayasa pembukuan.
             </div>
           </div>
-          <div className="p-4 rounded-[12px] bg-[#151515] border border-white/10 space-y-1">
-            <span className="text-xs font-mono text-emerald-400 font-bold">10% BOND ESCROW</span>
-            <div className="text-xs text-zinc-300">
-              Uang jaminan penyewa melindungi investor dari risiko penurunan omzet.
+          <div className="p-3.5 rounded-lg bg-slate-50 border border-slate-200/80 space-y-1">
+            <div className="text-[11px] font-mono font-bold text-slate-900">
+              10% BOND ESCROW
+            </div>
+            <div className="text-[11px] text-slate-600 leading-relaxed">
+              Jaminan komitmen penyewa melindungi investor dari risiko penurunan omzet.
             </div>
           </div>
-          <div className="p-4 rounded-[12px] bg-[#151515] border border-white/10 space-y-1">
-            <span className="text-xs font-mono text-purple-400 font-bold">2-OF-3 MULTISIG</span>
-            <div className="text-xs text-zinc-300">
-              Pencairan termin renovasi mensyaratkan verifikasi fisik inspektur independen.
+          <div className="p-3.5 rounded-lg bg-slate-50 border border-slate-200/80 space-y-1">
+            <div className="text-[11px] font-mono font-bold text-slate-900">
+              2-OF-3 MULTISIG
+            </div>
+            <div className="text-[11px] text-slate-600 leading-relaxed">
+              Termin renovasi dicairkan hanya setelah verifikasi inspektur independen.
             </div>
           </div>
-          <div className="p-4 rounded-[12px] bg-[#151515] border border-white/10 space-y-1">
-            <span className="text-xs font-mono text-amber-400 font-bold">STEP-IN PROTOCOL</span>
-            <div className="text-xs text-zinc-300">
-              Hak ambil alih fisik ruko otomatis jika terjadi default dua bulan berurutan.
+          <div className="p-3.5 rounded-lg bg-slate-50 border border-slate-200/80 space-y-1">
+            <div className="text-[11px] font-mono font-bold text-slate-900">
+              STEP-IN PROTOCOL
+            </div>
+            <div className="text-[11px] text-slate-600 leading-relaxed">
+              Hak kelola ruko beralih otomatis jika terjadi default dua periode beruntun.
             </div>
           </div>
         </div>
 
-        {/* Bottom: Pilot Metrics & Live Testnet Tag */}
-        <div className="pt-4 border-t border-white/10 flex items-center justify-between text-xs font-mono text-zinc-500 relative z-10">
-          <div>Sepolia Testnet · Pilot Ruko Pasar Baru #01</div>
-          <div className="text-zinc-400">Ethereum Hackathon Jakarta 2026</div>
+        {/* Bottom: Network & Event Info */}
+        <div className="pt-3 border-t border-slate-200 flex items-center justify-between text-[11px] font-mono text-slate-500 relative z-10">
+          <div>Base Sepolia Testnet</div>
+          <div>Ethereum Hackathon 2026</div>
         </div>
       </div>
 
-      {/* RIGHT PANEL: INTERACTIVE AUTH CONTAINER */}
-      <div className="flex-1 flex flex-col justify-center items-center p-6 sm:p-12 min-h-screen relative">
-        <div className="w-full max-w-md space-y-6">
-          {/* Mobile Header Logo */}
-          <div className="flex lg:hidden items-center justify-between pb-4 border-b border-white/10">
-            <Link href="/" className="inline-flex items-center gap-2">
-              <div className="w-8 h-8 rounded-[10px] bg-blue-600 flex items-center justify-center text-white font-bold font-mono">
-                E
-              </div>
-              <span className="font-bold text-white tracking-tight">EUTHIAL</span>
-            </Link>
-            <span className="text-[11px] font-mono text-zinc-400">Pilot #01</span>
-          </div>
+      {/* SISI KANAN: FORM CONTAINER DENGAN VIEWPORT FIT (TIDAK SCROLL PADA DESKTOP) */}
+      <div className="flex-1 flex flex-col justify-between p-6 sm:p-10 lg:p-8 xl:p-12 overflow-y-auto lg:overflow-hidden relative bg-slate-50">
+        {/* Mobile Header Logo */}
+        <div className="flex lg:hidden items-center justify-between pb-3 mb-2 border-b border-slate-200">
+          <Link href="/" className="inline-flex items-center gap-2">
+            <div className="w-7 h-7 rounded-lg bg-white border border-slate-200 p-0.5 flex items-center justify-center">
+              <img
+                src="/euthial.png"
+                alt="Euthial Protocol"
+                className="w-full h-full object-contain"
+              />
+            </div>
+            <span className="font-bold text-slate-950 text-sm tracking-tight">EUTHIAL</span>
+          </Link>
+          <span className="text-[10px] font-mono text-slate-500">Pilot #01</span>
+        </div>
 
+        {/* Center Content Card */}
+        <div className="w-full max-w-md mx-auto my-auto py-2">
           {children}
+        </div>
 
-          {/* Global Back Link */}
-          <div className="pt-4 text-center">
-            <Link
-              href="/"
-              className="text-xs font-mono text-zinc-500 hover:text-zinc-300 transition-colors inline-flex items-center gap-1.5"
-            >
-              &larr; Kembali ke Beranda Protokol
-            </Link>
-          </div>
+        {/* Global Back Link */}
+        <div className="pt-2 text-center shrink-0">
+          <Link
+            href="/"
+            className="text-xs font-mono text-slate-500 hover:text-slate-900 transition-colors inline-flex items-center gap-1.5"
+          >
+            &larr; Kembali ke Beranda Protokol
+          </Link>
         </div>
       </div>
     </div>

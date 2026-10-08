@@ -9,25 +9,27 @@ export const metadata = {
 
 export default function RegisterPage() {
   return (
-    <div className="space-y-6">
-      <div className="space-y-1.5">
-        <h2 className="text-2xl font-bold text-white tracking-tight">
-          Pendaftaran Partisipan Protokol
+    <div className="space-y-4">
+      <div className="space-y-1 text-center sm:text-left">
+        <h2 className="text-xl sm:text-2xl font-bold text-slate-950 tracking-tight">
+          Pendaftaran Partisipan
         </h2>
-        <p className="text-xs text-zinc-400">
-          Ikuti 3 tahapan mudah untuk menghubungkan identitas dan peran Anda ke smart contract.
+        <p className="text-xs text-slate-500">
+          Ikuti 3 tahapan mudah untuk menghubungkan profil dan peran Anda ke ekosistem protokol.
         </p>
       </div>
 
-      <RegisterWizard />
+      <div className="bg-white rounded-xl border border-slate-200/90 p-5 sm:p-6 shadow-xs">
+        <RegisterWizard />
+      </div>
 
-      <div className="p-4 rounded-[12px] bg-[#121212] border border-white/5 text-center text-xs text-zinc-400">
+      <div className="text-center text-xs text-slate-600">
         Sudah memiliki akun terdaftar?{" "}
         <Link
           href="/login"
-          className="text-blue-400 hover:text-blue-300 font-semibold font-mono underline ml-1"
+          className="text-slate-950 hover:underline font-semibold ml-0.5"
         >
-          Masuk ke Portal &rarr;
+          Masuk ke Akun
         </Link>
       </div>
     </div>
