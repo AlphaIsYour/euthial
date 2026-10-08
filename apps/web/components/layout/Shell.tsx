@@ -6,6 +6,8 @@ import { Header } from "./Header";
 import { SearchModal } from "./SearchModal";
 import { FloatingRoleSwitcher } from "../navigation/FloatingRoleSwitcher";
 import { DataModeBanner } from "../ui/DataModeToggle";
+import { OnboardingWizard } from "../onboarding/OnboardingWizard";
+import { MobileBottomNav } from "../navigation/MobileBottomNav";
 import { useApp } from "../../context/AppContext";
 
 export const Shell: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -24,8 +26,8 @@ export const Shell: React.FC<{ children: React.ReactNode }> = ({ children }) => 
           {/* Panel Header: Absolute top, h-12 (48px), z-30, solid panel header, border-b, px-4 (16px) */}
           <Header onOpenSearch={() => setIsSearchOpen(true)} />
 
-          {/* Scrollable Content Container: height 100%, overflow-y auto, px-6 (24px), pt-16 (64px), pb-6 (24px) */}
-          <main className="h-full overflow-y-auto px-6 pt-[64px] pb-6 dotted-bg relative">
+          {/* Scrollable Content Container: height 100%, overflow-y auto, px-6 (24px), pt-16 (64px), pb-16 for mobile / pb-6 desktop */}
+          <main className="h-full overflow-y-auto px-4 sm:px-6 pt-[64px] pb-20 sm:pb-6 dotted-bg relative">
             <div
               className={`mx-auto space-y-6 transition-[max-width] duration-300 ease-out ${
                 isSidebarCollapsed ? "max-w-[1440px]" : "max-w-7xl"
@@ -41,8 +43,16 @@ export const Shell: React.FC<{ children: React.ReactNode }> = ({ children }) => 
       {/* Global Search Command Palette (Ctrl+K / ⌘K) */}
       <SearchModal isOpen={isSearchOpen} onClose={() => setIsSearchOpen(false)} />
 
-      {/* Floating Demo Navigation Pill */}
-      <FloatingRoleSwitcher />
+      {/* Onboarding Wizard Modal (#66) */}
+      <OnboardingWizard />
+
+      {/* Floating Demo Navigation Pill (Desktop) */}
+      <div className="hidden sm:block">
+        <FloatingRoleSwitcher />
+      </div>
+
+      {/* Mobile Bottom Navigation Bar (#74) */}
+      <MobileBottomNav />
     </div>
   );
 };

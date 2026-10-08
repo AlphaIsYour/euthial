@@ -8,6 +8,8 @@ import { useProtocol } from "../../context/ProtocolContext";
 import { useWeb3 } from "../../context/Web3Context";
 import { CryptographicProofCard } from "../../components/contracts/CryptographicProofCard";
 import { ActionCenter } from "../../components/ui/ActionCenter";
+import { MultiSigApprovalModal } from "../../components/contracts/MultiSigApprovalModal";
+import type { Milestone } from "../../context/ProtocolContext";
 
 export default function InspectorPortalPage() {
   const {
@@ -22,6 +24,7 @@ export default function InspectorPortalPage() {
   const [evidenceHashInput, setEvidenceHashInput] = useState<string>("0xa21df7e59bc438901b44917bce82e718b5");
   const [isSigning, setIsSigning] = useState<boolean>(false);
   const [signStatusMsg, setSignStatusMsg] = useState<string | null>(null);
+  const [modalMilestone, setModalMilestone] = useState<Milestone | null>(null);
 
   // Formatters
   const formatIDR = (val: number) =>
@@ -287,25 +290,39 @@ export default function InspectorPortalPage() {
                       </div>
 
                       {/* Multisig Signatures status */}
-                      <div className="flex items-center gap-2 text-[11px] font-mono bg-slate-100 dark:bg-white/5 p-2 rounded-lg border border-slate-200/80 dark:border-white/5 shrink-0">
-                        <div className="flex flex-col items-center px-2 border-r border-slate-200 dark:border-white/5">
-                          <span className="text-slate-500 dark:text-white/40 text-[9px]">INSPEKTUR</span>
-                          <span className={m.approvals.inspector ? "text-emerald-600 dark:text-emerald-400 font-bold" : "text-slate-400 dark:text-white/30"}>
-                            {m.approvals.inspector ? "✓ SIGN" : "PENDING"}
-                          </span>
+                      <div className="flex items-center gap-2">
+                        <div className="flex items-center gap-2 text-[11px] font-mono bg-slate-100 dark:bg-white/5 p-2 rounded-lg border border-slate-200/80 dark:border-white/5 shrink-0">
+                          <div className="flex flex-col items-center px-2 border-r border-slate-200 dark:border-white/5">
+                            <span className="text-slate-500 dark:text-white/40 text-[9px]">INSPEKTUR</span>
+                            <span className={m.approvals.inspector ? "text-emerald-600 dark:text-emerald-400 font-bold" : "text-slate-400 dark:text-white/30"}>
+                              {m.approvals.inspector ? "✓ SIGN" : "PENDING"}
+                            </span>
+                          </div>
+                          <div className="flex flex-col items-center px-2 border-r border-slate-200 dark:border-white/5">
+                            <span className="text-slate-500 dark:text-white/40 text-[9px]">LANDLORD</span>
+                            <span className={m.approvals.landlord ? "text-emerald-600 dark:text-emerald-400 font-bold" : "text-slate-400 dark:text-white/30"}>
+                              {m.approvals.landlord ? "✓ SIGN" : "PENDING"}
+                            </span>
+                          </div>
+                          <div className="flex flex-col items-center px-2">
+                            <span className="text-slate-500 dark:text-white/40 text-[9px]">TENANT</span>
+                            <span className={m.approvals.tenant ? "text-emerald-600 dark:text-emerald-400 font-bold" : "text-slate-400 dark:text-white/30"}>
+                              {m.approvals.tenant ? "✓ SIGN" : "PENDING"}
+                            </span>
+                          </div>
                         </div>
-                        <div className="flex flex-col items-center px-2 border-r border-slate-200 dark:border-white/5">
-                          <span className="text-slate-500 dark:text-white/40 text-[9px]">LANDLORD</span>
-                          <span className={m.approvals.landlord ? "text-emerald-600 dark:text-emerald-400 font-bold" : "text-slate-400 dark:text-white/30"}>
-                            {m.approvals.landlord ? "✓ SIGN" : "PENDING"}
-                          </span>
-                        </div>
-                        <div className="flex flex-col items-center px-2">
-                          <span className="text-slate-500 dark:text-white/40 text-[9px]">TENANT</span>
-                          <span className={m.approvals.tenant ? "text-emerald-600 dark:text-emerald-400 font-bold" : "text-slate-400 dark:text-white/30"}>
-                            {m.approvals.tenant ? "✓ SIGN" : "PENDING"}
-                          </span>
-                        </div>
+
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setModalMilestone(m);
+                          }}
+                          className="px-2.5 py-2 rounded-lg text-xs font-mono font-semibold bg-indigo-600 hover:bg-indigo-500 text-white shrink-0 shadow-sm transition-colors"
+                          title="Buka Konsol Otorisasi MultiSig 2-of-3"
+                        >
+                          2-of-3 Console &rarr;
+                        </button>
                       </div>
                     </div>
                   </div>
@@ -488,6 +505,15 @@ export default function InspectorPortalPage() {
             </div>
           )}
         </div>
+
+        {/* 2-of-3 MultiSig Approval Interactive Modal (#52) */}
+        {modalMilestone && (
+          <MultiSigApprovalModal
+            milestone={modalMilestone}
+            isOpen={!!modalMilestone}
+            onClose={() => setModalMilestone(null)}
+          />
+        )}
       </div>
     </Shell>
   );

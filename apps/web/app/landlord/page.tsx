@@ -92,12 +92,22 @@ export default function LandlordPortalPage() {
             </div>
           </div>
 
-          {/* Status Capsule */}
-          <div className="flex items-center gap-2 bg-slate-50 dark:bg-[#0A0A0A] px-3.5 py-2 rounded-md border border-slate-200/80 dark:border-white/10 shrink-0 self-start md:self-center">
-            <span className="text-[11px] font-mono text-slate-500 dark:text-[#8A8A8A]">Status Kontrak:</span>
-            <div className="flex items-center gap-1.5 px-2.5 py-0.5 rounded text-xs font-mono font-bold bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20">
-              <span className="w-1.5 h-1.5 rounded-full bg-amber-500 dark:bg-amber-400 animate-pulse" />
-              <span>AKTIF (24 BULAN)</span>
+          {/* Status Capsule & New Deal Button (#47) */}
+          <div className="flex items-center gap-2.5 shrink-0 self-start md:self-center">
+            <Link
+              href="/landlord/new-deal"
+              className="px-3 py-2 rounded-md bg-blue-600 hover:bg-blue-700 text-white font-mono text-xs font-semibold flex items-center gap-1.5 shadow-sm transition-colors"
+            >
+              <MaterialIcon name="add_circle" size={16} />
+              <span>Buat Deal Baru</span>
+            </Link>
+
+            <div className="flex items-center gap-2 bg-slate-50 dark:bg-[#0A0A0A] px-3.5 py-2 rounded-md border border-slate-200/80 dark:border-white/10">
+              <span className="text-[11px] font-mono text-slate-500 dark:text-[#8A8A8A]">Status:</span>
+              <div className="flex items-center gap-1.5 px-2.5 py-0.5 rounded text-xs font-mono font-bold bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20">
+                <span className="w-1.5 h-1.5 rounded-full bg-amber-500 dark:bg-amber-400 animate-pulse" />
+                <span>AKTIF (24 BULAN)</span>
+              </div>
             </div>
           </div>
         </div>

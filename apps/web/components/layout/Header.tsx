@@ -7,6 +7,7 @@ import { MaterialIcon } from "../ui/MaterialIcon";
 import { WalletConnectButton } from "../auth/WalletConnectButton";
 import { DataModeToggle } from "../ui/DataModeToggle";
 import { LanguageModeToggle } from "../ui/LanguageModeToggle";
+import { NotificationCenter } from "../notifications/NotificationCenter";
 
 interface HeaderProps {
   onOpenSearch: () => void;
@@ -126,6 +127,9 @@ export const Header: React.FC<HeaderProps> = ({ onOpenSearch }) => {
           </svg>
         </a>
 
+        {/* In-App Notification Center (#73) */}
+        <NotificationCenter />
+
         {/* Maximize Button */}
         <button
           type="button"
@@ -146,14 +150,14 @@ export const Header: React.FC<HeaderProps> = ({ onOpenSearch }) => {
           <MaterialIcon name={theme === "dark" ? "light_mode" : "dark_mode"} size={16} />
         </button>
 
-        {/* Auth Link Button */}
+        {/* User Profile & Wallet Management Link (#44) */}
         <a
-          href="/login"
-          title="Masuk / Daftar Akun"
+          href="/profile"
+          title="Profil Pengguna & Manajemen Dompet"
           className="h-8 px-2.5 rounded-[8px] border border-[var(--border-soft)] bg-[var(--card-bg)] hover:bg-[var(--hover-bg)] text-xs font-mono text-[var(--text-muted)] hover:text-[var(--text-main)] flex items-center gap-1.5 transition-colors shrink-0"
         >
           <MaterialIcon name="person" size={15} />
-          <span className="hidden md:inline">Akun</span>
+          <span className="hidden md:inline">Profil</span>
         </a>
 
         {/* RainbowKit + SIWE Connect Button (#58, #87) */}
