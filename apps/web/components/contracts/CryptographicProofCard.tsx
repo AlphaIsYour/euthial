@@ -3,6 +3,8 @@
 import React, { useState } from "react";
 import { useProtocol } from "@/context/ProtocolContext";
 import { keccak256, stringToHex, encodePacked } from "viem";
+import { AddressBadge } from "../ui/AddressBadge";
+import { TxLink } from "../ui/TxLink";
 
 export function CryptographicProofCard() {
   const { currentMonth, grossMonthly, activeScenario } = useProtocol();
@@ -106,37 +108,21 @@ export function CryptographicProofCard() {
       {/* Grid Inspector Specs */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs font-mono">
         {/* Attestor / Signer */}
-        <div className="p-3.5 rounded-xl bg-slate-50/80 dark:bg-[#0D0D0F] border border-slate-200/80 dark:border-[rgba(207,207,207,0.08)] space-y-1">
+        <div className="p-3.5 rounded-xl bg-slate-50/80 dark:bg-[#0D0D0F] border border-slate-200/80 dark:border-[rgba(207,207,207,0.08)] space-y-1.5">
           <div className="text-[10px] text-slate-500 dark:text-[#71717A] uppercase font-semibold">Authorized PJP Attestor (Signer)</div>
-          <div className="flex items-center justify-between">
-            <span className="text-slate-900 dark:text-white truncate font-semibold text-[11px]">
-              {ATTESTOR_ADDRESS}
-            </span>
-            <button
-              onClick={() => copyToClipboard(ATTESTOR_ADDRESS, "attestor")}
-              className="text-[10px] text-emerald-700 dark:text-emerald-400 hover:text-emerald-800 dark:hover:text-emerald-300 font-semibold ml-2"
-            >
-              {copied === "attestor" ? "Copied!" : "Copy"}
-            </button>
+          <div>
+            <AddressBadge address={ATTESTOR_ADDRESS} roleLabel="Bank Mandiri / SNAP BI" />
           </div>
           <div className="text-[10px] text-emerald-700 dark:text-emerald-400">
-            Bank Escrow Agent Node (Bank Mandiri / SNAP BI)
+            Bank Escrow Agent Node (Authorized Attestor)
           </div>
         </div>
 
         {/* Verifying Contract */}
-        <div className="p-3.5 rounded-xl bg-slate-50/80 dark:bg-[#0D0D0F] border border-slate-200/80 dark:border-[rgba(207,207,207,0.08)] space-y-1">
+        <div className="p-3.5 rounded-xl bg-slate-50/80 dark:bg-[#0D0D0F] border border-slate-200/80 dark:border-[rgba(207,207,207,0.08)] space-y-1.5">
           <div className="text-[10px] text-slate-500 dark:text-[#71717A] uppercase font-semibold">Verifying Contract (Router)</div>
-          <div className="flex items-center justify-between">
-            <span className="text-slate-900 dark:text-white truncate font-semibold text-[11px]">
-              {ROUTER_ADDRESS}
-            </span>
-            <button
-              onClick={() => copyToClipboard(ROUTER_ADDRESS, "router")}
-              className="text-[10px] text-emerald-700 dark:text-emerald-400 hover:text-emerald-800 dark:hover:text-emerald-300 font-semibold ml-2"
-            >
-              {copied === "router" ? "Copied!" : "Copy"}
-            </button>
+          <div>
+            <AddressBadge address={ROUTER_ADDRESS} roleLabel="WaterfallRouter" />
           </div>
           <div className="text-[10px] text-slate-500 dark:text-[#71717A]">
             Domain: {DOMAIN_NAME} v{DOMAIN_VERSION} · ChainId: {CHAIN_ID}

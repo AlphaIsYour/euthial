@@ -3,3 +3,6 @@ packages:
   - "packages/*"
 allowBuilds:
   esbuild: true
+  bufferutil: true
+  keccak: true
+  utf-8-validate: true

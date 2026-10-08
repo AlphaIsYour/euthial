@@ -11,6 +11,7 @@ import { CryptographicProofCard } from "../../components/contracts/Cryptographic
 import { UtilityTriangulationCard } from "../../components/fraud/UtilityTriangulationCard";
 import { CustomerRebateScanner } from "../../components/fraud/CustomerRebateScanner";
 import { PhysicalStepInCard } from "../../components/legal/PhysicalStepInCard";
+import { ActionCenter } from "../../components/ui/ActionCenter";
 
 export default function DemoMissionControlPage() {
   const {
@@ -73,6 +74,9 @@ export default function DemoMissionControlPage() {
   return (
     <Shell>
       <div className="space-y-6">
+        {/* Action Center - Urgent & Pending Alerts (#88) */}
+        <ActionCenter />
+
         {/* 1. Context Banner */}
         <div className="p-4 sm:p-5 rounded-card bg-white dark:bg-black border border-cyan-500/20 flex flex-col md:flex-row md:items-center justify-between gap-4 shadow-xs">
           <div className="flex items-center gap-3">

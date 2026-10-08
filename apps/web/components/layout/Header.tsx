@@ -4,6 +4,9 @@ import React, { useState, useEffect } from "react";
 import { useApp } from "../../context/AppContext";
 import { useWeb3 } from "../../context/Web3Context";
 import { MaterialIcon } from "../ui/MaterialIcon";
+import { WalletConnectButton } from "../auth/WalletConnectButton";
+import { DataModeToggle } from "../ui/DataModeToggle";
+import { LanguageModeToggle } from "../ui/LanguageModeToggle";
 
 interface HeaderProps {
   onOpenSearch: () => void;
@@ -18,10 +21,6 @@ export const Header: React.FC<HeaderProps> = ({ onOpenSearch }) => {
   } = useApp();
 
   const {
-    isWalletConnected,
-    connectWallet,
-    disconnectWallet,
-    address,
     isSepolia,
     networkConfig,
   } = useWeb3();
@@ -53,14 +52,10 @@ export const Header: React.FC<HeaderProps> = ({ onOpenSearch }) => {
     }
   };
 
-  const formattedAddress = address
-    ? `${address.slice(0, 6)}...${address.slice(-4)}`
-    : "Connect";
-
   return (
     <header className="absolute top-0 left-0 right-0 h-12 bg-[var(--panel-header-bg)] border-b border-[var(--border-soft)] px-4 flex items-center justify-between z-30 select-none transition-colors duration-200">
-      {/* Left: Sidebar Toggle (32x32) + Search Button (320x32) */}
-      <div className="flex items-center gap-2 flex-1 max-w-md">
+      {/* Left: Sidebar Toggle (32x32) + Search Button (320x32) + Dual Mode Toggle */}
+      <div className="flex items-center gap-2 flex-1 max-w-xl">
         {/* Sidebar Toggle 32x32 rounded-8px */}
         <button
           type="button"
@@ -71,11 +66,11 @@ export const Header: React.FC<HeaderProps> = ({ onOpenSearch }) => {
           <MaterialIcon name={isSidebarCollapsed ? "menu_open" : "menu"} size={16} />
         </button>
 
-        {/* Search Input Button: 320x32 rounded 8px */}
+        {/* Search Input Button */}
         <button
           type="button"
           onClick={onOpenSearch}
-          className="w-[320px] h-[32px] rounded-[8px] border border-[var(--border-soft)] bg-[var(--input-bg)] px-[10px] flex items-center justify-between text-left text-xs text-[var(--text-muted)] hover:border-[var(--border-hover)] hover:text-[var(--text-main)] transition-all group shrink-0"
+          className="w-[240px] sm:w-[280px] h-[32px] rounded-[8px] border border-[var(--border-soft)] bg-[var(--input-bg)] px-[10px] flex items-center justify-between text-left text-xs text-[var(--text-muted)] hover:border-[var(--border-hover)] hover:text-[var(--text-main)] transition-all group shrink-0"
         >
           <div className="flex items-center gap-2 truncate">
             <MaterialIcon name="search" size={14} className="text-[var(--text-muted)] group-hover:text-[var(--text-main)]" />
@@ -85,30 +80,40 @@ export const Header: React.FC<HeaderProps> = ({ onOpenSearch }) => {
             ⌘K
           </kbd>
         </button>
+
+        {/* Dual-Mode Toggle: Simulation ↔ On-Chain (#60) */}
+        <div className="hidden md:flex items-center shrink-0">
+          <DataModeToggle />
+        </div>
       </div>
 
-      {/* Right: Testnet Status, GitHub, Minimize, Maximize, Theme Toggle, Wallet */}
-      <div className="flex items-center gap-1.5">
+      {/* Right: Plain Language Mode, GitHub, Maximize, Theme, RainbowKit + SIWE Wallet */}
+      <div className="flex items-center gap-1.5 sm:gap-2">
+        {/* Plain Language Mode Toggle (#67) */}
+        <div className="hidden sm:flex items-center shrink-0">
+          <LanguageModeToggle />
+        </div>
+
         {/* Network & Prototype Badge */}
-        <div className="hidden lg:flex items-center gap-2 px-2.5 py-1 rounded-md bg-[var(--card-bg)] border border-[var(--border-soft)] text-[11px] font-mono text-[var(--text-muted)]">
+        <div className="hidden xl:flex items-center gap-2 px-2.5 py-1 rounded-md bg-[var(--card-bg)] border border-[var(--border-soft)] text-[11px] font-mono text-[var(--text-muted)]">
           <span className="flex h-1.5 w-1.5 relative">
             <span
               className={`animate-ping absolute inline-flex h-full w-full rounded-full ${
                 isSepolia ? "bg-emerald-400" : "bg-amber-400"
               } opacity-75`}
-            ></span>
+            />
             <span
               className={`relative inline-flex rounded-full h-1.5 w-1.5 ${
                 isSepolia ? "bg-emerald-500" : "bg-amber-500"
               }`}
-            ></span>
+            />
           </span>
           <span className="text-[var(--text-main)] font-medium">{networkConfig.name}</span>
           <span className="text-[var(--text-muted)] opacity-60">·</span>
           <span>Pilot #01</span>
         </div>
 
-        {/* GitHub Button 32x32 rounded 8px */}
+        {/* GitHub Button */}
         <a
           href="https://github.com/AlphaIsYour/euthial"
           target="_blank"
@@ -121,7 +126,7 @@ export const Header: React.FC<HeaderProps> = ({ onOpenSearch }) => {
           </svg>
         </a>
 
-        {/* Maximize Button 32x32 (Fullscreen / Window expand) */}
+        {/* Maximize Button */}
         <button
           type="button"
           onClick={handleMaximize}
@@ -131,7 +136,7 @@ export const Header: React.FC<HeaderProps> = ({ onOpenSearch }) => {
           <MaterialIcon name={isFullscreen ? "fullscreen_exit" : "fullscreen"} size={16} />
         </button>
 
-        {/* Theme Toggle Button 32x32 rounded 8px */}
+        {/* Theme Toggle Button */}
         <button
           type="button"
           onClick={toggleTheme}
@@ -141,19 +146,10 @@ export const Header: React.FC<HeaderProps> = ({ onOpenSearch }) => {
           <MaterialIcon name={theme === "dark" ? "light_mode" : "dark_mode"} size={16} />
         </button>
 
-        {/* Wallet Pill */}
-        <button
-          type="button"
-          onClick={isWalletConnected ? disconnectWallet : connectWallet}
-          className="flex items-center gap-1.5 h-8 px-2.5 rounded-lg text-xs font-mono transition-colors border bg-[var(--card-bg)] border-[var(--border-soft)] text-[var(--text-main)] hover:border-[var(--border-hover)] hover:bg-[var(--hover-bg)] ml-1"
-        >
-          <span
-            className={`w-1.5 h-1.5 rounded-full ${
-              isWalletConnected ? "bg-emerald-400" : "bg-zinc-500"
-            }`}
-          />
-          <span className="hidden sm:inline">{isWalletConnected ? formattedAddress : "Connect"}</span>
-        </button>
+        {/* RainbowKit + SIWE Connect Button (#58, #87) */}
+        <div className="ml-1">
+          <WalletConnectButton />
+        </div>
       </div>
     </header>
   );

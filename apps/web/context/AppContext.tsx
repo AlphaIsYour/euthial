@@ -28,8 +28,8 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   const [activeTab, setActiveTab] = useState<NavTab>("dashboard");
   const [theme, setTheme] = useState<"dark" | "light">("dark");
-  const [isWalletConnected, setIsWalletConnected] = useState(true);
-  const [address] = useState("0x70997970C51812dc3A010C7d01b50e0d17dc79C8");
+  const [isWalletConnected, setIsWalletConnected] = useState(false);
+  const [address, setAddress] = useState("");
 
   useEffect(() => {
     // Read saved theme on client mount

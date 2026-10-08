@@ -2,8 +2,10 @@
 
 import React from "react";
 import { MaterialIcon } from "../ui/MaterialIcon";
+import { useLanguageMode } from "../../hooks/useLanguageMode";
 
 export const TrancheClaimCards: React.FC = () => {
+  const { term } = useLanguageMode();
   const seniorTarget = 150000000;
   const seniorPaid = 115200000;
   const seniorPercent = Math.round((seniorPaid / seniorTarget) * 100);
@@ -28,7 +30,7 @@ export const TrancheClaimCards: React.FC = () => {
           <div className="flex items-center justify-between pb-3 border-b border-[rgba(207,207,207,0.08)]">
             <div className="flex items-center gap-2">
               <span className="w-2.5 h-2.5 rounded-full bg-blue-500"></span>
-              <h3 className="text-sm font-semibold text-white">Senior Tranche Vault (ERC-4626)</h3>
+              <h3 className="text-sm font-semibold text-white">{term("seniorTranche")} ({term("erc4626Vault")})</h3>
             </div>
             <span className="px-2 py-0.5 rounded text-[10px] font-mono font-semibold bg-blue-500/15 text-blue-400 border border-blue-500/30">
               PRIORITAS 1 (80%)
@@ -86,7 +88,7 @@ export const TrancheClaimCards: React.FC = () => {
           <div className="flex items-center justify-between pb-3 border-b border-[rgba(207,207,207,0.08)]">
             <div className="flex items-center gap-2">
               <span className="w-2.5 h-2.5 rounded-full bg-purple-500"></span>
-              <h3 className="text-sm font-semibold text-white">Junior Tranche Vault (ERC-4626)</h3>
+              <h3 className="text-sm font-semibold text-white">{term("juniorTranche")} ({term("erc4626Vault")})</h3>
             </div>
             <span className="px-2 py-0.5 rounded text-[10px] font-mono font-semibold bg-purple-500/15 text-purple-400 border border-purple-500/30">
               FIRST-LOSS (20%)

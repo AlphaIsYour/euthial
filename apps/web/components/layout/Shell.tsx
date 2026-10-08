@@ -5,6 +5,7 @@ import { Sidebar } from "./Sidebar";
 import { Header } from "./Header";
 import { SearchModal } from "./SearchModal";
 import { FloatingRoleSwitcher } from "../navigation/FloatingRoleSwitcher";
+import { DataModeBanner } from "../ui/DataModeToggle";
 import { useApp } from "../../context/AppContext";
 
 export const Shell: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -26,10 +27,11 @@ export const Shell: React.FC<{ children: React.ReactNode }> = ({ children }) => 
           {/* Scrollable Content Container: height 100%, overflow-y auto, px-6 (24px), pt-16 (64px), pb-6 (24px) */}
           <main className="h-full overflow-y-auto px-6 pt-[64px] pb-6 dotted-bg relative">
             <div
-              className={`mx-auto space-y-8 transition-[max-width] duration-300 ease-out ${
+              className={`mx-auto space-y-6 transition-[max-width] duration-300 ease-out ${
                 isSidebarCollapsed ? "max-w-[1440px]" : "max-w-7xl"
               }`}
             >
+              <DataModeBanner />
               {children}
             </div>
           </main>
