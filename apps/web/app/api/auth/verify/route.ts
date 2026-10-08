@@ -5,6 +5,12 @@ export async function POST(req: NextRequest) {
   try {
     const { message, signature } = await req.json();
     const storedNonce = req.cookies.get("siwe_nonce")?.value;
+    if (!storedNonce) {
+      return NextResponse.json(
+        { ok: false, error: "Nonce expired or not found" },
+        { status: 400 }
+      );
+    }
 
     const siweMessage = new SiweMessage(message);
     const { data: fields } = await siweMessage.verify({
@@ -25,6 +31,9 @@ export async function POST(req: NextRequest) {
       sameSite: "lax",
       maxAge: 86400 * 7, // 7 days
     });
+
+    // Invalidate nonce after single use to prevent replay attacks
+    response.cookies.delete("siwe_nonce");
 
     return response;
   } catch (error: any) {
