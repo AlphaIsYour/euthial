@@ -186,8 +186,8 @@ contract WaterfallRouter is EIP712, ReentrancyGuard {
             abi.encode(SETTLEMENT_TYPEHASH, s.dayId, s.periodDays, s.grossRecorded, s.txCount, s.evidenceHash)
         );
         bytes32 digest = _hashTypedDataV4(structHash);
-        address signer = ECDSA.recover(digest, signature);
-        if (signer != attestor) revert InvalidSignature();
+        (address signer, ECDSA.RecoverError err, ) = ECDSA.tryRecover(digest, signature);
+        if (err != ECDSA.RecoverError.NoError || signer != attestor) revert InvalidSignature();
 
         // 3. Check monotonicity and replay protection
         if (settled[s.dayId]) revert SettlementAlreadyRecorded();
