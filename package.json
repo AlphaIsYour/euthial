@@ -11,10 +11,11 @@
     "test:all": "pnpm test:contracts && pnpm test:sim",
     "contracts:compile": "cd contracts && forge build",
     "contracts:deploy": "cd contracts && forge script script/DeployAndSeed.s.sol --broadcast",
-    "demo:reset": "pnpm --filter @euthial/attestor demo:reset",
-    "demo:run": "pnpm --filter @euthial/attestor demo:run",
-    "attest:day": "pnpm --filter @euthial/attestor attest:day",
-    "attest:multisig": "pnpm --filter @euthial/attestor attest:multisig"
+    "demo:reset": "tsx ./packages/attestor/src/cli.ts reset",
+    "demo:run": "tsx ./packages/attestor/src/cli.ts demo",
+    "attest:day": "tsx ./packages/attestor/src/cli.ts day",
+    "attest:multisig": "tsx ./packages/attestor/src/cli.ts multisig",
+    "test:attestor": "tsx ./packages/attestor/test/attestor.test.ts"
   },
   "keywords": [
     "ethereum",

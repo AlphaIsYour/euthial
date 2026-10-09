@@ -1,0 +1,25 @@
+{
+  "name": "@euthial/attestor",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "main": "./src/index.ts",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "test": "tsx ./test/attestor.test.ts",
+    "attest:day": "tsx ./src/cli.ts day",
+    "attest:multisig": "tsx ./src/cli.ts multisig",
+    "demo:run": "tsx ./src/cli.ts demo",
+    "demo:reset": "tsx ./src/cli.ts reset"
+  },
+  "dependencies": {
+    "viem": "^2.57.3"
+  },
+  "devDependencies": {
+    "@types/node": "^20.17.0",
+    "tsx": "^4.23.15",
+    "typescript": "^5.6.3"
+  }
+}
