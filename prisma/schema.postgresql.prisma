@@ -1,0 +1,128 @@
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+enum UserRole {
+  INVESTOR
+  LANDLORD
+  TENANT
+  CONTRACTOR
+  INSPECTOR
+  ADMIN
+  VIEWER
+}
+
+model User {
+  id            String     @id @default(cuid())
+  email         String?    @unique
+  name          String?
+  passwordHash  String?
+  walletAddress String?    @unique
+  role          UserRole   @default(VIEWER)
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+  accounts      Account[]
+  sessions      Session[]
+  deals         UserDeal[]
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+model UserDeal {
+  id        String   @id @default(cuid())
+  userId    String
+  dealId    String
+  role      UserRole
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Deal {
+  id                 String         @id @default(cuid())
+  onChainDealId      Int?           @unique
+  propertyName       String
+  location           String
+  budget             Float
+  seniorPrincipal    Float
+  juniorPrincipal    Float
+  seniorMultipleBps  Int
+  juniorMultipleBps  Int
+  targetTenorDays    Int
+  maxTenorDays       Int
+  status             String         @default("DRAFT")
+  agreementAddress   String?
+  seniorVaultAddress String?
+  juniorVaultAddress String?
+  routerAddress      String?
+  landlordAddress    String
+  tenantAddress      String
+  contractorAddress  String
+  inspectorAddress   String
+  arbiterAddress     String
+  createdAt          DateTime       @default(now())
+  updatedAt          DateTime       @updatedAt
+  documents          DealDocument[]
+}
+
+model Whitelist {
+  id         String    @id @default(cuid())
+  address    String    @unique
+  name       String?
+  role       UserRole  @default(INVESTOR)
+  status     String    @default("APPROVED")
+  addedBy    String?
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+}
+
+model DealDocument {
+  id            String    @id @default(cuid())
+  dealId        String
+  milestoneIdx  Int
+  cid           String
+  title         String
+  fileSize      Int?
+  fileType      String?
+  txHash        String?
+  submittedBy   String
+  createdAt     DateTime  @default(now())
+  deal          Deal      @relation(fields: [dealId], references: [id], onDelete: Cascade)
+}
