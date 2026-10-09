@@ -4,7 +4,6 @@ pragma solidity ^0.8.24;
 import {ERC721} from "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import {ERC721URIStorage} from "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 import {AccessControl} from "@openzeppelin/contracts/access/AccessControl.sol";
-import {Counters} from "@openzeppelin/contracts/utils/Counters.sol";
 
 /**
  * @title PropertyNFT
@@ -17,15 +16,13 @@ import {Counters} from "@openzeppelin/contracts/utils/Counters.sol";
  *      - Certificate hash (bytes32) stored for compliance verification
  *      - FitOutAgreement link established at registration (atomic)
  *      - Token ID auto-incremented to guarantee uniqueness
- *      - ERC721URIStorage used for flexible metadata URIs
+ *      - Compatible with OpenZeppelin Contracts v5.0.2
  *
  * References:
  *   - Issue #49: PropertyNFT, ERC-721 Representasi Aset Ruko
  *   - Euthial Protocol: Revenue-based financing for commercial fit-outs
  */
 contract PropertyNFT is ERC721, ERC721URIStorage, AccessControl {
-    using Counters for Counters.Counter;
-
     struct PropertyMetadata {
         string physicalAddress;
         bytes32 certificateHash;
@@ -36,7 +33,7 @@ contract PropertyNFT is ERC721, ERC721URIStorage, AccessControl {
 
     bytes32 public constant REGISTRAR_ROLE = keccak256("REGISTRAR_ROLE");
 
-    Counters.Counter private _tokenIdCounter;
+    uint256 private _nextTokenId;
     mapping(uint256 => PropertyMetadata) public properties;
     mapping(address => uint256) public agreementToTokenId;
 
@@ -65,7 +62,7 @@ contract PropertyNFT is ERC721, ERC721URIStorage, AccessControl {
         }
         _grantRole(DEFAULT_ADMIN_ROLE, admin);
         _grantRole(REGISTRAR_ROLE, admin);
-        _tokenIdCounter.increment();
+        _nextTokenId = 1;
     }
 
     function registerProperty(
@@ -74,23 +71,22 @@ contract PropertyNFT is ERC721, ERC721URIStorage, AccessControl {
         bytes32 certHash,
         uint256 estValue,
         address fitOutAgreement,
-        string memory tokenURI
+        string memory tokenURI_
     ) external onlyRole(REGISTRAR_ROLE) returns (uint256) {
         if (landlord == address(0)) revert ZeroAddressLandlord();
         if (fitOutAgreement == address(0)) revert ZeroAddressAgreement();
         if (bytes(physicalAddr).length == 0) revert EmptyPhysicalAddress();
         if (certHash == bytes32(0)) revert EmptyCertificateHash();
         if (estValue == 0) revert InvalidEstimatedValue();
-        if (bytes(tokenURI).length == 0) revert EmptyTokenURI();
+        if (bytes(tokenURI_).length == 0) revert EmptyTokenURI();
         if (agreementToTokenId[fitOutAgreement] != 0) {
             revert AgreementAlreadyLinked();
         }
 
-        uint256 tokenId = _tokenIdCounter.current();
-        _tokenIdCounter.increment();
+        uint256 tokenId = _nextTokenId++;
 
         _safeMint(landlord, tokenId);
-        _setTokenURI(tokenId, tokenURI);
+        _setTokenURI(tokenId, tokenURI_);
 
         properties[tokenId] = PropertyMetadata({
             physicalAddress: physicalAddr,
@@ -154,9 +150,4 @@ contract PropertyNFT is ERC721, ERC721URIStorage, AccessControl {
     function _exists(uint256 tokenId) internal view returns (bool) {
         return _ownerOf(tokenId) != address(0);
     }
-
-    function _burn(uint256 tokenId) internal override(ERC721, ERC721URIStorage) {
-        super._burn(tokenId);
-    }
 }
-
