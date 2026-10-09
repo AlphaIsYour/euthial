@@ -72,6 +72,7 @@ contract TrancheVaultTest is Fixtures {
         vm.stopPrank();
         vm.prank(address(agreement));
         seniorVault.deploy(100_000_000e6, contractor);
+        token.mint(address(router), 120_000_000e6);
         vm.startPrank(address(router));
         token.approve(address(seniorVault), 120_000_000e6);
         seniorVault.onRepayment(120_000_000e6);

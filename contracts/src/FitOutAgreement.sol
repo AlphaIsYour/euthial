@@ -169,7 +169,7 @@ contract FitOutAgreement is ReentrancyGuard {
         }
     }
 
-    function _calculateLogicalDays() internal view returns (uint256) { if (lastDayId < startDay) return 0;
+    function _calculateLogicalDays() internal view returns (uint256) { if (startDay == 0 || lastDayId < startDay) return 0;
         uint256 elapsed = lastDayId - startDay + 1; if (elapsed <= excusedDays) return 0; return elapsed - excusedDays; }
 
     function floor(uint256 d) public view returns (uint256) { if (d == 0) return 0;

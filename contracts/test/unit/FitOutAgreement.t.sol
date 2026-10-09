@@ -53,11 +53,15 @@ contract FitOutAgreementTest is Fixtures {
 
     function test_Bond_Deposit_OnlyTenant() public {
         vm.prank(landlord);
+        agreement.startFundraising();
+        vm.prank(landlord);
         vm.expectRevert(FitOutAgreement.Unauthorized.selector);
         agreement.depositBond(BOND_AMOUNT);
     }
 
     function test_Bond_Deposit_Success() public {
+        vm.prank(landlord);
+        agreement.startFundraising();
         vm.startPrank(tenant);
         token.approve(address(agreement), BOND_AMOUNT);
         agreement.depositBond(BOND_AMOUNT);
@@ -66,6 +70,8 @@ contract FitOutAgreementTest is Fixtures {
     }
 
     function test_Bond_Deposit_OnlyOnce() public {
+        vm.prank(landlord);
+        agreement.startFundraising();
         vm.startPrank(tenant);
         token.approve(address(agreement), BOND_AMOUNT * 2);
         agreement.depositBond(BOND_AMOUNT);
@@ -110,6 +116,8 @@ contract FitOutAgreementTest is Fixtures {
     }
 
     function test_BondConservation() public {
+        vm.prank(landlord);
+        agreement.startFundraising();
         vm.startPrank(tenant);
         token.approve(address(agreement), BOND_AMOUNT);
         agreement.depositBond(BOND_AMOUNT);

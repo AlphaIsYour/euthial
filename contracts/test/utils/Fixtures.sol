@@ -94,6 +94,9 @@ contract Fixtures is Test, Constants {
     }
 
     function completeFundraising(uint256 seniorAmount, uint256 juniorAmount) public {
+        vm.prank(landlord);
+        agreement.startFundraising();
+
         vm.startPrank(alice);
         token.approve(address(seniorVault), seniorAmount);
         seniorVault.deposit(seniorAmount, alice);
