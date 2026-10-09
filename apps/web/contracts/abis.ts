@@ -404,4 +404,85 @@ export const AGREEMENT_FACTORY_ABI = [
   },
 ] as const;
 
+export const PROPERTY_NFT_ABI = [
+  {
+    type: "function",
+    name: "registerProperty",
+    inputs: [
+      { name: "landlord", type: "address" },
+      { name: "physicalAddr", type: "string" },
+      { name: "certHash", type: "bytes32" },
+      { name: "estValue", type: "uint256" },
+      { name: "fitOutAgreement", type: "address" },
+      { name: "tokenURI_", type: "string" },
+    ],
+    outputs: [{ name: "", type: "uint256" }],
+    stateMutability: "nonpayable",
+  },
+  {
+    type: "function",
+    name: "getPropertyMetadata",
+    inputs: [{ name: "tokenId", type: "uint256" }],
+    outputs: [
+      {
+        name: "",
+        type: "tuple",
+        components: [
+          { name: "physicalAddress", type: "string" },
+          { name: "certificateHash", type: "bytes32" },
+          { name: "estimatedValue", type: "uint256" },
+          { name: "fitOutAgreement", type: "address" },
+          { name: "isActive", type: "bool" },
+        ],
+      },
+    ],
+    stateMutability: "view",
+  },
+  {
+    type: "function",
+    name: "getTokenIdByAgreement",
+    inputs: [{ name: "fitOutAgreement", type: "address" }],
+    outputs: [{ name: "", type: "uint256" }],
+    stateMutability: "view",
+  },
+  {
+    type: "function",
+    name: "getLinkedAgreement",
+    inputs: [{ name: "tokenId", type: "uint256" }],
+    outputs: [{ name: "", type: "address" }],
+    stateMutability: "view",
+  },
+  {
+    type: "function",
+    name: "isPropertyActive",
+    inputs: [{ name: "tokenId", type: "uint256" }],
+    outputs: [{ name: "", type: "bool" }],
+    stateMutability: "view",
+  },
+  {
+    type: "function",
+    name: "setPropertyStatus",
+    inputs: [
+      { name: "tokenId", type: "uint256" },
+      { name: "isActive", type: "bool" },
+    ],
+    outputs: [],
+    stateMutability: "nonpayable",
+  },
+  {
+    type: "function",
+    name: "tokenURI",
+    inputs: [{ name: "tokenId", type: "uint256" }],
+    outputs: [{ name: "", type: "string" }],
+    stateMutability: "view",
+  },
+  {
+    type: "function",
+    name: "ownerOf",
+    inputs: [{ name: "tokenId", type: "uint256" }],
+    outputs: [{ name: "", type: "address" }],
+    stateMutability: "view",
+  },
+] as const;
+
 

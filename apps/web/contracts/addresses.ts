@@ -13,6 +13,7 @@ export interface NetworkContracts {
     fitOutAgreement: Address;
     waterfallRouter: Address;
     agreementFactory?: Address;
+    propertyNFT?: Address;
   };
 }
 
@@ -31,6 +32,7 @@ export const NETWORKS: Record<number, NetworkContracts> = {
       fitOutAgreement: "0x89D2E1643c59a35e00fB10283b7E42588147E840" as Address,
       waterfallRouter: "0x5FbDB2315678afecb367f032d93F642f64180aa3" as Address,
       agreementFactory: "0x0165878A594ca255338adfa4d48449f69242Eb8F" as Address,
+      propertyNFT: "0x9A676e781A523b5d0C0e43731313A708CB607508" as Address,
     },
   },
   // Anvil Localhost
@@ -47,6 +49,7 @@ export const NETWORKS: Record<number, NetworkContracts> = {
       fitOutAgreement: "0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9" as Address,
       waterfallRouter: "0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9" as Address,
       agreementFactory: "0x5FC8d32690cc91D4c39d103bc414979874999342" as Address,
+      propertyNFT: "0xa513E6E4b8f2a923D98304ec87F64353C4D5C853" as Address,
     },
   },
 };
