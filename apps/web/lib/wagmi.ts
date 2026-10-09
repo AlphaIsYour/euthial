@@ -5,7 +5,7 @@ import {
   walletConnectWallet,
 } from "@rainbow-me/rainbowkit/wallets";
 import { createConfig, http } from "wagmi";
-import { sepolia, foundry } from "wagmi/chains";
+import { sepolia, foundry } from "viem/chains";
 
 const connectors = connectorsForWallets(
   [

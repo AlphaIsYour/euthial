@@ -23,6 +23,11 @@ const nextConfig = {
       "@react-native-async-storage/async-storage": false,
     };
     config.externals.push("pino-pretty", "lokijs", "encoding");
+    config.ignoreWarnings = [
+      ...(config.ignoreWarnings || []),
+      { module: /ox/ },
+      { message: /Critical dependency: the request of a dependency is an expression/ },
+    ];
     return config;
   },
 };
@@ -32,24 +37,16 @@ const sentryWebpackPluginOptions = {
   project: process.env.SENTRY_PROJECT,
   authToken: process.env.SENTRY_AUTH_TOKEN,
   release: process.env.SENTRY_RELEASE,
-
-  // Keep CI logs clean unless Sentry upload/debugging is explicitly needed.
   silent: !process.env.SENTRY_DEBUG,
+};
 
-  // Upload additional source maps so Sentry can show complete stack traces.
-  widenClientFileUpload: true,
-
-  // Prevent browser users from downloading generated source maps.
+const sentryOptions = {
+  widenClientFileUpload: false,
   hideSourceMaps: true,
-
-  // Tree-shake Sentry logger calls from production bundles.
   disableLogger: true,
-
-  // Proxy browser events through the app to reduce ad-blocker drops.
   tunnelRoute: "/monitoring",
-
-  // Enable automatic Vercel cron monitor instrumentation when deployed there.
   automaticVercelMonitors: true,
 };
 
-module.exports = withSentryConfig(nextConfig, sentryWebpackPluginOptions);
+module.exports = withSentryConfig(nextConfig, sentryWebpackPluginOptions, sentryOptions);
+
