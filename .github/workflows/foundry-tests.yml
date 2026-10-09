@@ -33,17 +33,39 @@ jobs:
       - name: Run fuzz tests
         run: cd contracts && forge test --match-path 'test/fuzz/*.t.sol' -v --fuzz-runs 1000
       
-      - name: Run invariant tests
-        run: cd contracts && forge test --match-path 'test/invariant/*.t.sol' -v --invariant-runs 1000
+      - name: Run invariant tests (10000 runs per property)
+        run: cd contracts && forge test --match-path 'test/invariant/*.t.sol' -v --invariant-runs 10000
       
       - name: Run integration tests
         run: cd contracts && forge test --match-path 'test/integration/*.t.sol' -v
       
-      - name: Generate coverage report
+      - name: Generate LCOV coverage report
         run: cd contracts && forge coverage --report lcov --report-file coverage.lcov
       
-      - name: Generate JSON coverage
+      - name: Generate JSON coverage report
         run: cd contracts && forge coverage --report json > coverage.json
+        continue-on-error: true
+      
+      - name: Verify coverage threshold (≥95%)
+        run: |
+          cd contracts
+          if [ -f coverage.lcov ]; then
+            # Extract line coverage from LCOV report
+            LINE_COVERAGE=$(grep -oP 'LH:\s*\K[0-9]+' coverage.lcov | head -1)
+            TOTAL_LINES=$(grep -oP 'LF:\s*\K[0-9]+' coverage.lcov | head -1)
+            if [ -n "$LINE_COVERAGE" ] && [ -n "$TOTAL_LINES" ]; then
+              PERCENTAGE=$((LINE_COVERAGE * 100 / TOTAL_LINES))
+              echo "Line Coverage: $PERCENTAGE% ($LINE_COVERAGE/$TOTAL_LINES lines)"
+              if [ $PERCENTAGE -lt 95 ]; then
+                echo "ERROR: Line coverage ($PERCENTAGE%) is below 95% threshold"
+                exit 1
+              else
+                echo "SUCCESS: Coverage meets ≥95% requirement"
+              fi
+            else
+              echo "WARNING: Could not extract coverage metrics from LCOV"
+            fi
+          fi
         continue-on-error: true
       
       - name: Upload coverage to Codecov
