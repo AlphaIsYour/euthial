@@ -49,9 +49,9 @@ contract FullCycleTest is Fixtures {
         deployCapital(SENIOR_PRINCIPAL, JUNIOR_PRINCIPAL);
         
         uint256 dailySettlement = 10_000_000e6;
-        uint256 days = (SENIOR_CLAIM / dailySettlement) + 5;
+        uint256 numDays = (SENIOR_CLAIM / dailySettlement) + 5;
         
-        for (uint32 day = 1; day <= days; day++) {
+        for (uint32 day = 1; day <= numDays; day++) {
             (WaterfallRouter.Settlement memory s, bytes memory sig) = 
                 createSignedSettlement(day, 1, dailySettlement);
             router.settle(s, sig);
@@ -66,9 +66,9 @@ contract FullCycleTest is Fixtures {
         deployCapital(SENIOR_PRINCIPAL, JUNIOR_PRINCIPAL);
         
         uint256 dailySettlement = 15_000_000e6;
-        uint256 days = (TOTAL_CLAIM / dailySettlement) + 5;
+        uint256 numDays = (TOTAL_CLAIM / dailySettlement) + 5;
         
-        for (uint32 day = 1; day <= days; day++) {
+        for (uint32 day = 1; day <= numDays; day++) {
             (WaterfallRouter.Settlement memory s, bytes memory sig) = 
                 createSignedSettlement(day, 1, dailySettlement);
             router.settle(s, sig);
