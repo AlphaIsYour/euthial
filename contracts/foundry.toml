@@ -8,6 +8,16 @@ optimizer_runs = 200
 via_ir = false
 ffi = false
 
+# Test configuration
+[fuzz]
+runs = 10000
+max_test_rejects = 100000
+
+[invariant]
+runs = 1000
+depth = 500
+fail_on_revert = true
+
 [fmt]
 line_length = 120
 tab_width = 4
