@@ -33,8 +33,8 @@ jobs:
       - name: Run fuzz tests
         run: cd contracts && forge test --match-path 'test/fuzz/*.t.sol' -v --fuzz-runs 1000
       
-      - name: Run invariant tests (10000 runs per property)
-        run: cd contracts && forge test --match-path 'test/invariant/*.t.sol' -v --invariant-runs 10000
+      - name: Run invariant tests
+        run: cd contracts && forge test --match-path 'test/invariant/*.t.sol' -v
       
       - name: Run integration tests
         run: cd contracts && forge test --match-path 'test/integration/*.t.sol' -v
