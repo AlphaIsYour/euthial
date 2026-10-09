@@ -119,7 +119,7 @@ contract Fixtures is Test, Constants {
 
     function createSignedSettlement(
         uint32 dayId,
-        uint32 periodDays,
+        uint8 periodDays,
         uint256 grossRecorded
     ) public view returns (WaterfallRouter.Settlement memory, bytes memory) {
         WaterfallRouter.Settlement memory s = WaterfallRouter.Settlement({

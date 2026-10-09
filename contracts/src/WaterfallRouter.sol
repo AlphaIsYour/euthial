@@ -282,10 +282,10 @@ contract WaterfallRouter is EIP712, ReentrancyGuard {
     // ========================================
 
     function _computeWaterfall(uint256 G) internal view returns (SplitResult memory split) {
-        Phase currentPhase = _currentPhase();
-        split.phase = currentPhase;
+        Phase phase_ = _currentPhase();
+        split.phase = phase_;
 
-        if (currentPhase == Phase.PhaseA) {
+        if (phase_ == Phase.PhaseA) {
             // Phase A: Amortization
             split.landlordAmt = (G * LANDLORD_TAKE_BPS) / BPS_DENOMINATOR;
             uint256 investorPool = (G * INVESTOR_TAKE_BPS) / BPS_DENOMINATOR;

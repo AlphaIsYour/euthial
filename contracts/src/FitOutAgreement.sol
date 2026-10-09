@@ -70,9 +70,17 @@ contract FitOutAgreement is ReentrancyGuard {
     }
 
     function startFundraising() external { if (msg.sender != landlord && msg.sender != tenant) revert Unauthorized(); _transitionState(State.FUNDRAISING); }
-    function depositBond() external nonReentrant { if (msg.sender != tenant) revert Unauthorized(); if (state != State.FUNDRAISING) revert InvalidState();
-        if (bondDeposited > 0) revert BondAlreadyDeposited(); bondDeposited = bondAmount; bondBalance = bondAmount;
-        asset.safeTransferFrom(msg.sender, address(this), bondAmount); emit BondDeposited(msg.sender, bondAmount); }
+    function depositBond() external nonReentrant { _depositBond(bondAmount); }
+    function depositBond(uint256 amount) external nonReentrant { _depositBond(amount); }
+    function _depositBond(uint256 amount) internal {
+        if (msg.sender != tenant) revert Unauthorized();
+        if (state != State.FUNDRAISING) revert InvalidState();
+        if (bondDeposited > 0) revert BondAlreadyDeposited();
+        bondDeposited = amount;
+        bondBalance = amount;
+        asset.safeTransferFrom(msg.sender, address(this), amount);
+        emit BondDeposited(msg.sender, amount);
+    }
     function startBuild() external nonReentrant { if (msg.sender != landlord && msg.sender != tenant && msg.sender != arbiter) revert Unauthorized();
         if (state != State.FUNDRAISING) revert InvalidState(); if (block.timestamp > fundraiseDeadline) revert DeadlinePassed();
         if (bondDeposited == 0) revert BondNotDeposited(); _transitionState(State.BUILDING); }
@@ -132,11 +140,11 @@ contract FitOutAgreement is ReentrancyGuard {
         if (startDay == 0) return; uint256 d = _calculateLogicalDays(); uint32 monthIndex = uint32(d / 30);
         if (covenantStatus == CovenantStatus.CURE && lastDayId >= cureDeadlineDay) { _processCureExpiry(cumulativeInvestorPaid, d); return; }
         if (monthIndex > lastTestedMonth && monthIndex > 0) {
-            lastTestedMonth = monthIndex; uint256 currentFloor = floor(d);
-            uint256 shortfall = currentFloor > cumulativeInvestorPaid ? currentFloor - cumulativeInvestorPaid : 0;
-            uint256 tolerance = (totalClaim * toleranceBps) / 10000; emit CovenantEvaluated(monthIndex, currentFloor, cumulativeInvestorPaid, shortfall);
+            lastTestedMonth = monthIndex; uint256 evaluatedFloor = floor(d);
+            uint256 shortfall = evaluatedFloor > cumulativeInvestorPaid ? evaluatedFloor - cumulativeInvestorPaid : 0;
+            uint256 tolerance = (totalClaim * toleranceBps) / 10000; emit CovenantEvaluated(monthIndex, evaluatedFloor, cumulativeInvestorPaid, shortfall);
             if (shortfall > tolerance) { CovenantStatus prevStatus = covenantStatus; covenantStatus = CovenantStatus.CURE;
-                cureTarget = currentFloor; cureDeadlineDay = lastDayId + cureDays; emit CovenantStatusChanged(prevStatus, covenantStatus); emit CureStarted(monthIndex, cureTarget, cureDeadlineDay); }
+                cureTarget = evaluatedFloor; cureDeadlineDay = lastDayId + cureDays; emit CovenantStatusChanged(prevStatus, covenantStatus); emit CureStarted(monthIndex, cureTarget, cureDeadlineDay); }
             else if (covenantStatus != CovenantStatus.CURE && covenantStatus == CovenantStatus.HEALTHY) breachCount = 0;
         }
     }
@@ -147,7 +155,7 @@ contract FitOutAgreement is ReentrancyGuard {
             emit CovenantStatusChanged(prevStatus, covenantStatus); emit CureResolved(cumulativeInvestorPaid); return; }
         uint256 draw = Math.min(shortfall, bondBalance);
         if (draw > 0) { bondBalance -= draw; bondDrawn += draw; emit BondDrawn(draw, bondBalance); asset.forceApprove(router, draw); }
-        breachCount++; CovenantStatus prevStatus = covenantStatus; covenantStatus = CovenantStatus.BREACHED; emit CovenantStatusChanged(prevStatus, covenantStatus);
+        breachCount++; CovenantStatus oldStatus = covenantStatus; covenantStatus = CovenantStatus.BREACHED; emit CovenantStatusChanged(oldStatus, covenantStatus);
         uint256 claimPaid = IWaterfallRouter(router).claimPaidTotal();
         if (claimPaid >= totalClaim) { _transitionState(State.RESIDUAL); covenantStatus = CovenantStatus.HEALTHY; emit ResidualReached(lastDayId, claimPaid); return; }
         uint256 remainingShortfall = cureTarget > claimPaid ? cureTarget - claimPaid : 0;
