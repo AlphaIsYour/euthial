@@ -2,6 +2,7 @@
 pragma solidity ^0.8.24;
 
 import {Test} from "forge-std/Test.sol";
+import {WaterfallRouter} from "../../src/WaterfallRouter.sol";
 import {Fixtures} from "../utils/Fixtures.sol";
 
 contract StepInTest is Fixtures {
