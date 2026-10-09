@@ -36,6 +36,23 @@ export const FITOUT_AGREEMENT_ABI = [
   },
   {
     type: "function",
+    name: "commitCID",
+    inputs: [
+      { name: "milestoneIndex", type: "uint8" },
+      { name: "cid", type: "string" },
+    ],
+    outputs: [],
+    stateMutability: "nonpayable",
+  },
+  {
+    type: "function",
+    name: "getMilestoneCIDs",
+    inputs: [{ name: "milestoneIndex", type: "uint8" }],
+    outputs: [{ name: "", type: "string[]" }],
+    stateMutability: "view",
+  },
+  {
+    type: "function",
     name: "bondBalance",
     inputs: [],
     outputs: [{ name: "", type: "uint256" }],
@@ -271,4 +288,120 @@ export const EUTHIAL_IDR_ABI = [
     stateMutability: "nonpayable",
   },
 ] as const;
+
+export const AGREEMENT_FACTORY_ABI = [
+  {
+    type: "function",
+    name: "createDeal",
+    inputs: [
+      {
+        name: "p",
+        type: "tuple",
+        components: [
+          { name: "asset", type: "address" },
+          { name: "dealAdmin", type: "address" },
+          { name: "landlord", type: "address" },
+          { name: "tenant", type: "address" },
+          { name: "contractor", type: "address" },
+          { name: "inspector", type: "address" },
+          { name: "arbiter", type: "address" },
+          { name: "attestor", type: "address" },
+          { name: "budget", type: "uint256" },
+          { name: "seniorPrincipal", type: "uint256" },
+          { name: "juniorPrincipal", type: "uint256" },
+          { name: "seniorMultipleBps", type: "uint16" },
+          { name: "juniorMultipleBps", type: "uint16" },
+          { name: "targetTenorDays", type: "uint32" },
+          { name: "maxTenorDays", type: "uint32" },
+          { name: "floorRatioBps", type: "uint16" },
+          { name: "toleranceBps", type: "uint16" },
+          { name: "cureDays", type: "uint16" },
+          { name: "maxExcusedDays", type: "uint16" },
+          { name: "fundraiseDeadline", type: "uint64" },
+          { name: "buildDeadline", type: "uint64" },
+          { name: "leaseEndDay", type: "uint32" },
+          { name: "seniorName", type: "string" },
+          { name: "seniorSymbol", type: "string" },
+          { name: "juniorName", type: "string" },
+          { name: "juniorSymbol", type: "string" },
+        ],
+      },
+    ],
+    outputs: [
+      { name: "dealId", type: "uint256" },
+      {
+        name: "addrs",
+        type: "tuple",
+        components: [
+          { name: "seniorVault", type: "address" },
+          { name: "juniorVault", type: "address" },
+          { name: "router", type: "address" },
+          { name: "agreement", type: "address" },
+        ],
+      },
+    ],
+    stateMutability: "nonpayable",
+  },
+  {
+    type: "function",
+    name: "getDeal",
+    inputs: [{ name: "dealId", type: "uint256" }],
+    outputs: [
+      {
+        name: "",
+        type: "tuple",
+        components: [
+          { name: "seniorVault", type: "address" },
+          { name: "juniorVault", type: "address" },
+          { name: "router", type: "address" },
+          { name: "agreement", type: "address" },
+        ],
+      },
+    ],
+    stateMutability: "view",
+  },
+  {
+    type: "function",
+    name: "getAllDeals",
+    inputs: [],
+    outputs: [
+      {
+        name: "",
+        type: "tuple[]",
+        components: [
+          { name: "seniorVault", type: "address" },
+          { name: "juniorVault", type: "address" },
+          { name: "router", type: "address" },
+          { name: "agreement", type: "address" },
+        ],
+      },
+    ],
+    stateMutability: "view",
+  },
+  {
+    type: "function",
+    name: "dealCount",
+    inputs: [],
+    outputs: [{ name: "", type: "uint256" }],
+    stateMutability: "view",
+  },
+  {
+    type: "function",
+    name: "dealCreators",
+    inputs: [{ name: "", type: "address" }],
+    outputs: [{ name: "", type: "bool" }],
+    stateMutability: "view",
+  },
+  {
+    type: "function",
+    name: "setDealCreator",
+    inputs: [
+      { name: "creator", type: "address" },
+      { name: "allowed", type: "bool" },
+    ],
+    outputs: [],
+    stateMutability: "nonpayable",
+  },
+] as const;
+
 

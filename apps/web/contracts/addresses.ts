@@ -12,6 +12,7 @@ export interface NetworkContracts {
     juniorVault: Address;
     fitOutAgreement: Address;
     waterfallRouter: Address;
+    agreementFactory?: Address;
   };
 }
 
@@ -29,6 +30,7 @@ export const NETWORKS: Record<number, NetworkContracts> = {
       juniorVault: "0x288cf2B69B7c14a24A69A27F19656461FE187b50" as Address,
       fitOutAgreement: "0x89D2E1643c59a35e00fB10283b7E42588147E840" as Address,
       waterfallRouter: "0x5FbDB2315678afecb367f032d93F642f64180aa3" as Address,
+      agreementFactory: "0x0165878A594ca255338adfa4d48449f69242Eb8F" as Address,
     },
   },
   // Anvil Localhost
@@ -44,6 +46,7 @@ export const NETWORKS: Record<number, NetworkContracts> = {
       juniorVault: "0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0" as Address,
       fitOutAgreement: "0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9" as Address,
       waterfallRouter: "0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9" as Address,
+      agreementFactory: "0x5FC8d32690cc91D4c39d103bc414979874999342" as Address,
     },
   },
 };

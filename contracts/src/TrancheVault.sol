@@ -101,6 +101,12 @@ contract TrancheVault is ERC4626 {
         emit AllowlistUpdated(account, status);
     }
 
+    function transferAdmin(address newAdmin) external {
+        if (msg.sender != admin) revert OnlyAdmin();
+        if (newAdmin == address(0)) revert ZeroAddress();
+        admin = newAdmin;
+    }
+
     function _deposit(address caller, address receiver, uint256 assets, uint256 shares) internal override {
         super._deposit(caller, receiver, assets, shares);
         idleCash += assets;

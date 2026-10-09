@@ -9,6 +9,7 @@ import { useWeb3 } from "../../context/Web3Context";
 import { CryptographicProofCard } from "../../components/contracts/CryptographicProofCard";
 import { ActionCenter } from "../../components/ui/ActionCenter";
 import { MultiSigApprovalModal } from "../../components/contracts/MultiSigApprovalModal";
+import { DocumentUpload } from "../../components/inspector/DocumentUpload";
 import type { Milestone } from "../../context/ProtocolContext";
 
 export default function InspectorPortalPage() {
@@ -413,6 +414,12 @@ export default function InspectorPortalPage() {
             </form>
           </div>
         </div>
+
+        {/* IPFS Evidence Upload & On-Chain CID Commitment (#62) */}
+        <DocumentUpload
+          milestoneIdx={selectedMilestoneId - 1}
+          onCidCommitted={(cid) => setEvidenceHashInput(cid)}
+        />
 
         {/* 4. Physical Quality & Technical Assurance Checklist */}
         <div className="bg-white dark:bg-black border border-slate-200/90 dark:border-white/10 rounded-card p-5 space-y-4 shadow-xs">

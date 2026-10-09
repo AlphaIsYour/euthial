@@ -18,6 +18,7 @@ contract FitOutAgreement is ReentrancyGuard {
 
     IERC20 public immutable asset; address public router; address public immutable seniorVault; address public immutable juniorVault;
     address public immutable landlord; address public immutable tenant; address public immutable contractor; address public immutable inspector; address public immutable arbiter;
+    address public immutable factory;
     uint256 public immutable budget; uint256 public immutable seniorPrincipal; uint256 public immutable juniorPrincipal;
     uint16 public immutable seniorMultipleBps; uint16 public immutable juniorMultipleBps;
     uint256 public immutable seniorClaim; uint256 public immutable juniorClaim; uint256 public immutable totalClaim; uint256 public immutable bondAmount;
@@ -29,6 +30,7 @@ contract FitOutAgreement is ReentrancyGuard {
     uint32 public excusedDays; uint32 public cureDeadlineDay; uint256 public cureTarget; uint32 public breachCount; bool public oracleStale; uint32 public staleStartDay;
     uint256 public bondDeposited; uint256 public bondBalance; uint256 public bondDrawn; uint256 public bondRefunded;
     Milestone[3] public milestones; uint8 public nextMilestone;
+    mapping(uint8 => string[]) private _milestoneCIDs;
 
     event StateTransitioned(State indexed previousState, State indexed newState, uint256 timestamp);
     event BondDeposited(address indexed from, uint256 amount); event BondDrawn(uint256 amount, uint256 newBalance); event BondRefunded(address indexed to, uint256 amount);
@@ -37,10 +39,12 @@ contract FitOutAgreement is ReentrancyGuard {
     event CureStarted(uint32 indexed month, uint256 target, uint32 deadline); event CureResolved(uint256 claimPaid);
     event StepInTriggered(string reason, uint256 remainingShortfall); event ResidualReached(uint32 dayId, uint256 claimPaidTotal);
     event ExcusedDaysMarked(uint32 startDay, uint32 endDay, uint32 count, bytes32 evidenceHash); event OracleStale(uint32 lastDayId, uint32 currentDayId); event OracleRecovered(uint32 newDayId);
+    event DocumentCommitted(uint8 indexed milestoneIndex, address indexed submitter, string cid, uint256 timestamp);
 
     error InvalidState(); error Unauthorized(); error InvalidAddress(); error InvalidBudget(); error BondAlreadyDeposited(); error BondNotDeposited();
     error MilestoneAlreadyReleased(); error InsufficientApprovals(); error MilestoneOutOfOrder(); error ExcusedDaysExceeded();
     error InvalidExcusedRange(); error DeadlinePassed(); error DeadlineNotPassed(); error MilestonesIncomplete(); error RouterAlreadySet();
+    error EmptyCID();
 
     constructor(
         address asset_, address router_, address seniorVault_, address juniorVault_, address landlord_, address tenant_,
@@ -53,7 +57,7 @@ contract FitOutAgreement is ReentrancyGuard {
         if (budget_ == 0 || seniorPrincipal_ == 0 || juniorPrincipal_ == 0 || seniorPrincipal_ + juniorPrincipal_ != budget_) revert InvalidBudget();
         if (seniorMultipleBps_ < 10000 || juniorMultipleBps_ < seniorMultipleBps_ || targetTenorDays_ == 0 || maxTenorDays_ < targetTenorDays_ || floorRatioBps_ > 10000 || cureDays_ == 0) revert InvalidBudget();
         asset = IERC20(asset_); router = router_; seniorVault = seniorVault_; juniorVault = juniorVault_; landlord = landlord_; tenant = tenant_;
-        contractor = contractor_; inspector = inspector_; arbiter = arbiter_; budget = budget_; seniorPrincipal = seniorPrincipal_; juniorPrincipal = juniorPrincipal_;
+        contractor = contractor_; inspector = inspector_; arbiter = arbiter_; factory = msg.sender; budget = budget_; seniorPrincipal = seniorPrincipal_; juniorPrincipal = juniorPrincipal_;
         seniorMultipleBps = seniorMultipleBps_; juniorMultipleBps = juniorMultipleBps_;
         seniorClaim = (seniorPrincipal_ * seniorMultipleBps_) / 10000; juniorClaim = (juniorPrincipal_ * juniorMultipleBps_) / 10000;
         totalClaim = seniorClaim + juniorClaim; bondAmount = (budget_ * 10) / 100;
@@ -178,10 +182,23 @@ contract FitOutAgreement is ReentrancyGuard {
         asset.safeTransfer(tenant, refund); emit BondRefunded(tenant, refund); }
 
     function setRouter(address router_) external {
-        if (msg.sender != arbiter && msg.sender != landlord) revert Unauthorized();
+        if (msg.sender != arbiter && msg.sender != landlord && msg.sender != factory) revert Unauthorized();
         if (router != address(0)) revert RouterAlreadySet();
         if (router_ == address(0)) revert InvalidAddress();
         router = router_;
+    }
+
+    function commitCID(uint8 milestoneIndex, string calldata cid) external {
+        if (msg.sender != inspector && msg.sender != landlord) revert Unauthorized();
+        if (milestoneIndex >= 3) revert InvalidState();
+        if (bytes(cid).length == 0) revert EmptyCID();
+        _milestoneCIDs[milestoneIndex].push(cid);
+        emit DocumentCommitted(milestoneIndex, msg.sender, cid, block.timestamp);
+    }
+
+    function getMilestoneCIDs(uint8 milestoneIndex) external view returns (string[] memory) {
+        if (milestoneIndex >= 3) revert InvalidState();
+        return _milestoneCIDs[milestoneIndex];
     }
 
     function bondConservation() external view returns (bool) { return bondBalance + bondDrawn + bondRefunded == bondDeposited; }

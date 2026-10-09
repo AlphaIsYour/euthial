@@ -3,6 +3,7 @@ import type { NextRequest } from "next/server";
 import { getToken } from "next-auth/jwt";
 
 const ROLE_PERMISSIONS: Record<string, string[]> = {
+  "/admin": ["ADMIN"],
   "/tenant": ["TENANT", "ADMIN"],
   "/investor": ["INVESTOR", "ADMIN"],
   "/landlord": ["LANDLORD", "ADMIN"],
@@ -89,6 +90,7 @@ export async function middleware(request: NextRequest) {
 
 export const config = {
   matcher: [
+    "/admin/:path*",
     "/tenant/:path*",
     "/investor/:path*",
     "/landlord/:path*",
