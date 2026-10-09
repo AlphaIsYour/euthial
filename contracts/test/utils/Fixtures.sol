@@ -82,10 +82,12 @@ contract Fixtures is Test, Constants {
     }
 
     function setupAllowlists() public {
+        vm.startPrank(admin);
         seniorVault.setAllowlist(alice, true);
         seniorVault.setAllowlist(admin, true);
         juniorVault.setAllowlist(landlord, true);
         juniorVault.setAllowlist(bob, true);
+        vm.stopPrank();
     }
 
     function approveRouter() public {

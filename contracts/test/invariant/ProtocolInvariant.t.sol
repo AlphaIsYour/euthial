@@ -10,14 +10,68 @@ import {MockIDR} from "../../src/MockIDR.sol";
 import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import {Fixtures} from "../utils/Fixtures.sol";
 
-contract ProtocolInvariantHandler is Fixtures {
+contract ProtocolInvariantHandler is Test {
+    FitOutAgreement public agreement;
+    WaterfallRouter public router;
+    TrancheVault public seniorVault;
+    TrancheVault public juniorVault;
+    MockIDR public token;
+    address public alice;
+    address public bob;
+    address public tenant;
+    address public landlord;
+    address public arbiter;
+    uint256 public attestorPrivateKey;
     uint256 public callCount;
 
-    function setUp() public {
-        deployContracts();
-        mintTokens();
-        setupAllowlists();
-        approveRouter();
+    constructor(
+        FitOutAgreement _agreement,
+        WaterfallRouter _router,
+        TrancheVault _seniorVault,
+        TrancheVault _juniorVault,
+        MockIDR _token,
+        address _alice,
+        address _bob,
+        address _tenant,
+        address _landlord,
+        address _arbiter,
+        uint256 _attestorPrivateKey
+    ) {
+        agreement = _agreement;
+        router = _router;
+        seniorVault = _seniorVault;
+        juniorVault = _juniorVault;
+        token = _token;
+        alice = _alice;
+        bob = _bob;
+        tenant = _tenant;
+        landlord = _landlord;
+        arbiter = _arbiter;
+        attestorPrivateKey = _attestorPrivateKey;
+    }
+
+    function createSignedSettlement(
+        uint32 dayId,
+        uint8 periodDays,
+        uint256 grossRecorded
+    ) public view returns (WaterfallRouter.Settlement memory, bytes memory) {
+        WaterfallRouter.Settlement memory s = WaterfallRouter.Settlement({
+            dayId: dayId, periodDays: periodDays, grossRecorded: grossRecorded,
+            txCount: 1, evidenceHash: bytes32(0)
+        });
+
+        bytes32 structHash = keccak256(abi.encode(
+            router.getSettlementTypehash(), s.dayId, s.periodDays,
+            s.grossRecorded, s.txCount, s.evidenceHash
+        ));
+
+        bytes32 digest = keccak256(abi.encodePacked(
+            "\x19\x01", router.domainSeparator(), structHash
+        ));
+
+        (uint8 v, bytes32 r, bytes32 s_) = vm.sign(attestorPrivateKey, digest);
+        bytes memory sig = abi.encodePacked(r, s_, v);
+        return (s, sig);
     }
 
     function handler_deposit(uint256 amount) public {
@@ -48,7 +102,7 @@ contract ProtocolInvariantHandler is Fixtures {
     }
 
     function handler_depositBond(uint256 amount) public {
-        amount = bound(amount, 1e6, BOND_AMOUNT);
+        amount = bound(amount, 1e6, 15_000_000e6);
         vm.startPrank(tenant);
         if (token.balanceOf(tenant) >= amount && agreement.bondDeposited() == 0) {
             token.approve(address(agreement), amount);
@@ -93,7 +147,19 @@ contract ProtocolInvariantTest is StdInvariant, Fixtures {
         completeFundraising(SENIOR_PRINCIPAL, JUNIOR_PRINCIPAL);
         deployCapital(SENIOR_PRINCIPAL, JUNIOR_PRINCIPAL);
         
-        handler = new ProtocolInvariantHandler();
+        handler = new ProtocolInvariantHandler(
+            agreement,
+            router,
+            seniorVault,
+            juniorVault,
+            token,
+            alice,
+            bob,
+            tenant,
+            landlord,
+            arbiter,
+            attestorPrivateKey
+        );
         targetContract(address(handler));
     }
 
