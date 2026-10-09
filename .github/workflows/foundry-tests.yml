@@ -1,0 +1,71 @@
+name: Foundry Tests & Coverage
+
+on:
+  push:
+    branches: [main, dev-1, feat/test-coverage]
+    paths:
+      - 'contracts/**'
+      - '.github/workflows/foundry-tests.yml'
+  pull_request:
+    branches: [main, dev-1, feat/test-coverage]
+    paths:
+      - 'contracts/**'
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+      
+      - name: Install Foundry
+        uses: foundry-rs/foundry-toolchain@v1
+      
+      - name: Install dependencies
+        run: cd contracts && forge remappings
+      
+      - name: Run unit tests
+        run: cd contracts && forge test --match-path 'test/unit/*.t.sol' -v
+      
+      - name: Run fuzz tests
+        run: cd contracts && forge test --match-path 'test/fuzz/*.t.sol' -v --fuzz-runs 1000
+      
+      - name: Run invariant tests
+        run: cd contracts && forge test --match-path 'test/invariant/*.t.sol' -v --invariant-runs 1000
+      
+      - name: Run integration tests
+        run: cd contracts && forge test --match-path 'test/integration/*.t.sol' -v
+      
+      - name: Generate coverage report
+        run: cd contracts && forge coverage --report lcov --report-file coverage.lcov
+      
+      - name: Generate JSON coverage
+        run: cd contracts && forge coverage --report json > coverage.json
+        continue-on-error: true
+      
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v3
+        with:
+          files: contracts/coverage.lcov
+          flags: foundry
+          fail_ci_if_error: false
+      
+      - name: Archive coverage artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: coverage-reports
+          path: |
+            contracts/coverage.lcov
+            contracts/coverage.json
+          retention-days: 30
+      
+      - name: Check minimum coverage threshold
+        run: |
+          cd contracts
+          # This is a placeholder for coverage threshold validation
+          # Can be enhanced with tools like coverage-badges or lcov
+          echo "Coverage report generated. Manual review recommended."
+        continue-on-error: true
