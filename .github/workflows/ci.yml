@@ -1,0 +1,84 @@
+name: Euthial Protocol CI/CD Pipeline
+
+on:
+  push:
+    branches: [main, dev-1, dev-2, dev-3]
+  pull_request:
+    branches: [main, dev-1, dev-2, dev-3]
+
+jobs:
+  test-contracts:
+    name: Smart Contract Verification (Foundry)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Install Foundry
+        uses: foundry-rs/foundry-toolchain@v1
+
+      - name: Verify Foundry Remappings & Dependencies
+        run: cd contracts && forge remappings
+
+      - name: Run Unit Tests
+        run: cd contracts && forge test --match-path 'test/unit/*.t.sol' -v
+
+      - name: Run Fuzz Tests (1,000 runs)
+        run: cd contracts && forge test --match-path 'test/fuzz/*.t.sol' -v --fuzz-runs 1000
+
+      - name: Run Invariant Tests
+        run: cd contracts && forge test --match-path 'test/invariant/*.t.sol' -v
+
+      - name: Run Integration Tests
+        run: cd contracts && forge test --match-path 'test/integration/*.t.sol' -v
+
+      - name: Run PropertyNFT Tests (#49)
+        run: cd contracts && forge test --match-contract PropertyNFT -v
+
+  test-and-build-web:
+    name: Full-Stack Next.js Build & Off-Chain Verification
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - name: Install Dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Run Simulation Suite (Scenario S1, S4, S6 & Reserves)
+        run: pnpm test:sim
+
+      - name: Run QRIS Attestor Consensus Test Suite (#53)
+        run: pnpm test:attestor
+
+      - name: Build Web Application & Type-Check
+        run: pnpm --filter @euthial/web build
+        env:
+          NEXT_TELEMETRY_DISABLED: 1
+          NEXTAUTH_SECRET: "ci-secret-key-32-bytes-minimum-length-for-euthial"
+
+  deploy-staging:
+    name: Deploy to Staging (Vercel)
+    needs: [test-contracts, test-and-build-web]
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Staging Deploy Notification
+        run: |
+          echo "🚀 All CI tests passed on main branch!"
+          echo "🌐 Staging environment build verified successfully."

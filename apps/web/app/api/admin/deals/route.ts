@@ -1,7 +1,35 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { checkRateLimit, rateLimitExceededResponse, RATE_LIMIT_PROFILES } from "@/lib/rate-limit";
+import { z } from "zod";
 
-export async function GET() {
+const createDealSchema = z.object({
+  propertyName: z.string().min(3, "Property name must be at least 3 characters"),
+  location: z.string().optional().default("Jakarta, Indonesia"),
+  budget: z.coerce.number().positive("Budget must be positive"),
+  seniorPrincipal: z.coerce.number().positive("Senior principal must be positive"),
+  juniorPrincipal: z.coerce.number().positive("Junior principal must be positive"),
+  seniorMultipleBps: z.coerce.number().int().min(10000).max(30000).optional().default(12000),
+  juniorMultipleBps: z.coerce.number().int().min(10000).max(30000).optional().default(15000),
+  targetTenorDays: z.coerce.number().int().positive().optional().default(540),
+  maxTenorDays: z.coerce.number().int().positive().optional().default(720),
+  landlordAddress: z.string().regex(/^0x[a-fA-F0-9]{40}$/, "Invalid landlord address"),
+  tenantAddress: z.string().regex(/^0x[a-fA-F0-9]{40}$/, "Invalid tenant address"),
+  contractorAddress: z.string().regex(/^0x[a-fA-F0-9]{40}$/, "Invalid contractor address"),
+  inspectorAddress: z.string().regex(/^0x[a-fA-F0-9]{40}$/, "Invalid inspector address"),
+  arbiterAddress: z.string().regex(/^0x[a-fA-F0-9]{40}$/, "Invalid arbiter address").optional(),
+  onChainDealId: z.coerce.number().optional(),
+  agreementAddress: z.string().optional(),
+  seniorVaultAddress: z.string().optional(),
+  juniorVaultAddress: z.string().optional(),
+  routerAddress: z.string().optional(),
+  status: z.string().optional().default("FUNDRAISING"),
+});
+
+export async function GET(request: NextRequest) {
+  const rateLimit = checkRateLimit(request, RATE_LIMIT_PROFILES.PUBLIC, "admin-deals");
+  if (!rateLimit.success) return rateLimitExceededResponse(rateLimit);
+
   try {
     const deals = await prisma.deal.findMany();
     return NextResponse.json({ deals });
@@ -10,9 +38,21 @@ export async function GET() {
   }
 }
 
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
+  const rateLimit = checkRateLimit(request, RATE_LIMIT_PROFILES.AUTH, "admin-deals-post");
+  if (!rateLimit.success) return rateLimitExceededResponse(rateLimit);
+
   try {
-    const body = await request.json();
+    const rawBody = await request.json();
+    const parseResult = createDealSchema.safeParse(rawBody);
+
+    if (!parseResult.success) {
+      return NextResponse.json(
+        { error: "Validation failed", details: parseResult.error.issues.map((e) => e.message) },
+        { status: 400 }
+      );
+    }
+
     const {
       propertyName,
       location,
@@ -34,11 +74,7 @@ export async function POST(request: Request) {
       juniorVaultAddress,
       routerAddress,
       status,
-    } = body;
-
-    if (!propertyName || !budget) {
-      return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
-    }
+    } = parseResult.data;
 
     const newDeal = await prisma.deal.create({
       data: {

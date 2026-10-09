@@ -15,7 +15,10 @@
     "demo:run": "tsx ./packages/attestor/src/cli.ts demo",
     "attest:day": "tsx ./packages/attestor/src/cli.ts day",
     "attest:multisig": "tsx ./packages/attestor/src/cli.ts multisig",
-    "test:attestor": "tsx ./packages/attestor/test/attestor.test.ts"
+    "test:attestor": "tsx ./packages/attestor/test/attestor.test.ts",
+    "test:iot": "tsx ./packages/iot-bridge/test/iot-bridge.test.ts",
+    "test:load": "tsx ./load-tests/benchmark.ts",
+    "iot:status": "tsx ./packages/iot-bridge/src/cli.ts status"
   },
   "keywords": [
     "ethereum",

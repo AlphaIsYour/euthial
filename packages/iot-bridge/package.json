@@ -1,0 +1,22 @@
+{
+  "name": "@euthial/iot-bridge",
+  "version": "0.1.0",
+  "private": true,
+  "description": "IoT Smart Lock Bridge & Physical Step-In Enforcement Service for Euthial Protocol",
+  "main": "./src/index.ts",
+  "scripts": {
+    "test": "tsx ./test/iot-bridge.test.ts",
+    "status": "tsx ./src/cli.ts status",
+    "lock": "tsx ./src/cli.ts lock",
+    "unlock": "tsx ./src/cli.ts unlock",
+    "listen": "tsx ./src/cli.ts listen"
+  },
+  "dependencies": {
+    "viem": "^2.21.53"
+  },
+  "devDependencies": {
+    "@types/node": "^20.17.0",
+    "tsx": "^4.19.2",
+    "typescript": "^5.6.3"
+  }
+}

@@ -1,4 +1,6 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
+import { checkRateLimit, rateLimitExceededResponse, RATE_LIMIT_PROFILES } from "@/lib/rate-limit";
+import { z } from "zod";
 import {
   sendDepositConfirmedEmail,
   sendMilestoneReadyEmail,
@@ -7,17 +9,39 @@ import {
   sentEmailsLog,
 } from "@/lib/email";
 
-export async function POST(request: Request) {
-  try {
-    const body = await request.json();
-    const { eventType, recipientEmail, data } = body;
+const webhookSchema = z.object({
+  eventType: z.enum([
+    "DEPOSIT_CONFIRMED",
+    "MILESTONE_READY",
+    "COVENANT_WARNING",
+    "BOND_DRAWDOWN",
+  ]),
+  recipientEmail: z.string().email(),
+  data: z.record(z.string(), z.any()).optional(),
+});
 
-    if (!eventType || !recipientEmail) {
+export async function POST(request: NextRequest) {
+  // 1. Rate Limiting Check
+  const rateLimit = checkRateLimit(request, RATE_LIMIT_PROFILES.WEBHOOK, "webhook");
+  if (!rateLimit.success) {
+    return rateLimitExceededResponse(rateLimit);
+  }
+
+  try {
+    const rawBody = await request.json();
+    const parseResult = webhookSchema.safeParse(rawBody);
+
+    if (!parseResult.success) {
       return NextResponse.json(
-        { error: "eventType and recipientEmail are required" },
+        {
+          error: "Invalid input",
+          details: parseResult.error.issues.map((e) => e.message),
+        },
         { status: 400 }
       );
     }
+
+    const { eventType, recipientEmail, data } = parseResult.data;
 
     let result;
 
