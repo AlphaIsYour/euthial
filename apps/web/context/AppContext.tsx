@@ -2,7 +2,7 @@
 
 import React, { createContext, useContext, useState, useEffect } from "react";
 
-export type UserRole = "INVESTOR" | "LANDLORD" | "TENANT" | "INSPECTOR";
+export type UserRole = "INVESTOR" | "LANDLORD" | "TENANT" | "INSPECTOR" | "CONTRACTOR";
 
 export type NavTab = "dashboard" | "scenarios" | "simulator" | "audit" | "contracts";
 

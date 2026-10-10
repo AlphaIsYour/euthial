@@ -128,6 +128,19 @@ export const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose }) => 
       },
     },
     {
+      id: "role-contractor",
+      title: "Switch to Contractor Perspective",
+      subtitle: "Monitor fit-out milestone stages and milestone escrow disbursements",
+      category: "Role Perspective",
+      icon: "construction",
+      badge: "Contractor",
+      action: () => {
+        setRole("CONTRACTOR");
+        setActiveTab("dashboard");
+        onClose();
+      },
+    },
+    {
       id: "scen-s1",
       title: "S1: Normal Baseline (100% Revenue)",
       subtitle: "Full revenue, Senior tranche repaid M14, Junior M18, enters Residual",
