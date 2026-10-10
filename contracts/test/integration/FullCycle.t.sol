@@ -23,11 +23,13 @@ contract FullCycleTest is Fixtures {
 
     function test_FullCycle_BuildingPhase() public {
         completeFundraising(SENIOR_PRINCIPAL, JUNIOR_PRINCIPAL);
+        
+        uint256 contractorBalBefore = token.balanceOf(contractor);
         deployCapital(SENIOR_PRINCIPAL, JUNIOR_PRINCIPAL);
         
         assertEq(seniorVault.principalOutstanding(), SENIOR_PRINCIPAL);
         assertEq(juniorVault.principalOutstanding(), JUNIOR_PRINCIPAL);
-        assertEq(token.balanceOf(contractor), SENIOR_PRINCIPAL + JUNIOR_PRINCIPAL);
+        assertEq(token.balanceOf(contractor) - contractorBalBefore, SENIOR_PRINCIPAL + JUNIOR_PRINCIPAL);
     }
 
     function test_FullCycle_SettlementPhase() public {
@@ -49,8 +51,11 @@ contract FullCycleTest is Fixtures {
         completeFundraising(SENIOR_PRINCIPAL, JUNIOR_PRINCIPAL);
         deployCapital(SENIOR_PRINCIPAL, JUNIOR_PRINCIPAL);
         
-        uint256 dailySettlement = 10_000_000e6;
-        uint256 numDays = (SENIOR_CLAIM / dailySettlement) + 5;
+        // Waterfall allocates 15% of gross to investors.
+        // At 100M daily gross, investor take is 15M/day.
+        // In 10 days, senior receives 150M (SENIOR_CLAIM reached). Day 11 begins paying junior.
+        uint256 dailySettlement = 100_000_000e6;
+        uint32 numDays = 11;
         
         for (uint32 day = 1; day <= numDays; day++) {
             (WaterfallRouter.Settlement memory s, bytes memory sig) = 
@@ -66,8 +71,10 @@ contract FullCycleTest is Fixtures {
         completeFundraising(SENIOR_PRINCIPAL, JUNIOR_PRINCIPAL);
         deployCapital(SENIOR_PRINCIPAL, JUNIOR_PRINCIPAL);
         
-        uint256 dailySettlement = 15_000_000e6;
-        uint256 numDays = (TOTAL_CLAIM / dailySettlement) + 5;
+        // TOTAL_CLAIM = 192M (150M Senior + 42M Junior).
+        // At 100M daily gross (15M investor pool/day), 13 days yields 195M >= 192M.
+        uint256 dailySettlement = 100_000_000e6;
+        uint32 numDays = 13;
         
         for (uint32 day = 1; day <= numDays; day++) {
             (WaterfallRouter.Settlement memory s, bytes memory sig) = 
@@ -85,8 +92,8 @@ contract FullCycleTest is Fixtures {
         
         assertEq(uint256(router.currentPhase()), uint256(WaterfallRouter.Phase.PhaseA));
         
-        uint256 dailySettlement = 20_000_000e6;
-        uint256 numDays = (TOTAL_CLAIM / dailySettlement) + 5;
+        uint256 dailySettlement = 100_000_000e6;
+        uint32 numDays = 13;
         
         for (uint32 day = 1; day <= numDays; day++) {
             (WaterfallRouter.Settlement memory s, bytes memory sig) = 
@@ -99,10 +106,25 @@ contract FullCycleTest is Fixtures {
 
     function test_FullCycle_BondRefund() public {
         completeFundraising(SENIOR_PRINCIPAL, JUNIOR_PRINCIPAL);
+
+        // Advance through construction phase
+        vm.prank(landlord);
+        agreement.startBuild();
+
         deployCapital(SENIOR_PRINCIPAL, JUNIOR_PRINCIPAL);
+
+        for (uint8 i = 0; i < 3; i++) {
+            vm.prank(landlord);
+            agreement.approveMilestone(i);
+            vm.prank(tenant);
+            agreement.approveMilestone(i);
+        }
+
+        vm.prank(landlord);
+        agreement.startOperating();
         
-        uint256 dailySettlement = 20_000_000e6;
-        uint256 numDays = (TOTAL_CLAIM / dailySettlement) + 5;
+        uint256 dailySettlement = 100_000_000e6;
+        uint32 numDays = 13;
         
         for (uint32 day = 1; day <= numDays; day++) {
             (WaterfallRouter.Settlement memory s, bytes memory sig) = 
@@ -110,11 +132,17 @@ contract FullCycleTest is Fixtures {
             router.settle(s, sig);
         }
         
+        // Agreement reaches RESIDUAL state when claims are fulfilled. Landlord closes.
+        vm.prank(landlord);
+        agreement.close();
+
         uint256 tenantBalBefore = token.balanceOf(tenant);
         vm.prank(tenant);
         agreement.refundBond();
         uint256 tenantBalAfter = token.balanceOf(tenant);
         
         assertEq(tenantBalAfter - tenantBalBefore, BOND_AMOUNT);
+        assertEq(agreement.bondBalance(), 0);
+        assertTrue(agreement.bondConservation());
     }
 }

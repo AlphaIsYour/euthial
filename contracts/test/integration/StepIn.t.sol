@@ -32,7 +32,9 @@ contract StepInTest is Fixtures {
         completeFundraising(SENIOR_PRINCIPAL, JUNIOR_PRINCIPAL);
         deployCapital(SENIOR_PRINCIPAL, JUNIOR_PRINCIPAL);
         
-        uint256 highSettlement = 30_000_000e6;
+        // 15% investor take on 150M gross is 22.5M/day.
+        // Over 10 days, 225M covers TOTAL_CLAIM (150M Senior + 42M Junior).
+        uint256 highSettlement = 150_000_000e6;
         for (uint32 day = 1; day <= 10; day++) {
             (WaterfallRouter.Settlement memory s, bytes memory sig) = 
                 createSignedSettlement(day, 1, highSettlement);

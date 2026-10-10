@@ -149,7 +149,7 @@ contract FitOutAgreement is ReentrancyGuard {
         }
     }
 
-    function _processCureExpiry(uint256 cumulativeInvestorPaid, uint256 d) internal {
+    function _processCureExpiry(uint256 cumulativeInvestorPaid, uint256 /* d */) internal {
         uint256 tolerance = (totalClaim * toleranceBps) / 10000; uint256 shortfall = cureTarget > cumulativeInvestorPaid ? cureTarget - cumulativeInvestorPaid : 0;
         if (shortfall <= tolerance) { CovenantStatus prevStatus = covenantStatus; covenantStatus = CovenantStatus.HEALTHY;
             emit CovenantStatusChanged(prevStatus, covenantStatus); emit CureResolved(cumulativeInvestorPaid); return; }
