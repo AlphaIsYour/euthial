@@ -6,7 +6,6 @@ import { Header } from "./Header";
 import { SearchModal } from "./SearchModal";
 import { FloatingRoleSwitcher } from "../navigation/FloatingRoleSwitcher";
 import { DataModeBanner } from "../ui/DataModeToggle";
-import { OnboardingWizard } from "../onboarding/OnboardingWizard";
 import { MobileBottomNav } from "../navigation/MobileBottomNav";
 import { useApp } from "../../context/AppContext";
 
@@ -41,9 +40,6 @@ export const Shell: React.FC<{ children: React.ReactNode }> = ({ children }) => 
 
       {/* Global Search Command Palette (Ctrl+K / ⌘K) */}
       <SearchModal isOpen={isSearchOpen} onClose={() => setIsSearchOpen(false)} />
-
-      {/* Onboarding Wizard Modal (#66) */}
-      <OnboardingWizard />
 
       {/* Floating Demo Navigation Pill (Desktop) */}
       <div className="hidden sm:block">
