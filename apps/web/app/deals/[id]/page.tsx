@@ -8,12 +8,13 @@ import { useProtocol } from "../../../context/ProtocolContext";
 import { useWeb3 } from "../../../context/Web3Context";
 import { TxLink } from "../../../components/ui/TxLink";
 import { AddressBadge } from "../../../components/ui/AddressBadge";
+import { RukoShowcaseCard } from "../../../components/marketplace/RukoShowcaseCard";
 
 export default function DealOverviewPage({ params }: { params: { id: string } }) {
   const { currentMonth, seniorRepaid, seniorClaimCap, milestones, covenantStatus } = useProtocol();
   const { networkConfig } = useWeb3();
 
-  const [activeTab, setActiveTab] = useState<"timeline" | "financials" | "stakeholders">("timeline");
+  const [activeTab, setActiveTab] = useState<"showcase" | "timeline" | "financials" | "stakeholders">("showcase");
 
   const formatIDR = (val: number) =>
     new Intl.NumberFormat("id-ID", {
@@ -200,8 +201,20 @@ export default function DealOverviewPage({ params }: { params: { id: string } })
           </div>
         </div>
 
-        {/* Tab Selector: Timeline vs Stakeholders */}
+        {/* Tab Selector: Showcase vs Timeline vs Stakeholders */}
         <div className="flex gap-2 border-b border-slate-200 dark:border-zinc-800 pb-1">
+          <button
+            onClick={() => setActiveTab("showcase")}
+            className={`px-4 py-2 text-xs font-mono font-semibold rounded-lg transition-colors flex items-center gap-2 ${
+              activeTab === "showcase"
+                ? "bg-emerald-600 text-white"
+                : "text-slate-500 hover:text-slate-900 dark:hover:text-white"
+            }`}
+          >
+            <MaterialIcon name="storefront" size={16} />
+            Visual 3D Fit-Out & Simulasi ROI
+          </button>
+
           <button
             onClick={() => setActiveTab("timeline")}
             className={`px-4 py-2 text-xs font-mono font-semibold rounded-lg transition-colors flex items-center gap-2 ${
@@ -226,6 +239,15 @@ export default function DealOverviewPage({ params }: { params: { id: string } })
             Pemangku Kepentingan On-Chain
           </button>
         </div>
+
+        {/* Tab 0: Visual Showcase & ROI Simulator */}
+        {activeTab === "showcase" && (
+          <RukoShowcaseCard
+            onInvestClick={(tranche, amount) => {
+              alert(`✅ Simulasi investasi Rp ${amount.toLocaleString("id-ID")} ke ${tranche} Tranche berhasil disimulasikan!`);
+            }}
+          />
+        )}
 
         {/* Tab 1: Chronological Events Timeline */}
         {activeTab === "timeline" && (

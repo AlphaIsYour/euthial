@@ -8,6 +8,8 @@ import { useWeb3 } from "../../context/Web3Context";
 import { WaterfallVisualizer } from "../../components/waterfall/WaterfallVisualizer";
 import { CustomerRebateScanner } from "../../components/fraud/CustomerRebateScanner";
 import { ActionCenter } from "../../components/ui/ActionCenter";
+import { InteractiveTour } from "../../components/tour/InteractiveTour";
+import { TENANT_TOUR_STEPS } from "../../components/tour/tour-steps";
 
 export default function TenantPortalPage() {
   const protocol = useProtocol();
@@ -47,6 +49,9 @@ export default function TenantPortalPage() {
         {/* Action Center - Urgent & Pending Alerts (#88) */}
         <ActionCenter />
 
+        {/* Guided Tour for Tenant Simulator */}
+        <InteractiveTour steps={TENANT_TOUR_STEPS} tourKey="tenant_tour" />
+
         {/* Context Banner */}
         <div className="p-4 sm:p-5 rounded-card bg-white dark:bg-black border border-emerald-500/20 flex flex-col md:flex-row md:items-center justify-between gap-4 shadow-xs">
           <div className="flex items-center gap-3">
@@ -69,7 +74,7 @@ export default function TenantPortalPage() {
           </div>
 
           {/* Covenant Status Badge */}
-          <div className="flex items-center gap-2 bg-slate-50 dark:bg-[#0A0A0A] px-3.5 py-2 rounded-md border border-slate-200/80 dark:border-white/10 shrink-0 self-start md:self-center">
+          <div id="tour-covenant-status" className="flex items-center gap-2 bg-slate-50 dark:bg-[#0A0A0A] px-3.5 py-2 rounded-md border border-slate-200/80 dark:border-white/10 shrink-0 self-start md:self-center">
             <span className="text-[11px] font-mono text-slate-500 dark:text-[#8A8A8A]">Status Covenant:</span>
             <span
               className={`px-2.5 py-0.5 rounded text-xs font-mono font-bold flex items-center gap-1.5 ${
@@ -145,7 +150,7 @@ export default function TenantPortalPage() {
         {/* Interactive Cashier Simulation Widget & Covenant Actions */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
           {/* Cashier Simulation Form */}
-          <div className="bg-white dark:bg-black border border-slate-200/90 dark:border-white/10 rounded-card p-4 sm:p-5 space-y-4 shadow-xs">
+          <div id="tour-tenant-pos" className="bg-white dark:bg-black border border-slate-200/90 dark:border-white/10 rounded-card p-4 sm:p-5 space-y-4 shadow-xs">
             <div className="flex items-center gap-2 pb-2 border-b border-slate-100 dark:border-white/10">
               <MaterialIcon name="point_of_sale" size={18} className="text-emerald-600 dark:text-emerald-400" />
               <h2 className="text-sm font-semibold text-slate-900 dark:text-white">
@@ -182,7 +187,7 @@ export default function TenantPortalPage() {
               </div>
 
               {/* Instant Breakdown Preview */}
-              <div className="p-3 bg-slate-50 dark:bg-[#0A0A0A] rounded-md border border-slate-200/80 dark:border-white/10 grid grid-cols-3 gap-2 text-center font-mono">
+              <div id="tour-revenue-split" className="p-3 bg-slate-50 dark:bg-[#0A0A0A] rounded-md border border-slate-200/80 dark:border-white/10 grid grid-cols-3 gap-2 text-center font-mono">
                 <div>
                   <span className="text-[10px] text-slate-500 dark:text-[#71717A] block">Hak Kedai (80%)</span>
                   <span className="text-xs font-bold text-emerald-600 dark:text-emerald-400">

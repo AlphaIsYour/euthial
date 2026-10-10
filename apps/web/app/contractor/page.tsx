@@ -9,6 +9,8 @@ import { useWeb3 } from "../../context/Web3Context";
 import { ActionCenter } from "../../components/ui/ActionCenter";
 import { AddressBadge } from "../../components/ui/AddressBadge";
 import { TxLink } from "../../components/ui/TxLink";
+import { InteractiveTour } from "../../components/tour/InteractiveTour";
+import { CONTRACTOR_TOUR_STEPS } from "../../components/tour/tour-steps";
 
 export default function ContractorPortalPage() {
   const { milestones, currentMonth } = useProtocol();
@@ -37,6 +39,9 @@ export default function ContractorPortalPage() {
       <div className="space-y-6">
         {/* Action Center */}
         <ActionCenter />
+
+        {/* Guided Tour for Contractor Portal */}
+        <InteractiveTour steps={CONTRACTOR_TOUR_STEPS} tourKey="contractor_tour" />
 
         {/* 1. Context Banner */}
         <div className="p-4 sm:p-5 rounded-card bg-white dark:bg-black border border-amber-500/20 flex flex-col md:flex-row md:items-center justify-between gap-4 shadow-xs">
@@ -101,7 +106,7 @@ export default function ContractorPortalPage() {
         </div>
 
         {/* 3. Milestones Timeline & Status Card */}
-        <div className="p-5 sm:p-6 rounded-xl border border-slate-200/80 dark:border-white/10 bg-white dark:bg-black shadow-xs space-y-4">
+        <div id="tour-milestone-stages" className="p-5 sm:p-6 rounded-xl border border-slate-200/80 dark:border-white/10 bg-white dark:bg-black shadow-xs space-y-4">
           <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-white/10">
             <div>
               <h2 className="text-base font-semibold text-slate-900 dark:text-white flex items-center gap-2">
@@ -116,7 +121,7 @@ export default function ContractorPortalPage() {
             </div>
           </div>
 
-          <div className="space-y-3">
+          <div id="tour-evidence-upload" className="space-y-3">
             {milestones.map((m) => {
               const approvalCount = [m.approvals.landlord, m.approvals.inspector, m.approvals.tenant].filter(Boolean).length;
               const isReady = approvalCount >= 2;

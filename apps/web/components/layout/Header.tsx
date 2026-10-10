@@ -8,6 +8,7 @@ import { WalletConnectButton } from "../auth/WalletConnectButton";
 import { DataModeToggle } from "../ui/DataModeToggle";
 import { LanguageModeToggle } from "../ui/LanguageModeToggle";
 import { NotificationCenter } from "../notifications/NotificationCenter";
+import { AuthModal } from "../auth/AuthModal";
 
 interface HeaderProps {
   onOpenSearch: () => void;
@@ -27,6 +28,7 @@ export const Header: React.FC<HeaderProps> = ({ onOpenSearch }) => {
   } = useWeb3();
 
   const [isFullscreen, setIsFullscreen] = useState(false);
+  const [isAuthOpen, setIsAuthOpen] = useState(false);
 
   useEffect(() => {
     const handleFullscreenChange = () => {
@@ -160,10 +162,24 @@ export const Header: React.FC<HeaderProps> = ({ onOpenSearch }) => {
           <span className="hidden md:inline">Profil</span>
         </a>
 
+        {/* Dual-Rail Auth Button (Google / SIWE) */}
+        <button
+          type="button"
+          onClick={() => setIsAuthOpen(true)}
+          title="Masuk / Daftar Akun (Google / Dompet)"
+          className="h-8 px-3 rounded-[8px] border border-emerald-500/30 bg-emerald-500/10 hover:bg-emerald-500/20 text-xs font-semibold text-emerald-400 flex items-center gap-1.5 transition-all shadow-xs shrink-0"
+        >
+          <MaterialIcon name="login" size={15} />
+          <span className="hidden sm:inline">Masuk</span>
+        </button>
+
         {/* RainbowKit + SIWE Connect Button (#58, #87) */}
         <div className="ml-1">
           <WalletConnectButton />
         </div>
+
+        {/* Auth Modal Dialog */}
+        <AuthModal isOpen={isAuthOpen} onClose={() => setIsAuthOpen(false)} />
       </div>
     </header>
   );
