@@ -111,8 +111,6 @@ contract FullCycleTest is Fixtures {
         vm.prank(landlord);
         agreement.startBuild();
 
-        deployCapital(SENIOR_PRINCIPAL, JUNIOR_PRINCIPAL);
-
         for (uint8 i = 0; i < 3; i++) {
             vm.prank(landlord);
             agreement.approveMilestone(i);

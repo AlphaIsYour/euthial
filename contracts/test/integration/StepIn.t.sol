@@ -33,9 +33,10 @@ contract StepInTest is Fixtures {
         deployCapital(SENIOR_PRINCIPAL, JUNIOR_PRINCIPAL);
         
         // 15% investor take on 150M gross is 22.5M/day.
-        // Over 10 days, 225M covers TOTAL_CLAIM (150M Senior + 42M Junior).
+        // TOTAL_CLAIM is 192M (150M Senior + 42M Junior).
+        // In 9 days, 202.5M covers claims: senior receives exactly 150M, junior receives 42M.
         uint256 highSettlement = 150_000_000e6;
-        for (uint32 day = 1; day <= 10; day++) {
+        for (uint32 day = 1; day <= 9; day++) {
             (WaterfallRouter.Settlement memory s, bytes memory sig) = 
                 createSignedSettlement(day, 1, highSettlement);
             router.settle(s, sig);
