@@ -10,22 +10,19 @@ export const DataModeToggle: React.FC = () => {
     <button
       onClick={toggleMode}
       title={isSimulation ? "Beralih ke Live Sepolia Testnet" : "Beralih ke Mode Simulasi Offline"}
-      className={`inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-mono font-semibold transition-all duration-200 border shadow-sm ${
-        isSimulation
+      className={`inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-mono font-semibold transition-all duration-200 border shadow-sm ${isSimulation
           ? "bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/30 hover:bg-amber-500/20"
           : "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/30 hover:bg-emerald-500/20"
-      }`}
+        }`}
     >
       <span className="relative flex h-2 w-2">
         <span
-          className={`animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 ${
-            isSimulation ? "bg-amber-400" : "bg-emerald-400"
-          }`}
+          className={`animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 ${isSimulation ? "bg-amber-400" : "bg-emerald-400"
+            }`}
         />
         <span
-          className={`relative inline-flex rounded-full h-2 w-2 ${
-            isSimulation ? "bg-amber-500" : "bg-emerald-500"
-          }`}
+          className={`relative inline-flex rounded-full h-2 w-2 ${isSimulation ? "bg-amber-500" : "bg-emerald-500"
+            }`}
         />
       </span>
 
@@ -49,7 +46,7 @@ export const DataModeBanner: React.FC = () => {
         <div className="flex items-center gap-2">
           <span className="flex h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
           <span>
-            <strong>🟢 ON-CHAIN MODE ACTIVE:</strong> Data terhubung langsung ke smart contract Sepolia Testnet.
+            <strong>ON-CHAIN MODE ACTIVE:</strong> Data terhubung langsung ke smart contract Sepolia Testnet.
           </span>
         </div>
         <button

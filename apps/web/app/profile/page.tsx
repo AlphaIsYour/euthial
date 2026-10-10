@@ -84,9 +84,7 @@ export default function UserProfilePage() {
               {/* Dynamic Identicon / Avatar */}
               <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-gradient-to-tr from-blue-600 via-indigo-600 to-purple-600 p-0.5 shadow-lg shrink-0">
                 <div className="w-full h-full rounded-[14px] bg-white dark:bg-black flex items-center justify-center overflow-hidden">
-                  <span className="material-symbols-outlined text-3xl sm:text-4xl text-blue-500">
-                    account_balance_wallet
-                  </span>
+                  <MaterialIcon name="account_balance_wallet" size={24} className="text-blue-500" />
                 </div>
               </div>
 
@@ -184,7 +182,7 @@ export default function UserProfilePage() {
           <div className="md:col-span-2 p-5 rounded-2xl bg-white dark:bg-[#0A0A0A] border border-slate-200/80 dark:border-white/10 shadow-sm space-y-4">
             <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-white/5">
               <h2 className="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-2">
-                <MaterialIcon name="account_balance_wallet" size={18} className="text-blue-500" />
+                <MaterialIcon name="account_balance_wallet" size={15} className="text-blue-500" />
                 Dompet Web3 Terhubung
               </h2>
               <span className="text-[11px] font-mono text-slate-400">

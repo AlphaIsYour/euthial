@@ -62,13 +62,13 @@ export function CryptographicProofCard() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-slate-100 dark:border-white/10">
         <div className="flex items-center gap-2.5">
-          <div className="w-8 h-8 rounded-lg bg-emerald-50 dark:bg-emerald-500/10 border border-emerald-200/80 dark:border-emerald-500/20 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0">
+          <div className="w-8 h-8 rounded-lg bg-slate-100 dark:bg-zinc-800 text-slate-700 dark:text-zinc-300 flex items-center justify-center shrink-0">
             <span className="material-symbols-outlined text-lg">verified_user</span>
           </div>
           <div>
             <h2 className="text-base font-semibold text-slate-900 dark:text-white flex items-center gap-2">
               EIP-712 Settlement Proof Inspector
-              <span className="px-2 py-0.5 rounded text-[10px] font-mono font-semibold bg-emerald-50 dark:bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-500/20">
+              <span className="px-2 py-0.5 rounded text-[10px] font-mono font-semibold bg-slate-100 dark:bg-zinc-800 text-slate-700 dark:text-zinc-300 border border-slate-200 dark:border-zinc-700">
                 P0 AUDIT
               </span>
             </h2>
@@ -82,7 +82,7 @@ export function CryptographicProofCard() {
           <button
             onClick={handleReverify}
             disabled={isVerifying}
-            className="px-3.5 py-1.5 rounded-lg text-xs font-mono font-medium bg-slate-900 hover:bg-slate-800 dark:bg-emerald-600 dark:hover:bg-emerald-500 text-white shadow-xs transition flex items-center gap-1.5 disabled:opacity-50"
+            className="h-8 px-3.5 rounded-lg text-xs font-mono font-medium bg-slate-900 hover:bg-slate-800 dark:bg-white dark:text-black dark:hover:bg-slate-100 text-white shadow-xs transition flex items-center gap-1.5 disabled:opacity-50"
           >
             <span className={`material-symbols-outlined text-[14px] ${isVerifying ? "animate-spin" : ""}`}>
               sync

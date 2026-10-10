@@ -1,12 +1,12 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import Link from "next/link";
+import { useSession, signOut } from "next-auth/react";
 import { useApp } from "../../context/AppContext";
 import { useWeb3 } from "../../context/Web3Context";
 import { MaterialIcon } from "../ui/MaterialIcon";
 import { WalletConnectButton } from "../auth/WalletConnectButton";
-import { DataModeToggle } from "../ui/DataModeToggle";
-import { LanguageModeToggle } from "../ui/LanguageModeToggle";
 import { NotificationCenter } from "../notifications/NotificationCenter";
 import { AuthModal } from "../auth/AuthModal";
 
@@ -15,6 +15,9 @@ interface HeaderProps {
 }
 
 export const Header: React.FC<HeaderProps> = ({ onOpenSearch }) => {
+  const { data: session, status } = useSession();
+  const isAuthenticated = status === "authenticated" && !!session?.user;
+
   const {
     isSidebarCollapsed,
     toggleSidebar,
@@ -56,72 +59,42 @@ export const Header: React.FC<HeaderProps> = ({ onOpenSearch }) => {
   };
 
   return (
-    <header className="absolute top-0 left-0 right-0 h-12 bg-[var(--panel-header-bg)] border-b border-[var(--border-soft)] px-4 flex items-center justify-between z-30 select-none transition-colors duration-200">
-      {/* Left: Sidebar Toggle (32x32) + Search Button (320x32) + Dual Mode Toggle */}
-      <div className="flex items-center gap-2 flex-1 max-w-xl">
-        {/* Sidebar Toggle 32x32 rounded-8px */}
+    <header className="absolute top-0 left-0 right-0 h-[52px] py-2 px-3 sm:px-4 bg-[var(--panel-header-bg)] border-b border-[var(--border-soft)] flex items-center justify-between z-30 select-none transition-colors duration-200">
+      {/* Sisi Kiri: Sidebar Toggle & Search Input */}
+      <div className="flex items-center gap-2.5 shrink-0">
         <button
           type="button"
           onClick={toggleSidebar}
-          title={isSidebarCollapsed ? "Expand sidebar" : "Collapse sidebar"}
+          title={isSidebarCollapsed ? "Buka Sidebar" : "Tutup Sidebar"}
           className="w-8 h-8 rounded-lg flex items-center justify-center text-[var(--text-muted)] hover:text-[var(--text-main)] hover:bg-[var(--hover-bg)] transition-colors shrink-0"
         >
-          <MaterialIcon name={isSidebarCollapsed ? "menu_open" : "menu"} size={16} />
+          <MaterialIcon name={isSidebarCollapsed ? "menu_open" : "menu"} size={17} />
         </button>
 
-        {/* Search Input Button */}
         <button
           type="button"
           onClick={onOpenSearch}
-          className="w-[240px] sm:w-[280px] h-[32px] rounded-[8px] border border-[var(--border-soft)] bg-[var(--input-bg)] px-[10px] flex items-center justify-between text-left text-xs text-[var(--text-muted)] hover:border-[var(--border-hover)] hover:text-[var(--text-main)] transition-all group shrink-0"
+          className="w-[140px] sm:w-[180px] md:w-[220px] h-[32px] rounded-lg border border-[var(--border-soft)] bg-[var(--input-bg)] px-2.5 flex items-center justify-between text-left text-xs text-[var(--text-muted)] hover:border-[var(--border-hover)] hover:text-[var(--text-main)] transition-all group shrink-0"
         >
           <div className="flex items-center gap-2 truncate">
             <MaterialIcon name="search" size={14} className="text-[var(--text-muted)] group-hover:text-[var(--text-main)]" />
-            <span className="text-[13px] text-[var(--text-muted)] group-hover:text-[var(--text-main)] truncate">Search tools...</span>
+            <span className="text-xs text-[var(--text-muted)] group-hover:text-[var(--text-main)] truncate">Search tools...</span>
           </div>
           <kbd className="hidden sm:inline-block px-1.5 py-0.5 rounded text-[10px] font-mono bg-[var(--hover-bg)] border border-[var(--border-soft)] text-[var(--text-muted)]">
             ⌘K
           </kbd>
         </button>
-
-        {/* Dual-Mode Toggle: Simulation ↔ On-Chain (#60) */}
-        <div className="hidden md:flex items-center shrink-0">
-          <DataModeToggle />
-        </div>
       </div>
 
-      {/* Right: Plain Language Mode, GitHub, Maximize, Theme, RainbowKit + SIWE Wallet */}
-      <div className="flex items-center gap-1.5 sm:gap-2">
-        {/* Plain Language Mode Toggle (#67) */}
-        <div className="hidden sm:flex items-center shrink-0">
-          <LanguageModeToggle />
-        </div>
+      {/* Sisi Kanan: Utilitas, Autentikasi, dan Wallet */}
+      <div className="flex items-center gap-1 sm:gap-1.5 shrink-0 ml-auto">
 
-        {/* Network & Prototype Badge */}
-        <div className="hidden xl:flex items-center gap-2 px-2.5 py-1 rounded-md bg-[var(--card-bg)] border border-[var(--border-soft)] text-[11px] font-mono text-[var(--text-muted)]">
-          <span className="flex h-1.5 w-1.5 relative">
-            <span
-              className={`animate-ping absolute inline-flex h-full w-full rounded-full ${
-                isSepolia ? "bg-emerald-400" : "bg-amber-400"
-              } opacity-75`}
-            />
-            <span
-              className={`relative inline-flex rounded-full h-1.5 w-1.5 ${
-                isSepolia ? "bg-emerald-500" : "bg-amber-500"
-              }`}
-            />
-          </span>
-          <span className="text-[var(--text-main)] font-medium">{networkConfig.name}</span>
-          <span className="text-[var(--text-muted)] opacity-60">·</span>
-          <span>Pilot #01</span>
-        </div>
-
-        {/* GitHub Button */}
+        {/* GitHub Link */}
         <a
           href="https://github.com/AlphaIsYour/euthial"
           target="_blank"
           rel="noreferrer"
-          title="View GitHub Repository"
+          title="Repositori GitHub"
           className="w-8 h-8 rounded-lg flex items-center justify-center text-[var(--text-muted)] hover:text-[var(--text-main)] hover:bg-[var(--hover-bg)] transition-colors shrink-0"
         >
           <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">
@@ -129,56 +102,80 @@ export const Header: React.FC<HeaderProps> = ({ onOpenSearch }) => {
           </svg>
         </a>
 
-        {/* In-App Notification Center (#73) */}
+        {/* Notifikasi In-App */}
         <NotificationCenter />
 
-        {/* Maximize Button */}
+        {/* Maximize / Layar Penuh */}
         <button
           type="button"
           onClick={handleMaximize}
-          title={isFullscreen ? "Exit Fullscreen" : "Maximize / Fullscreen"}
+          title={isFullscreen ? "Keluar dari Layar Penuh" : "Layar Penuh"}
           className="w-8 h-8 rounded-lg flex items-center justify-center text-[var(--text-muted)] hover:text-[var(--text-main)] hover:bg-[var(--hover-bg)] transition-colors shrink-0"
         >
           <MaterialIcon name={isFullscreen ? "fullscreen_exit" : "fullscreen"} size={16} />
         </button>
 
-        {/* Theme Toggle Button */}
+        {/* Toggle Tema (Terang / Gelap) */}
         <button
           type="button"
           onClick={toggleTheme}
-          title={theme === "dark" ? "Switch to light theme" : "Switch to dark theme"}
+          title={theme === "dark" ? "Ganti ke mode terang" : "Ganti ke mode gelap"}
           className="w-8 h-8 rounded-lg flex items-center justify-center text-[var(--text-muted)] hover:text-[var(--text-main)] hover:bg-[var(--hover-bg)] transition-colors shrink-0"
         >
           <MaterialIcon name={theme === "dark" ? "light_mode" : "dark_mode"} size={16} />
         </button>
 
-        {/* User Profile & Wallet Management Link (#44) */}
-        <a
-          href="/profile"
-          title="Profil Pengguna & Manajemen Dompet"
-          className="h-8 px-2.5 rounded-[8px] border border-[var(--border-soft)] bg-[var(--card-bg)] hover:bg-[var(--hover-bg)] text-xs font-mono text-[var(--text-muted)] hover:text-[var(--text-main)] flex items-center gap-1.5 transition-colors shrink-0"
-        >
-          <MaterialIcon name="person" size={15} />
-          <span className="hidden md:inline">Profil</span>
-        </a>
+        <div className="h-4 w-px bg-[var(--border-soft)] mx-0.5" />
 
-        {/* Dual-Rail Auth Button (Google / SIWE) */}
-        <button
-          type="button"
-          onClick={() => setIsAuthOpen(true)}
-          title="Masuk / Daftar Akun (Google / Dompet)"
-          className="h-8 px-3 rounded-[8px] border border-emerald-500/30 bg-emerald-500/10 hover:bg-emerald-500/20 text-xs font-semibold text-emerald-400 flex items-center gap-1.5 transition-all shadow-xs shrink-0"
-        >
-          <MaterialIcon name="login" size={15} />
-          <span className="hidden sm:inline">Masuk</span>
-        </button>
+        {/* Area Autentikasi Pengguna: Kondisional Login / Sesi */}
+        {isAuthenticated ? (
+          <div className="flex items-center gap-1.5">
+            {/* Pill Profil User Aktif */}
+            <Link
+              href="/profile"
+              title="Profil Pengguna & Status Akun"
+              className="h-8 px-2.5 rounded-lg border border-[var(--border-soft)] bg-[var(--card-bg)] hover:bg-[var(--hover-bg)] text-xs font-mono text-[var(--text-main)] flex items-center gap-2 transition-colors shrink-0"
+            >
+              <div className="w-5 h-5 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold text-[10px]">
+                {(session.user?.name || session.user?.email || "U").charAt(0).toUpperCase()}
+              </div>
+              <span className="hidden md:inline max-w-[110px] truncate text-xs font-medium">
+                {session.user?.name?.split(" ")[0] || session.user?.email?.split("@")[0]}
+              </span>
+              <span className="text-[10px] px-1.5 py-0.2 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 uppercase font-semibold">
+                {session.user?.role || "USER"}
+              </span>
+            </Link>
 
-        {/* RainbowKit + SIWE Connect Button (#58, #87) */}
-        <div className="ml-1">
+            {/* Tombol Keluar (Logout) */}
+            <button
+              type="button"
+              onClick={() => signOut({ callbackUrl: "/login" })}
+              title="Keluar dari Akun"
+              className="h-8 px-2.5 rounded-lg border border-rose-500/20 bg-rose-500/5 hover:bg-rose-500/15 text-xs font-medium text-rose-400 flex items-center gap-1 transition-all shrink-0"
+            >
+              <MaterialIcon name="logout" size={14} />
+              <span className="hidden sm:inline">Keluar</span>
+            </button>
+          </div>
+        ) : (
+          /* Tombol Masuk ketika Belum Login */
+          <Link
+            href="/login"
+            title="Masuk ke Akun"
+            className="h-8 px-3 rounded-lg border border-emerald-500/30 bg-emerald-500/10 hover:bg-emerald-500/20 text-xs font-semibold text-emerald-400 flex items-center gap-1.5 transition-all shadow-xs shrink-0"
+          >
+            <MaterialIcon name="login" size={15} />
+            <span className="hidden sm:inline">Masuk</span>
+          </Link>
+        )}
+
+        {/* RainbowKit + SIWE Connect Button */}
+        <div className="ml-0.5 shrink-0">
           <WalletConnectButton />
         </div>
 
-        {/* Auth Modal Dialog */}
+        {/* Auth Modal Fallback */}
         <AuthModal isOpen={isAuthOpen} onClose={() => setIsAuthOpen(false)} />
       </div>
     </header>

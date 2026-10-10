@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { useAccount, useDisconnect } from "wagmi";
 import { SIWEModal } from "./SIWEModal";
+import { MaterialIcon } from "../ui/MaterialIcon";
 
 export const WalletConnectButton: React.FC = () => {
   const { isConnected, address } = useAccount();
@@ -51,11 +52,9 @@ export const WalletConnectButton: React.FC = () => {
                     <button
                       onClick={openConnectModal}
                       type="button"
-                      className="px-3.5 py-1.5 rounded-lg text-xs font-mono font-semibold bg-blue-600 hover:bg-blue-700 text-white transition-all shadow-sm flex items-center gap-1.5"
+                      className="h-8 px-3 rounded-lg text-xs font-mono font-semibold bg-blue-600 hover:bg-blue-700 text-white transition-all shadow-sm flex items-center gap-1.5 shrink-0"
                     >
-                      <span className="material-symbols-outlined text-[15px]">
-                        account_balance_wallet
-                      </span>
+                      <MaterialIcon name="account_balance_wallet" size={13} className="shrink-0 text-white" />
                       Connect Wallet
                     </button>
                   );
@@ -66,21 +65,19 @@ export const WalletConnectButton: React.FC = () => {
                     <button
                       onClick={openChainModal}
                       type="button"
-                      className="px-3 py-1.5 rounded-lg text-xs font-mono font-semibold bg-red-600 text-white hover:bg-red-700 transition-all flex items-center gap-1.5 shadow-sm"
+                      className="h-8 px-3 rounded-lg text-xs font-mono font-semibold bg-red-600 text-white hover:bg-red-700 transition-all flex items-center gap-1.5 shadow-sm shrink-0"
                     >
-                      <span className="material-symbols-outlined text-[15px]">
-                        warning
-                      </span>
+                      <MaterialIcon name="warning" size={13} className="shrink-0 text-white" />
                       Pindah Jaringan
                     </button>
                   );
                 }
 
                 return (
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-1.5 shrink-0">
                     <button
                       onClick={openChainModal}
-                      className="px-2.5 py-1.5 rounded-lg text-xs font-mono border border-slate-200 dark:border-zinc-800 bg-white/80 dark:bg-zinc-900/80 hover:bg-slate-100 dark:hover:bg-zinc-800 text-slate-700 dark:text-zinc-200 transition-all flex items-center gap-1.5"
+                      className="h-8 px-2.5 rounded-lg text-xs font-mono border border-slate-200 dark:border-zinc-800 bg-white/80 dark:bg-zinc-900/80 hover:bg-slate-100 dark:hover:bg-zinc-800 text-slate-700 dark:text-zinc-200 transition-all flex items-center gap-1.5 shrink-0"
                       type="button"
                     >
                       {chain.hasIcon && (
@@ -103,39 +100,35 @@ export const WalletConnectButton: React.FC = () => {
                           )}
                         </div>
                       )}
-                      {chain.name}
+                      <span className="hidden sm:inline">{chain.name}</span>
                     </button>
 
                     <button
                       onClick={openAccountModal}
                       type="button"
-                      className="px-3 py-1.5 rounded-lg text-xs font-mono font-semibold border border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 hover:bg-slate-100 dark:hover:bg-zinc-800 text-slate-800 dark:text-zinc-100 transition-all flex items-center gap-1.5 shadow-sm"
+                      className="h-8 px-2.5 rounded-lg text-xs font-mono font-semibold border border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 hover:bg-slate-100 dark:hover:bg-zinc-800 text-slate-800 dark:text-zinc-100 transition-all flex items-center gap-1.5 shadow-sm shrink-0"
                     >
-                      <span className="w-2 h-2 rounded-full bg-emerald-500" />
-                      {account.displayName}
+                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+                      <span>{account.displayName}</span>
                     </button>
 
                     {/* SIWE Status Badge / Trigger */}
                     {isSiweVerified ? (
                       <span
-                        className="px-2 py-1 rounded text-[11px] font-mono bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20 flex items-center gap-1"
+                        className="h-8 px-2 rounded-lg text-[11px] font-mono bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20 flex items-center gap-1 shrink-0"
                         title="Terverifikasi SIWE (EIP-4361)"
                       >
-                        <span className="material-symbols-outlined text-[13px]">
-                          verified
-                        </span>
-                        SIWE ✓
+                        <MaterialIcon name="verified" size={12} className="shrink-0" />
+                        <span className="hidden sm:inline">SIWE ✓</span>
                       </span>
                     ) : (
                       <button
                         onClick={() => setShowSiweModal(true)}
-                        className="px-2.5 py-1 rounded text-[11px] font-mono bg-blue-600/10 text-blue-600 dark:text-blue-400 border border-blue-600/20 hover:bg-blue-600 hover:text-white transition-all flex items-center gap-1"
+                        className="h-8 px-2.5 rounded-lg text-[11px] font-mono bg-blue-600/10 text-blue-600 dark:text-blue-400 border border-blue-600/20 hover:bg-blue-600 hover:text-white transition-all flex items-center gap-1 shrink-0"
                         title="Verifikasi identitas via SIWE"
                       >
-                        <span className="material-symbols-outlined text-[13px]">
-                          key
-                        </span>
-                        Sign SIWE
+                        <MaterialIcon name="key" size={12} className="shrink-0" />
+                        <span>SIWE</span>
                       </button>
                     )}
                   </div>

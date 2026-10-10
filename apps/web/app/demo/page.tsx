@@ -12,6 +12,8 @@ import { UtilityTriangulationCard } from "../../components/fraud/UtilityTriangul
 import { CustomerRebateScanner } from "../../components/fraud/CustomerRebateScanner";
 import { PhysicalStepInCard } from "../../components/legal/PhysicalStepInCard";
 import { ActionCenter } from "../../components/ui/ActionCenter";
+import { InteractiveTour } from "../../components/tour/InteractiveTour";
+import { DEMO_DASHBOARD_TOUR_STEPS } from "../../components/tour/tour-steps";
 
 export default function DemoMissionControlPage() {
   const {
@@ -50,23 +52,23 @@ export default function DemoMissionControlPage() {
     { title: string; subtitle: string; badge: string; color: string }
   > = {
     S1: {
-      title: "S1: Normal (100% Target Omzet)",
+      title: "Kondisi Normal (100% Target Kasir)",
       subtitle: "Omzet rata-rata Rp 71,1 Juta/bln. Senior lunas Bulan 14, Junior lunas Bulan 18.",
       badge: "OPTIMAL",
       color: "border-emerald-500/30 text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-500/10",
     },
     S4: {
-      title: "S4: Kebocoran Kas 30% (Leakage)",
+      title: "Volatilitas Kasir (Aktivasi Masa Cure)",
       subtitle:
-        "Omzet kasir bocor 30%. Pembayaran jatuh di bawah Floor -> Masa Cure 7 hari -> Penarikan deposit jaminan.",
-      badge: "STRESS TEST",
+        "Omzet kasir turun 30%. Pembayaran jatuh di bawah Floor -> Masa Cure 7 hari -> Penarikan deposit jaminan.",
+      badge: "VOLATILE",
       color: "border-amber-500/30 text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-500/10",
     },
     S6: {
-      title: "S6: Default Dini (Bulan 6)",
+      title: "Stres Likuiditas (Aktivasi Jaminan)",
       subtitle:
-        "Omzet anjlok drastis. Deposit bond Rp 15M terkuras habis -> Hak Step-In pengambilalihan ruko aktif.",
-      badge: "CRITICAL FAILURE",
+        "Omzet anjlok drastis. Deposit bond Rp 15M dieksekusi -> Hak Step-In pengambilalihan ruko aktif.",
+      badge: "STRESS TEST",
       color: "border-red-500/30 text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-500/10",
     },
   };
@@ -78,47 +80,75 @@ export default function DemoMissionControlPage() {
         <ActionCenter />
 
         {/* 1. Context Banner */}
-        <div className="p-4 sm:p-5 rounded-card bg-white dark:bg-black border border-cyan-500/20 flex flex-col md:flex-row md:items-center justify-between gap-4 shadow-xs">
+        <div
+          id="tour-demo-welcome"
+          className="p-4 sm:p-5 rounded-xl bg-white dark:bg-black border border-slate-200/90 dark:border-white/10 flex flex-col md:flex-row md:items-center justify-between gap-4 shadow-xs"
+        >
           <div className="flex items-center gap-3">
-            <div className="p-2.5 rounded-md bg-cyan-500/10 text-cyan-600 dark:text-cyan-400 border border-cyan-500/20 shrink-0">
-              <MaterialIcon name="play_circle" size={24} />
+            <div className="w-9 h-9 rounded-lg bg-slate-100 dark:bg-zinc-800 text-slate-700 dark:text-zinc-300 flex items-center justify-center shrink-0">
+              <MaterialIcon name="analytics" size={20} />
             </div>
             <div>
               <div className="flex items-center gap-2">
                 <h1 className="text-base font-bold text-slate-900 dark:text-white tracking-tight">
-                  Jury & Demo Mission Control Deck
+                  Konsol Operasional & Waterfall Protocol
                 </h1>
-                <span className="px-2 py-0.5 rounded text-[10px] font-mono font-semibold bg-cyan-500/10 text-cyan-600 dark:text-cyan-400 border border-cyan-500/20">
-                  EVALUATION & STRESS TEST
+                <span className="px-2 py-0.5 rounded text-[10px] font-mono font-semibold bg-slate-100 dark:bg-zinc-800 text-slate-700 dark:text-zinc-300 border border-slate-200 dark:border-zinc-700">
+                  ON-CHAIN RUNTIME
                 </span>
               </div>
               <p className="text-xs text-slate-500 dark:text-[#8A8A8A] mt-0.5 font-mono">
-                Ruko Komersial Sentra #01 · Arena Pengujian Stres 24 Bulan & Sinkronisasi Lintas Portal
+                Ruko Komersial Sentra #01 · Pembukuan Kasir QRIS & Siklus Waterfall Tenor 24 Bulan
               </p>
             </div>
           </div>
 
-          {/* Status Capsule */}
-          <div className="flex items-center gap-2 bg-slate-50 dark:bg-[#0A0A0A] px-3.5 py-2 rounded-md border border-slate-200/80 dark:border-white/10 shrink-0 self-start md:self-center">
-            <span className="text-[11px] font-mono text-slate-500 dark:text-[#8A8A8A]">Status Reaktif:</span>
-            <div className="flex items-center gap-1.5 px-2.5 py-0.5 rounded text-xs font-mono font-bold bg-cyan-500/10 text-cyan-600 dark:text-cyan-400 border border-cyan-500/20">
-              <span className="w-1.5 h-1.5 rounded-full bg-cyan-500 dark:bg-cyan-400 animate-pulse" />
-              <span>ALL PORTALS SYNCED (Bulan {currentMonth}/24)</span>
+          <div className="flex items-center gap-2.5 shrink-0 flex-wrap">
+            <button
+              onClick={() => {
+                if (typeof window !== "undefined") {
+                  window.dispatchEvent(
+                    new CustomEvent("start-interactive-tour", {
+                      detail: { tourKey: "demo_dashboard_tour" },
+                    })
+                  );
+                }
+              }}
+              className="h-8 px-3 rounded-lg border border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 hover:bg-slate-100 dark:hover:bg-zinc-800 text-slate-800 dark:text-zinc-100 font-medium text-xs flex items-center gap-1.5 transition shadow-xs cursor-pointer"
+            >
+              <MaterialIcon name="help_outline" size={15} className="text-slate-500 dark:text-zinc-400" />
+              <span>Panduan Membaca Dashboard</span>
+            </button>
+
+            {/* Status Capsule */}
+            <div className="h-8 flex items-center gap-2 bg-slate-50 dark:bg-zinc-900/60 px-3 rounded-lg border border-slate-200 dark:border-zinc-800">
+              <span className="text-[11px] font-mono text-slate-500 dark:text-[#8A8A8A]">Status:</span>
+              <div className="flex items-center gap-1.5 text-xs font-mono font-semibold text-slate-800 dark:text-zinc-200">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+                <span>Aktif (Bulan {currentMonth}/24)</span>
+              </div>
             </div>
           </div>
         </div>
 
         {/* 2. Control Module 1: 24-Month Time Machine Control Panel */}
-        <div className="p-5 sm:p-6 rounded-xl border border-slate-200/90 dark:border-white/10 bg-white dark:bg-black shadow-xs space-y-4">
+        <div
+          id="tour-time-machine"
+          className="p-5 sm:p-6 rounded-xl border border-slate-200/90 dark:border-white/10 bg-white dark:bg-black shadow-xs space-y-4"
+        >
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-            <div>
-              <h2 className="text-base font-semibold text-slate-900 dark:text-white flex items-center gap-2">
-                <MaterialIcon name="schedule" size={20} className="text-cyan-600 dark:text-cyan-400" />
-                Mesin Waktu Simulasi 24 Bulan
-              </h2>
-              <p className="text-xs text-slate-500 dark:text-[#8A8A8A] mt-0.5">
-                Geser bulan atau jalankan auto-play untuk mengamati aliran waterfall kasir QRIS bulan demi bulan.
-              </p>
+            <div className="flex items-center gap-2.5">
+              <div className="w-8 h-8 rounded-lg bg-slate-100 dark:bg-zinc-800 text-slate-700 dark:text-zinc-300 flex items-center justify-center shrink-0">
+                <MaterialIcon name="schedule" size={18} />
+              </div>
+              <div>
+                <h2 className="text-base font-semibold text-slate-900 dark:text-white">
+                  Siklus Arus Kas 24 Bulan
+                </h2>
+                <p className="text-xs text-slate-500 dark:text-[#8A8A8A] mt-0.5">
+                  Pantau aliran kasir QRIS dan realisasi pengembalian modal bulan demi bulan.
+                </p>
+              </div>
             </div>
 
             {/* Action buttons: Prev, Next, Auto-Play, Reset */}
@@ -126,34 +156,34 @@ export default function DemoMissionControlPage() {
               <button
                 onClick={prevMonth}
                 disabled={currentMonth <= 1}
-                className="py-1.5 px-3 rounded-lg border border-slate-200 dark:border-white/15 bg-slate-50 dark:bg-[#0A0A0A] hover:bg-slate-100 dark:hover:bg-[#141414] text-slate-700 dark:text-slate-200 text-xs font-mono disabled:opacity-40 disabled:cursor-not-allowed transition flex items-center gap-1 shadow-xs"
+                className="h-8 px-3 rounded-lg border border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 hover:bg-slate-100 dark:hover:bg-zinc-800 text-slate-700 dark:text-zinc-200 text-xs font-mono disabled:opacity-40 disabled:cursor-not-allowed transition flex items-center gap-1 shadow-xs"
               >
                 <MaterialIcon name="skip_previous" size={15} />
                 Mundur
               </button>
               <button
                 onClick={toggleAutoPlay}
-                className={`py-1.5 px-3.5 rounded-lg text-xs font-mono font-medium flex items-center gap-1.5 transition shadow-xs ${
+                className={`h-8 px-3.5 rounded-lg text-xs font-mono font-medium flex items-center gap-1.5 transition shadow-xs ${
                   isPlaying
-                    ? "bg-amber-500 hover:bg-amber-600 text-white font-bold"
+                    ? "bg-slate-800 text-white font-bold"
                     : "bg-slate-900 dark:bg-white hover:bg-slate-800 dark:hover:bg-slate-100 text-white dark:text-black font-semibold"
                 }`}
               >
                 <MaterialIcon name={isPlaying ? "pause" : "play_arrow"} size={15} />
-                {isPlaying ? "Jeda Simulasi" : "Auto-Play (24 Bln)"}
+                {isPlaying ? "Jeda Tenor" : "Auto-Play (24 Bln)"}
               </button>
               <button
                 onClick={nextMonth}
                 disabled={currentMonth >= 24}
-                className="py-1.5 px-3 rounded-lg border border-slate-200 dark:border-white/15 bg-slate-50 dark:bg-[#0A0A0A] hover:bg-slate-100 dark:hover:bg-[#141414] text-slate-700 dark:text-slate-200 text-xs font-mono disabled:opacity-40 disabled:cursor-not-allowed transition flex items-center gap-1 shadow-xs"
+                className="h-8 px-3 rounded-lg border border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 hover:bg-slate-100 dark:hover:bg-zinc-800 text-slate-700 dark:text-zinc-200 text-xs font-mono disabled:opacity-40 disabled:cursor-not-allowed transition flex items-center gap-1 shadow-xs"
               >
                 Maju
                 <MaterialIcon name="skip_next" size={15} />
               </button>
               <button
                 onClick={resetSimulation}
-                className="py-1.5 px-2.5 rounded-lg border border-slate-200 dark:border-white/15 bg-slate-50 dark:bg-[#0A0A0A] hover:bg-red-50 dark:hover:bg-red-950/40 hover:text-red-600 dark:hover:text-red-400 text-slate-500 dark:text-[#8A8A8A] text-xs font-mono transition shadow-xs"
-                title="Reset Simulasi ke Bulan 1"
+                className="h-8 px-2.5 rounded-lg border border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 hover:bg-slate-100 dark:hover:bg-zinc-800 text-slate-500 dark:text-zinc-400 text-xs font-mono transition shadow-xs"
+                title="Kembali ke Bulan 1"
               >
                 <MaterialIcon name="restart_alt" size={15} />
               </button>
@@ -181,10 +211,10 @@ export default function DemoMissionControlPage() {
                     onClick={() => setMonth(m)}
                     className={`py-1.5 text-[10px] font-mono rounded transition text-center ${
                       isCurrent
-                        ? "bg-slate-900 dark:bg-cyan-500 text-white dark:text-black font-bold shadow-sm scale-105 z-10"
+                        ? "bg-slate-900 dark:bg-white text-white dark:text-black font-bold shadow-xs z-10"
                         : isPast
-                        ? "bg-slate-200/80 dark:bg-white/10 text-slate-800 dark:text-slate-200 font-medium hover:bg-slate-300 dark:hover:bg-white/20"
-                        : "bg-slate-100 dark:bg-white/5 text-slate-400 dark:text-white/30 hover:bg-slate-200 dark:hover:bg-white/10"
+                        ? "bg-slate-100 dark:bg-zinc-800 text-slate-700 dark:text-zinc-300 font-medium hover:bg-slate-200 dark:hover:bg-zinc-700"
+                        : "bg-slate-50 dark:bg-zinc-900/60 text-slate-400 dark:text-zinc-600 hover:bg-slate-100 dark:hover:bg-zinc-800"
                     }`}
                   >
                     {m}
@@ -196,15 +226,22 @@ export default function DemoMissionControlPage() {
         </div>
 
         {/* 3. Control Module 2: Scenario Presets */}
-        <div className="p-5 sm:p-6 rounded-xl border border-slate-200/90 dark:border-white/10 bg-white dark:bg-black shadow-xs space-y-4">
-          <div>
-            <h2 className="text-base font-semibold text-slate-900 dark:text-white flex items-center gap-2">
-              <MaterialIcon name="tune" size={20} className="text-amber-500" />
-              Uji Stres Skenario Ekonomi
-            </h2>
-            <p className="text-xs text-slate-500 dark:text-[#8A8A8A] mt-0.5">
-              Pilih skenario makro untuk menguji respon protokol saat omzet stabil vs anjlok.
-            </p>
+        <div
+          id="tour-scenarios"
+          className="p-5 sm:p-6 rounded-xl border border-slate-200/90 dark:border-white/10 bg-white dark:bg-black shadow-xs space-y-4"
+        >
+          <div className="flex items-center gap-2.5">
+            <div className="w-8 h-8 rounded-lg bg-slate-100 dark:bg-zinc-800 text-slate-700 dark:text-zinc-300 flex items-center justify-center shrink-0">
+              <MaterialIcon name="tune" size={18} />
+            </div>
+            <div>
+              <h2 className="text-base font-semibold text-slate-900 dark:text-white">
+                Kondisi Arus Kas & Stres Pasar
+              </h2>
+              <p className="text-xs text-slate-500 dark:text-[#8A8A8A] mt-0.5">
+                Pilih kondisi pasar untuk mengamati respon proteksi protokol saat omzet stabil vs anjlok.
+              </p>
+            </div>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
@@ -216,15 +253,15 @@ export default function DemoMissionControlPage() {
                 <div
                   key={scKey}
                   onClick={() => setScenario(scKey)}
-                  className={`p-4 rounded-xl border transition cursor-pointer text-left space-y-2 ${
+                  className={`p-4 rounded-xl border transition cursor-pointer text-left space-y-2.5 ${
                     isSelected
-                      ? "border-slate-900 dark:border-cyan-500/80 bg-slate-50/90 dark:bg-cyan-950/20 ring-1 ring-slate-900 dark:ring-cyan-500 shadow-xs"
-                      : "border-slate-200 dark:border-white/10 bg-white dark:bg-[#0A0A0A] hover:border-slate-300 dark:hover:border-white/20 hover:bg-slate-50/50 dark:hover:bg-[#141414]"
+                      ? "border-slate-900 dark:border-white bg-slate-50/80 dark:bg-zinc-900/80 ring-1 ring-slate-900 dark:ring-white shadow-xs"
+                      : "border-slate-200 dark:border-white/10 bg-white dark:bg-[#0A0A0A] hover:border-slate-300 dark:hover:border-white/20 hover:bg-slate-50/50 dark:hover:bg-zinc-900/30"
                   }`}
                 >
                   <div className="flex items-center justify-between">
                     <span className="text-xs font-mono font-bold text-slate-900 dark:text-white">{sc.title}</span>
-                    <span className={`text-[9px] font-mono px-1.5 py-0.5 rounded border ${sc.color}`}>
+                    <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-slate-100 dark:bg-zinc-800 text-slate-600 dark:text-zinc-300 border border-slate-200 dark:border-zinc-700">
                       {sc.badge}
                     </span>
                   </div>
@@ -233,10 +270,10 @@ export default function DemoMissionControlPage() {
                     <MaterialIcon
                       name={isSelected ? "radio_button_checked" : "radio_button_unchecked"}
                       size={14}
-                      className={isSelected ? "text-slate-900 dark:text-cyan-400" : "text-slate-400 dark:text-slate-500"}
+                      className={isSelected ? "text-slate-900 dark:text-white" : "text-slate-400 dark:text-zinc-500"}
                     />
-                    <span className={isSelected ? "text-slate-900 dark:text-cyan-400 font-semibold" : "text-slate-500 dark:text-[#8A8A8A]"}>
-                      {isSelected ? "Skenario Aktif" : "Terapkan Skenario"}
+                    <span className={isSelected ? "text-slate-900 dark:text-white font-semibold" : "text-slate-500 dark:text-zinc-400"}>
+                      {isSelected ? "Kondisi Aktif" : "Terapkan Kondisi"}
                     </span>
                   </div>
                 </div>
@@ -246,11 +283,11 @@ export default function DemoMissionControlPage() {
         </div>
 
         {/* 4. Cross-Role Impact Summary Cards */}
-        <div className="space-y-3">
+        <div id="tour-role-cards" className="space-y-3">
           <div className="flex items-center justify-between">
             <h2 className="text-sm font-semibold text-slate-900 dark:text-white flex items-center gap-2">
               <MaterialIcon name="hub" size={18} className="text-slate-500 dark:text-[#8A8A8A]" />
-              Dampak Lintas Portal (Snapshot Bulan {currentMonth})
+              Dampak Arus Kas Lintas Peran (Posisi Bulan {currentMonth})
             </h2>
             <span className="text-xs font-mono text-slate-400 dark:text-[#8A8A8A]">Klik kartu untuk inspeksi portal</span>
           </div>
@@ -259,11 +296,11 @@ export default function DemoMissionControlPage() {
             {/* Tenant Snapshot */}
             <Link
               href="/tenant"
-              className="p-5 rounded-xl border border-slate-200/90 dark:border-white/10 bg-white dark:bg-black shadow-xs hover:border-emerald-400 dark:hover:border-emerald-500/50 hover:shadow-sm transition group space-y-2.5 block"
+              className="p-5 rounded-xl border border-slate-200/90 dark:border-white/10 bg-white dark:bg-black shadow-xs hover:border-slate-400 dark:hover:border-zinc-700 transition group space-y-2.5 block"
             >
               <div className="flex items-center justify-between">
-                <span className="text-xs font-mono text-emerald-700 dark:text-emerald-400 font-bold">Portal Penyewa</span>
-                <span className="text-xs font-mono text-slate-400 dark:text-slate-500 group-hover:text-slate-900 dark:group-hover:text-white group-hover:translate-x-0.5 transition">
+                <span className="text-xs font-mono text-slate-900 dark:text-white font-bold">Portal Penyewa</span>
+                <span className="text-xs font-mono text-slate-400 group-hover:text-slate-900 dark:group-hover:text-white group-hover:translate-x-0.5 transition">
                   &rarr;
                 </span>
               </div>
@@ -271,19 +308,11 @@ export default function DemoMissionControlPage() {
               <div className="text-[11px] text-slate-500 dark:text-[#8A8A8A] space-y-1">
                 <div>Kas Bersih (80%)</div>
                 <div className="text-slate-600 dark:text-slate-300">
-                  Total Bond: <strong className="text-emerald-700 dark:text-emerald-400">{formatIDR(bondBalance + rollingBondReserve)}</strong>
+                  Total Bond: <strong className="text-slate-900 dark:text-white">{formatIDR(bondBalance + rollingBondReserve)}</strong>
                 </div>
-                <div className="text-slate-600 dark:text-slate-300">
-                  Covenant:{" "}
-                  <span
-                    className={
-                      covenantStatus === "HEALTHY"
-                        ? "text-emerald-700 dark:text-emerald-400 font-semibold"
-                        : covenantStatus === "CURE"
-                        ? "text-amber-700 dark:text-amber-400 font-semibold"
-                        : "text-red-700 dark:text-red-400 font-semibold"
-                    }
-                  >
+                <div className="text-slate-600 dark:text-slate-300 flex items-center gap-1.5">
+                  <span>Covenant:</span>
+                  <span className="px-1.5 py-0.2 rounded font-mono text-[10px] bg-slate-100 dark:bg-zinc-800 text-slate-700 dark:text-zinc-300 border border-slate-200 dark:border-zinc-700 font-semibold">
                     {covenantStatus}
                   </span>
                 </div>
@@ -293,11 +322,11 @@ export default function DemoMissionControlPage() {
             {/* Investor Senior Snapshot */}
             <Link
               href="/investor"
-              className="p-5 rounded-xl border border-slate-200/90 dark:border-white/10 bg-white dark:bg-black shadow-xs hover:border-blue-400 dark:hover:border-blue-500/50 hover:shadow-sm transition group space-y-2.5 block"
+              className="p-5 rounded-xl border border-slate-200/90 dark:border-white/10 bg-white dark:bg-black shadow-xs hover:border-slate-400 dark:hover:border-zinc-700 transition group space-y-2.5 block"
             >
               <div className="flex items-center justify-between">
-                <span className="text-xs font-mono text-blue-700 dark:text-blue-400 font-bold">Investor Senior</span>
-                <span className="text-xs font-mono text-slate-400 dark:text-slate-500 group-hover:text-slate-900 dark:group-hover:text-white group-hover:translate-x-0.5 transition">
+                <span className="text-xs font-mono text-slate-900 dark:text-white font-bold">Investor Senior</span>
+                <span className="text-xs font-mono text-slate-400 group-hover:text-slate-900 dark:group-hover:text-white group-hover:translate-x-0.5 transition">
                   &rarr;
                 </span>
               </div>
@@ -306,7 +335,7 @@ export default function DemoMissionControlPage() {
                 <div>Realisasi Hak Klaim</div>
                 <div className="text-slate-600 dark:text-slate-300">Target: {formatIDR(seniorClaimCap)} (1.25x)</div>
                 <div className="text-slate-600 dark:text-slate-300">
-                  Kas Vault: <strong className="text-blue-700 dark:text-blue-400">{formatIDR(idleCashSenior)}</strong>
+                  Kas Vault: <strong className="text-slate-900 dark:text-white">{formatIDR(idleCashSenior)}</strong>
                 </div>
               </div>
             </Link>
@@ -314,11 +343,11 @@ export default function DemoMissionControlPage() {
             {/* Landlord Snapshot */}
             <Link
               href="/landlord"
-              className="p-5 rounded-xl border border-slate-200/90 dark:border-white/10 bg-white dark:bg-black shadow-xs hover:border-amber-400 dark:hover:border-amber-500/50 hover:shadow-sm transition group space-y-2.5 block"
+              className="p-5 rounded-xl border border-slate-200/90 dark:border-white/10 bg-white dark:bg-black shadow-xs hover:border-slate-400 dark:hover:border-zinc-700 transition group space-y-2.5 block"
             >
               <div className="flex items-center justify-between">
-                <span className="text-xs font-mono text-amber-700 dark:text-amber-400 font-bold">Pemilik Ruko</span>
-                <span className="text-xs font-mono text-slate-400 dark:text-slate-500 group-hover:text-slate-900 dark:group-hover:text-white group-hover:translate-x-0.5 transition">
+                <span className="text-xs font-mono text-slate-900 dark:text-white font-bold">Pemilik Ruko</span>
+                <span className="text-xs font-mono text-slate-400 group-hover:text-slate-900 dark:group-hover:text-white group-hover:translate-x-0.5 transition">
                   &rarr;
                 </span>
               </div>
@@ -326,7 +355,7 @@ export default function DemoMissionControlPage() {
               <div className="text-[11px] text-slate-500 dark:text-[#8A8A8A] space-y-1">
                 <div>Akumulasi Sewa (5%)</div>
                 <div className="text-slate-600 dark:text-slate-300">
-                  Buffer Likuiditas: <strong className="text-amber-700 dark:text-amber-400">{formatIDR(juniorReservePool)}</strong>
+                  Buffer Likuiditas: <strong className="text-slate-900 dark:text-white">{formatIDR(juniorReservePool)}</strong>
                 </div>
                 <div className="text-slate-600 dark:text-slate-300">Target Junior: {formatIDR(juniorClaimCap)}</div>
               </div>
@@ -335,11 +364,11 @@ export default function DemoMissionControlPage() {
             {/* Inspector Snapshot */}
             <Link
               href="/inspector"
-              className="p-5 rounded-xl border border-slate-200/90 dark:border-white/10 bg-white dark:bg-black shadow-xs hover:border-purple-400 dark:hover:border-purple-500/50 hover:shadow-sm transition group space-y-2.5 block"
+              className="p-5 rounded-xl border border-slate-200/90 dark:border-white/10 bg-white dark:bg-black shadow-xs hover:border-slate-400 dark:hover:border-zinc-700 transition group space-y-2.5 block"
             >
               <div className="flex items-center justify-between">
-                <span className="text-xs font-mono text-purple-700 dark:text-purple-400 font-bold">Inspektur & Capex</span>
-                <span className="text-xs font-mono text-slate-400 dark:text-slate-500 group-hover:text-slate-900 dark:group-hover:text-white group-hover:translate-x-0.5 transition">
+                <span className="text-xs font-mono text-slate-900 dark:text-white font-bold">Inspektur & Capex</span>
+                <span className="text-xs font-mono text-slate-400 group-hover:text-slate-900 dark:group-hover:text-white group-hover:translate-x-0.5 transition">
                   &rarr;
                 </span>
               </div>
@@ -357,21 +386,29 @@ export default function DemoMissionControlPage() {
 
         {/* 5. Visualizers Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <WaterfallVisualizer />
-          <CovenantChart />
+          <div id="tour-waterfall">
+            <WaterfallVisualizer />
+          </div>
+          <div id="tour-covenant">
+            <CovenantChart />
+          </div>
         </div>
 
         {/* 6. Cryptographic EIP-712 Proof Inspector */}
-        <CryptographicProofCard />
+        <div id="tour-crypto-proof">
+          <CryptographicProofCard />
+        </div>
 
         {/* 7. Anti-Fraud Defense Matrix */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div id="tour-fraud-scanner" className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <UtilityTriangulationCard />
           <CustomerRebateScanner />
         </div>
 
         {/* 8. Physical Step-In & Legal IoT Gateway */}
-        <PhysicalStepInCard />
+        <div id="tour-step-in">
+          <PhysicalStepInCard />
+        </div>
 
         {/* 9. Real-Time Audit Log Feed */}
         <div className="p-5 sm:p-6 rounded-xl border border-slate-200/90 dark:border-white/10 bg-white dark:bg-black shadow-xs space-y-3">
@@ -417,6 +454,12 @@ export default function DemoMissionControlPage() {
           </div>
         </div>
       </div>
+
+      {/* Joyride Interactive Product Tour for Dashboard Mission Control */}
+      <InteractiveTour
+        steps={DEMO_DASHBOARD_TOUR_STEPS}
+        tourKey="demo_dashboard_tour"
+      />
     </Shell>
   );
 }

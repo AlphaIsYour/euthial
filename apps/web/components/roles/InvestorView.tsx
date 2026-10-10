@@ -48,7 +48,7 @@ export const InvestorView: React.FC = () => {
       <div className="bg-[#1A1A1A] border border-[rgba(207,207,207,0.10)] rounded-card p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <div className="flex items-center gap-2">
-            <MaterialIcon name="account_balance_wallet" size={18} className="text-blue-400" />
+            <MaterialIcon name="account_balance_wallet" size={14} className="text-blue-400" />
             <h4 className="text-sm font-semibold text-white">Kas Tersedia di Senior Vault (Idle Cash)</h4>
           </div>
           <p className="text-xs text-[#8A8A8A] mt-1">

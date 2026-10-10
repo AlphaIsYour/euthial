@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import { useAccount, useWriteContract } from "wagmi";
 import { FITOUT_AGREEMENT_ABI } from "@/contracts/abis";
 import { NETWORKS, DEFAULT_CHAIN_ID } from "@/contracts/addresses";
+import { toast } from "../ui/Toast";
 
 interface DocumentUploadProps {
   dealId?: string;
@@ -65,6 +66,7 @@ export function DocumentUpload({
         setRecentCid(data.ipfs.cid);
         setRecentGatewayUrl(data.ipfs.gatewayUrl);
         setStatusMsg("File pinned to IPFS successfully! Ready to commit on-chain.");
+        toast.success("Upload Berhasil", `File berhasil di-pin ke IPFS dengan CID: ${data.ipfs.cid.slice(0, 10)}...`);
         if (onCidCommitted) {
           onCidCommitted(data.ipfs.cid);
         }
@@ -72,11 +74,11 @@ export function DocumentUpload({
         setFile(null);
         setTitle("");
       } else {
-        alert(data.error || "Upload failed");
+        toast.error("Upload Gagal", data.error || "Gagal mengunggah dokumen ke IPFS");
       }
     } catch (err: any) {
       console.error(err);
-      alert("Upload failed: " + err.message);
+      toast.error("Upload Gagal", err.message);
     } finally {
       setUploading(false);
     }
@@ -103,12 +105,13 @@ export function DocumentUpload({
         setTxHash(fakeHash);
       }
       setStatusMsg(`CID ${cidToCommit.slice(0, 10)}... committed on-chain!`);
+      toast.success("Komitmen On-Chain Berhasil", `CID ${cidToCommit.slice(0, 10)}... berhasil dikomit.`);
       if (onCidCommitted) {
         onCidCommitted(cidToCommit);
       }
     } catch (err: any) {
       console.error(err);
-      alert("Failed to commit CID on-chain: " + err.message);
+      toast.error("Komitmen On-Chain Gagal", err.message);
     } finally {
       setCommitting(false);
     }

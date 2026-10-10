@@ -9,6 +9,7 @@ import { useWeb3 } from "../../../context/Web3Context";
 import { TxLink } from "../../../components/ui/TxLink";
 import { AddressBadge } from "../../../components/ui/AddressBadge";
 import { RukoShowcaseCard } from "../../../components/marketplace/RukoShowcaseCard";
+import { toast } from "../../../components/ui/Toast";
 
 export default function DealOverviewPage({ params }: { params: { id: string } }) {
   const { currentMonth, seniorRepaid, seniorClaimCap, milestones, covenantStatus } = useProtocol();
@@ -244,7 +245,10 @@ export default function DealOverviewPage({ params }: { params: { id: string } })
         {activeTab === "showcase" && (
           <RukoShowcaseCard
             onInvestClick={(tranche, amount) => {
-              alert(`✅ Simulasi investasi Rp ${amount.toLocaleString("id-ID")} ke ${tranche} Tranche berhasil disimulasikan!`);
+              toast.success(
+                "Simulasi Investasi Berhasil!",
+                `Alokasi Rp ${amount.toLocaleString("id-ID")} ke ${tranche} Tranche disimulasikan.`
+              );
             }}
           />
         )}

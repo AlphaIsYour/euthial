@@ -3,6 +3,7 @@
 export const dynamic = "force-dynamic";
 
 import React, { useEffect, useState } from "react";
+import { toast } from "@/components/ui/Toast";
 
 export default function AdminWhitelistPage() {
   const [whitelist, setWhitelist] = useState<any[]>([]);
@@ -43,12 +44,14 @@ export default function AdminWhitelistPage() {
         setNewAddress("");
         setNewName("");
         fetchWhitelist();
+        toast.success("Alamat Berhasil Ditambahkan", "Entri whitelist telah disimpan.");
       } else {
         const err = await res.json();
-        alert(err.error || "Failed to add address");
+        toast.error("Gagal Menambahkan Alamat", err.error || "Terjadi kesalahan pada whitelist.");
       }
-    } catch (err) {
+    } catch (err: any) {
       console.error(err);
+      toast.error("Terjadi Kesalahan", err?.message || "Koneksi gagal.");
     } finally {
       setSubmitting(false);
     }

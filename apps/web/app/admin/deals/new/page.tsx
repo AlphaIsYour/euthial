@@ -8,6 +8,7 @@ import Link from "next/link";
 import { useAccount, useWriteContract } from "wagmi";
 import { AGREEMENT_FACTORY_ABI } from "@/contracts/abis";
 import { NETWORKS, DEFAULT_CHAIN_ID } from "@/contracts/addresses";
+import { toast } from "@/components/ui/Toast";
 
 export default function NewDealWizardPage() {
   const router = useRouter();
@@ -114,11 +115,12 @@ export default function NewDealWizardPage() {
       });
 
       if (res.ok) {
+        toast.success("Deal Berhasil Dibuat", "Deal baru telah ditambahkan ke database.");
         router.push("/admin/deals");
       }
-    } catch (err) {
+    } catch (err: any) {
       console.error("Deal creation error:", err);
-      alert("Failed to create deal: " + (err as any)?.message);
+      toast.error("Gagal Membuat Deal", err?.message || "Terjadi kesalahan saat deploy deal.");
     } finally {
       setLoading(false);
     }

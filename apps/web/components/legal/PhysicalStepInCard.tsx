@@ -90,12 +90,12 @@ export const PhysicalStepInCard: React.FC = () => {
     }).format(val);
 
   return (
-    <div className="bg-white dark:bg-black border border-red-200/90 dark:border-red-500/20 rounded-xl p-5 sm:p-6 space-y-5 text-slate-900 dark:text-zinc-100 shadow-xs">
+    <div className="bg-white dark:bg-black border border-slate-200/90 dark:border-white/10 rounded-xl p-5 sm:p-6 space-y-5 text-slate-900 dark:text-zinc-100 shadow-xs">
       {/* Toast Feedback */}
       {feedbackToast && (
-        <div className="p-3 bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-500/20 rounded-xl text-xs font-mono text-red-800 dark:text-red-300 flex items-center justify-between animate-fadeIn">
+        <div className="p-3 bg-slate-100 dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 rounded-xl text-xs font-mono text-slate-800 dark:text-zinc-200 flex items-center justify-between animate-fadeIn">
           <div className="flex items-center gap-2">
-            <MaterialIcon name="verified_user" size={16} className="text-red-600 dark:text-red-400" />
+            <MaterialIcon name="verified_user" size={16} className="text-slate-600 dark:text-zinc-400" />
             <span>{feedbackToast}</span>
           </div>
           <span className="text-[10px] opacity-70">LEGAL EXECUTION LOG</span>
@@ -105,15 +105,15 @@ export const PhysicalStepInCard: React.FC = () => {
       {/* Header Banner */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 border-b border-slate-100 dark:border-white/10 pb-4">
         <div className="flex items-center gap-3">
-          <div className="w-8 h-8 rounded-lg bg-red-50 dark:bg-red-500/10 text-red-600 dark:text-red-400 border border-red-200/80 dark:border-red-500/20 flex items-center justify-center shrink-0">
-            <MaterialIcon name="gavel" size={20} />
+          <div className="w-8 h-8 rounded-lg bg-slate-100 dark:bg-zinc-800 text-slate-700 dark:text-zinc-300 flex items-center justify-center shrink-0">
+            <MaterialIcon name="gavel" size={18} />
           </div>
           <div>
             <div className="flex items-center gap-2">
               <h3 className="text-base font-semibold tracking-tight text-slate-900 dark:text-white">
                 Protokol Eksekusi Fisik: Grosse Akta, Fidusia & IoT Door Lock
               </h3>
-              <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-red-50 dark:bg-red-500/10 text-red-700 dark:text-red-400 border border-red-200 dark:border-red-500/20">
+              <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-slate-100 dark:bg-zinc-800 text-slate-700 dark:text-zinc-300 border border-slate-200 dark:border-zinc-700">
                 PASAL 224 HIR / 258 RBG
               </span>
             </div>
@@ -284,7 +284,7 @@ export const PhysicalStepInCard: React.FC = () => {
             </div>
           </div>
 
-          <div className="pt-2 border-t border-slate-200/80 dark:border-white/10 text-[10px] text-slate-500 dark:text-[#71717A] leading-relaxed">
+          <div className="pt-2 text-[10px] text-slate-500 dark:text-[#71717A] leading-relaxed">
             *Webhook otomatis merotasi PIN pintu saat status on-chain beralih ke <code>STEP_IN</code>, mencegah penyewa menahan aset komersial.
           </div>
         </div>
@@ -335,7 +335,7 @@ export const PhysicalStepInCard: React.FC = () => {
             </table>
           </div>
 
-          <div className="pt-2 border-t border-slate-200/80 dark:border-white/10 flex items-center justify-between text-[11px] text-slate-600 dark:text-[#8A8A8A]">
+          <div className="pt-2 flex items-center justify-between text-[11px] text-slate-600 dark:text-[#8A8A8A]">
             <span>Konsorsium Pengganti: <strong className="text-slate-900 dark:text-white">Jaringan Operator Terakreditasi</strong></span>
             <span className="text-emerald-700 dark:text-emerald-400 font-semibold">SLA Take-Over: Maks. 7 Hari Kalender</span>
           </div>

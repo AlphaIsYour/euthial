@@ -29,9 +29,9 @@ export const WaterfallVisualizer: React.FC = () => {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-slate-100 dark:border-white/10">
         <div>
-          <div className="flex items-center gap-2">
-            <div className="w-7 h-7 rounded-lg bg-blue-50 dark:bg-blue-500/10 border border-blue-200/80 dark:border-blue-500/20 flex items-center justify-center text-blue-600 dark:text-blue-400 shrink-0">
-              <MaterialIcon name="waterfall_chart" size={16} />
+          <div className="flex items-center gap-2.5">
+            <div className="w-8 h-8 rounded-lg bg-slate-100 dark:bg-zinc-800 text-slate-700 dark:text-zinc-300 flex items-center justify-center shrink-0">
+              <MaterialIcon name="waterfall_chart" size={18} />
             </div>
             <h2 className="text-base font-semibold text-slate-900 dark:text-white tracking-tight">
               Waterfall Split Visualizer (QRIS Settlement)

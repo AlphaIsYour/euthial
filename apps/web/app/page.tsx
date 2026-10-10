@@ -279,8 +279,8 @@ export default function HomePage() {
                   key={tab.id}
                   onClick={() => setSelectedCategory(tab.id)}
                   className={`px-3 py-1.5 rounded-lg transition-all duration-150 whitespace-nowrap ${selectedCategory === tab.id
-                      ? "bg-white text-slate-900 shadow-sm border border-slate-200/80 font-medium"
-                      : "text-slate-600 hover:text-slate-900"
+                    ? "bg-white text-slate-900 shadow-sm border border-slate-200/80 font-medium"
+                    : "text-slate-600 hover:text-slate-900"
                     }`}
                 >
                   {tab.label}
@@ -307,13 +307,12 @@ export default function HomePage() {
                   {/* Default State Status Badge */}
                   <div className="absolute top-3 left-3 z-10 transition-opacity duration-200 group-hover:opacity-0">
                     <span
-                      className={`text-[11px] font-mono px-2.5 py-1 rounded-full border backdrop-blur-md shadow-xs ${
-                        ruko.status === "LIVE_ACTIVE"
+                      className={`text-[11px] font-mono px-2.5 py-1 rounded-full border backdrop-blur-md shadow-xs ${ruko.status === "LIVE_ACTIVE"
                           ? "bg-emerald-500/90 border-emerald-400 text-white font-medium"
                           : ruko.status === "OPEN_TENANT"
                             ? "bg-slate-900/90 border-slate-700 text-white font-medium"
                             : "bg-emerald-500/90 border-emerald-400 text-white font-medium"
-                      }`}
+                        }`}
                     >
                       {ruko.statusBadge}
                     </span>
@@ -470,8 +469,8 @@ export default function HomePage() {
                       type="button"
                       onClick={() => setEstimatedRevenue(chip.val)}
                       className={`px-3.5 py-1.5 rounded-full text-xs font-mono transition-all duration-150 border ${isActive
-                          ? "bg-slate-950 text-white border-slate-950 shadow-sm"
-                          : "border-slate-300 bg-white text-slate-700 hover:text-slate-900 hover:border-slate-400 shadow-xs"
+                        ? "bg-slate-950 text-white border-slate-950 shadow-sm"
+                        : "border-slate-300 bg-white text-slate-700 hover:text-slate-900 hover:border-slate-400 shadow-xs"
                         }`}
                     >
                       <span>{chip.label}</span>
@@ -712,9 +711,9 @@ export default function HomePage() {
         </section>
 
         {/* 5.5. FITUR AUDIT PARTISIPATIF PELANGGAN (ISSUE #34) */}
-        <section id="customer-rebate" className="pt-2">
+        {/* <section id="customer-rebate" className="pt-2">
           <CustomerRebateScanner />
-        </section>
+        </section> */}
 
         {/* 6. CONSOLE AKSES MASUK STAKEHOLDER (BENTO GRID 5 ROLES) */}
         <section id="portal-sistem" className="space-y-8 pt-6 scroll-mt-24">

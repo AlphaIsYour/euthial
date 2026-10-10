@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import Link from "next/link";
+import { useSession, signOut } from "next-auth/react";
 import { MaterialIcon } from "../ui/MaterialIcon";
 import { WalletConnectButton } from "../auth/WalletConnectButton";
 
@@ -59,6 +60,9 @@ const ROLE_PORTALS: RoleLink[] = [
 ];
 
 export const LandingHeader: React.FC = () => {
+  const { data: session, status } = useSession();
+  const isAuthenticated = status === "authenticated" && !!session?.user;
+
   const [roleMenuOpen, setRoleMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -163,23 +167,68 @@ export const LandingHeader: React.FC = () => {
 
             <div className="h-5 w-[1px] bg-slate-200 mx-1 hidden sm:block" />
 
-            {/* TOMBOL MASUK (LOGIN) - PROMINENT GHOST/OUTLINE */}
-            <Link
-              href="/login"
-              className="h-8 px-3.5 rounded-lg border border-slate-300 hover:border-slate-400 text-xs font-semibold text-slate-800 hover:text-slate-950 bg-white hover:bg-slate-50 transition-all flex items-center gap-1.5 shadow-2xs"
-            >
-              <MaterialIcon name="login" size={14} className="text-slate-500" />
-              <span>Masuk</span>
-            </Link>
+            {/* KONDISIONAL SESI PENGGUNA (LOGIN vs SUDAH MASUK) */}
+            {isAuthenticated ? (
+              <div className="flex items-center gap-1.5 sm:gap-2">
+                {/* Pill Profil Ringkas */}
+                <Link
+                  href="/profile"
+                  title="Profil & Pengaturan Akun"
+                  className="h-8 px-2.5 rounded-lg border border-slate-200 bg-slate-50 hover:bg-slate-100 text-xs text-slate-800 transition-colors flex items-center gap-2 shadow-2xs"
+                >
+                  <div className="w-5 h-5 rounded-full bg-slate-900 text-white flex items-center justify-center font-bold text-[10px]">
+                    {(session.user?.name || session.user?.email || "U").charAt(0).toUpperCase()}
+                  </div>
+                  <span className="hidden sm:inline max-w-[95px] truncate font-medium text-slate-900">
+                    {session.user?.name?.split(" ")[0] || session.user?.email?.split("@")[0]}
+                  </span>
+                  <span className="text-[10px] px-1.5 py-0.2 rounded bg-emerald-100 text-emerald-800 font-semibold uppercase">
+                    {session.user?.role || "USER"}
+                  </span>
+                </Link>
 
-            {/* TOMBOL DAFTAR (REGISTER) - SOLID BLACK/SLATE-900 */}
-            <Link
-              href="/register"
-              className="h-8 px-3.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-xs font-semibold text-white shadow-2xs transition-all flex items-center gap-1.5 active:scale-[0.98]"
-            >
-              <MaterialIcon name="person_add" size={14} />
-              <span>Daftar</span>
-            </Link>
+                {/* Tombol Launch Console / Dashboard */}
+                <Link
+                  href="/demo"
+                  title="Buka Console Protokol"
+                  className="h-8 px-3 rounded-lg bg-slate-900 hover:bg-slate-800 text-xs font-semibold text-white shadow-2xs transition-all flex items-center gap-1.5"
+                >
+                  <MaterialIcon name="dashboard" size={14} />
+                  <span className="hidden md:inline">Console</span>
+                </Link>
+
+                {/* Tombol Keluar (Logout) */}
+                <button
+                  type="button"
+                  onClick={() => signOut({ callbackUrl: "/" })}
+                  title="Keluar dari Akun"
+                  className="h-8 px-2.5 rounded-lg border border-rose-200 bg-rose-50 hover:bg-rose-100 text-xs font-medium text-rose-700 transition-colors flex items-center gap-1"
+                >
+                  <MaterialIcon name="logout" size={14} />
+                  <span className="hidden lg:inline">Keluar</span>
+                </button>
+              </div>
+            ) : (
+              <>
+                {/* TOMBOL MASUK (LOGIN) - PROMINENT GHOST/OUTLINE */}
+                <Link
+                  href="/login"
+                  className="h-8 px-3.5 rounded-lg border border-slate-300 hover:border-slate-400 text-xs font-semibold text-slate-800 hover:text-slate-950 bg-white hover:bg-slate-50 transition-all flex items-center gap-1.5 shadow-2xs"
+                >
+                  <MaterialIcon name="login" size={14} className="text-slate-500" />
+                  <span>Masuk</span>
+                </Link>
+
+                {/* TOMBOL DAFTAR (REGISTER) - SOLID BLACK/SLATE-900 */}
+                <Link
+                  href="/register"
+                  className="h-8 px-3.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-xs font-semibold text-white shadow-2xs transition-all flex items-center gap-1.5 active:scale-[0.98]"
+                >
+                  <MaterialIcon name="person_add" size={14} />
+                  <span>Daftar</span>
+                </Link>
+              </>
+            )}
 
             {/* Web3 Wallet Compact Connect */}
             <div className="hidden xl:block ml-1">
@@ -353,10 +402,51 @@ export const LandingHeader: React.FC = () => {
             <Link
               href="/demo"
               onClick={() => setMobileMenuOpen(false)}
-              className="py-1.5 px-2 rounded-lg hover:bg-slate-100 font-semibold text-slate-950"
+              className="py-1.5 px-2 rounded-lg hover:bg-slate-100 font-semibold text-slate-950 flex items-center justify-between"
             >
-              Launch Console
+              <span>Launch Console</span>
+              <MaterialIcon name="arrow_forward" size={14} />
             </Link>
+
+            {/* Mobile Auth Actions */}
+            <div className="pt-2 border-t border-slate-200 mt-2">
+              {isAuthenticated ? (
+                <div className="space-y-1.5">
+                  <div className="text-[11px] text-slate-500 px-2 flex items-center justify-between">
+                    <span>Login sebagai: <strong>{session.user?.name || session.user?.email}</strong></span>
+                    <span className="text-[9px] px-1.5 py-0.2 rounded bg-emerald-100 text-emerald-800 font-bold uppercase">{session.user?.role}</span>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setMobileMenuOpen(false);
+                      signOut({ callbackUrl: "/" });
+                    }}
+                    className="w-full py-2 px-3 rounded-lg border border-rose-200 text-rose-700 bg-rose-50 hover:bg-rose-100 text-xs font-semibold flex items-center justify-center gap-1.5 transition-colors"
+                  >
+                    <MaterialIcon name="logout" size={14} />
+                    <span>Keluar dari Akun</span>
+                  </button>
+                </div>
+              ) : (
+                <div className="grid grid-cols-2 gap-2">
+                  <Link
+                    href="/login"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="py-2 rounded-lg border border-slate-300 text-center font-semibold text-xs text-slate-800 bg-white hover:bg-slate-50"
+                  >
+                    Masuk
+                  </Link>
+                  <Link
+                    href="/register"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="py-2 rounded-lg bg-slate-900 text-center font-semibold text-xs text-white hover:bg-slate-800"
+                  >
+                    Daftar
+                  </Link>
+                </div>
+              )}
+            </div>
           </div>
         </div>
       )}

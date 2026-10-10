@@ -246,7 +246,7 @@ export function RukoShowcaseCard({ onInvestClick }: RukoShowcaseCardProps) {
           </div>
 
           {/* Projected Payout Box */}
-          <div className="grid grid-cols-2 gap-4 pt-3 border-t border-slate-800/80">
+          <div className="grid grid-cols-2 gap-4 pt-3">
             <div>
               <div className="text-[11px] text-slate-400">Total Pengembalian Target:</div>
               <div className="text-lg font-bold text-slate-100 font-mono">

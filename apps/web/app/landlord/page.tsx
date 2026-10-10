@@ -72,9 +72,9 @@ export default function LandlordPortalPage() {
         <ActionCenter />
 
         {/* 1. Context Banner (Consistent with /tenant & /investor) */}
-        <div className="p-4 sm:p-5 rounded-card bg-white dark:bg-black border border-purple-500/20 flex flex-col md:flex-row md:items-center justify-between gap-4 shadow-xs">
+        <div className="p-4 sm:p-5 rounded-card bg-white dark:bg-black border border-slate-200/90 dark:border-white/10 flex flex-col md:flex-row md:items-center justify-between gap-4 shadow-xs">
           <div className="flex items-center gap-3">
-            <div className="p-2.5 rounded-md bg-purple-500/10 text-purple-600 dark:text-purple-400 border border-purple-500/20 shrink-0">
+            <div className="p-2.5 rounded-md bg-slate-100 dark:bg-zinc-800 text-slate-700 dark:text-zinc-300 border border-slate-200 dark:border-white/10 shrink-0">
               <MaterialIcon name="real_estate_agent" size={24} />
             </div>
             <div>
@@ -82,7 +82,7 @@ export default function LandlordPortalPage() {
                 <h1 className="text-base font-bold text-slate-900 dark:text-white tracking-tight">
                   Portal Pemilik Ruko & Properti: Jl. Kalimantan No. 12
                 </h1>
-                <span className="px-2 py-0.5 rounded text-[10px] font-mono font-semibold bg-purple-500/10 text-purple-600 dark:text-purple-400 border border-purple-500/20">
+                <span className="px-2 py-0.5 rounded text-[10px] font-mono font-medium bg-slate-100 dark:bg-zinc-800 text-slate-700 dark:text-zinc-300 border border-slate-200 dark:border-white/10">
                   PEMILIK ASET (LANDLORD · JUNIOR 20%)
                 </span>
               </div>
@@ -96,7 +96,7 @@ export default function LandlordPortalPage() {
           <div className="flex items-center gap-2.5 shrink-0 self-start md:self-center">
             <Link
               href="/landlord/new-deal"
-              className="px-3 py-2 rounded-md bg-blue-600 hover:bg-blue-700 text-white font-mono text-xs font-semibold flex items-center gap-1.5 shadow-sm transition-colors"
+              className="px-3 py-2 rounded-md bg-slate-900 hover:bg-slate-800 dark:bg-white dark:hover:bg-slate-100 text-white dark:text-black font-mono text-xs font-semibold flex items-center gap-1.5 shadow-sm transition-colors"
             >
               <MaterialIcon name="add_circle" size={16} />
               <span>Buat Deal Baru</span>
@@ -104,8 +104,8 @@ export default function LandlordPortalPage() {
 
             <div className="flex items-center gap-2 bg-slate-50 dark:bg-[#0A0A0A] px-3.5 py-2 rounded-md border border-slate-200/80 dark:border-white/10">
               <span className="text-[11px] font-mono text-slate-500 dark:text-[#8A8A8A]">Status:</span>
-              <div className="flex items-center gap-1.5 px-2.5 py-0.5 rounded text-xs font-mono font-bold bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20">
-                <span className="w-1.5 h-1.5 rounded-full bg-amber-500 dark:bg-amber-400 animate-pulse" />
+              <div className="flex items-center gap-1.5 px-2.5 py-0.5 rounded text-xs font-mono font-medium bg-slate-100 dark:bg-zinc-800 text-slate-700 dark:text-zinc-300 border border-slate-200 dark:border-white/10">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
                 <span>AKTIF (24 BULAN)</span>
               </div>
             </div>
@@ -114,12 +114,12 @@ export default function LandlordPortalPage() {
 
         {/* Feedback Message Toast */}
         {feedbackMsg && (
-          <div className="p-3.5 rounded-xl border border-amber-500/30 bg-amber-50 dark:bg-amber-500/10 text-amber-900 dark:text-amber-200 text-xs flex items-center justify-between animate-fadeIn font-mono">
+          <div className="p-3.5 rounded-xl border border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-zinc-900 text-slate-900 dark:text-white text-xs flex items-center justify-between animate-fadeIn font-mono">
             <div className="flex items-center gap-2">
-              <MaterialIcon name="verified" size={16} className="text-amber-600 dark:text-amber-400" />
+              <MaterialIcon name="verified" size={16} className="text-slate-700 dark:text-zinc-300" />
               <span className="font-medium">{feedbackMsg}</span>
             </div>
-            <span className="text-[10px] text-amber-700/70 dark:text-white/40">
+            <span className="text-[10px] text-slate-500 dark:text-white/40">
               MULTISIG CO-SIGNER: LANDLORD
             </span>
           </div>
@@ -131,11 +131,11 @@ export default function LandlordPortalPage() {
           <div className="bg-white dark:bg-black p-4 rounded-card border border-slate-200/90 dark:border-white/10 shadow-xs">
             <div className="flex items-center justify-between">
               <span className="text-[11px] font-mono text-slate-500 dark:text-[#8A8A8A]">SEWA VARIABEL (5%)</span>
-              <span className="text-[10px] font-mono text-purple-600 dark:text-purple-400 bg-purple-500/10 px-1.5 py-0.5 rounded border border-purple-500/20">
+              <span className="text-[10px] font-mono text-slate-600 dark:text-zinc-400 bg-slate-100 dark:bg-zinc-800 px-1.5 py-0.5 rounded border border-slate-200 dark:border-white/10">
                 Turnover Rent
               </span>
             </div>
-            <div className="text-lg font-mono font-bold text-purple-600 dark:text-purple-400 mt-1">
+            <div className="text-lg font-mono font-bold text-slate-900 dark:text-white mt-1">
               {formatIDR(landlordRent)}
             </div>
             <span className="text-[10px] text-slate-500 dark:text-[#71717A] font-mono">
@@ -147,7 +147,7 @@ export default function LandlordPortalPage() {
           <div className="bg-white dark:bg-black p-4 rounded-card border border-slate-200/90 dark:border-white/10 shadow-xs">
             <div className="flex items-center justify-between">
               <span className="text-[11px] font-mono text-slate-500 dark:text-[#8A8A8A]">MODAL JUNIOR (20%)</span>
-              <span className="text-[10px] font-mono text-amber-600 dark:text-amber-400 bg-amber-500/10 px-1.5 py-0.5 rounded border border-amber-500/20">
+              <span className="text-[10px] font-mono text-slate-600 dark:text-zinc-400 bg-slate-100 dark:bg-zinc-800 px-1.5 py-0.5 rounded border border-slate-200 dark:border-white/10">
                 Subordinasi
               </span>
             </div>
@@ -163,16 +163,16 @@ export default function LandlordPortalPage() {
           <div className="bg-white dark:bg-black p-4 rounded-card border border-slate-200/90 dark:border-white/10 shadow-xs">
             <div className="flex items-center justify-between">
               <span className="text-[11px] font-mono text-slate-500 dark:text-[#8A8A8A]">REALISASI MODAL JUNIOR</span>
-              <span className="text-[10px] font-mono text-amber-600 dark:text-amber-400 bg-amber-500/10 px-1.5 py-0.5 rounded border border-amber-500/20">
+              <span className="text-[10px] font-mono text-slate-600 dark:text-zinc-400 bg-slate-100 dark:bg-zinc-800 px-1.5 py-0.5 rounded border border-slate-200 dark:border-white/10">
                 {juniorProgressPct}%
               </span>
             </div>
-            <div className="text-lg font-mono font-bold text-amber-600 dark:text-amber-400 mt-1">
+            <div className="text-lg font-mono font-bold text-slate-900 dark:text-white mt-1">
               {formatIDR(juniorRepaid)}
             </div>
-            <div className="w-full bg-slate-100 dark:bg-[#0A0A0A] rounded-full h-1.5 mt-1.5 overflow-hidden border border-transparent dark:border-white/10">
+            <div className="w-full bg-slate-100 dark:bg-zinc-800 rounded-full h-1.5 mt-1.5 overflow-hidden border border-transparent dark:border-white/10">
               <div
-                className="bg-amber-500 dark:bg-amber-400 h-full rounded-full transition-all duration-500"
+                className="bg-slate-900 dark:bg-white h-full rounded-full transition-all duration-500"
                 style={{ width: `${juniorProgressPct}%` }}
               />
             </div>
@@ -185,13 +185,7 @@ export default function LandlordPortalPage() {
           <div className="bg-white dark:bg-black p-4 rounded-card border border-slate-200/90 dark:border-white/10 shadow-xs">
             <div className="flex items-center justify-between">
               <span className="text-[11px] font-mono text-slate-500 dark:text-[#8A8A8A]">STATUS WATERFALL</span>
-              <span
-                className={`text-[10px] font-mono px-1.5 py-0.5 rounded border ${
-                  isSeniorCompleted
-                    ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20"
-                    : "bg-slate-100 dark:bg-white/5 text-slate-600 dark:text-white/60 border-slate-200 dark:border-white/10"
-                }`}
-              >
+              <span className="text-[10px] font-mono px-1.5 py-0.5 rounded border bg-slate-100 dark:bg-zinc-800 text-slate-700 dark:text-zinc-300 border-slate-200 dark:border-white/10">
                 {isSeniorCompleted ? "AKTIF" : "SUBORDINAT"}
               </span>
             </div>
@@ -213,7 +207,7 @@ export default function LandlordPortalPage() {
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-2 border-b border-slate-100 dark:border-[rgba(207,207,207,0.06)]">
               <div>
                 <div className="flex items-center gap-2">
-                  <MaterialIcon name="domain" size={18} className="text-amber-600 dark:text-amber-400" />
+                  <MaterialIcon name="domain" size={18} className="text-slate-700 dark:text-zinc-300" />
                   <h2 className="text-sm font-semibold text-slate-900 dark:text-white">
                     Pengawasan Renovasi Fisik Ruko (Milestone Capex)
                   </h2>
@@ -236,26 +230,16 @@ export default function LandlordPortalPage() {
                 return (
                   <div
                     key={m.id}
-                    className={`p-4 rounded-xl border transition ${
-                      isReleased
-                        ? "border-emerald-200 dark:border-emerald-500/20 bg-emerald-50/50 dark:bg-emerald-500/[0.02]"
-                        : "border-slate-200/80 dark:border-white/10 bg-slate-50/50 dark:bg-white/[0.02]"
-                    }`}
+                    className="p-4 rounded-xl border border-slate-200/80 dark:border-white/10 bg-slate-50/50 dark:bg-white/[0.02] transition"
                   >
                     <div className="flex flex-col md:flex-row md:items-center justify-between gap-3">
                       <div className="space-y-1">
                         <div className="flex items-center gap-2">
-                          <span className="text-xs font-mono font-bold text-amber-600 dark:text-amber-400">
+                          <span className="text-xs font-mono font-bold text-slate-900 dark:text-white">
                             Termin #{m.id}
                           </span>
                           <span className="text-sm font-medium text-slate-900 dark:text-white">{m.title}</span>
-                          <span
-                            className={`text-[10px] font-mono px-2 py-0.5 rounded border ${
-                              isReleased
-                                ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20"
-                                : "bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/20"
-                            }`}
-                          >
+                          <span className="text-[10px] font-mono px-2 py-0.5 rounded border bg-slate-100 dark:bg-zinc-800 text-slate-700 dark:text-zinc-300 border-slate-200 dark:border-white/10">
                             {m.status}
                           </span>
                         </div>
@@ -273,7 +257,7 @@ export default function LandlordPortalPage() {
                             <span
                               className={
                                 m.approvals.inspector
-                                  ? "text-emerald-600 dark:text-emerald-400"
+                                  ? "text-slate-900 dark:text-white font-medium"
                                   : "text-slate-400 dark:text-white/30"
                               }
                             >
@@ -285,8 +269,8 @@ export default function LandlordPortalPage() {
                             <span
                               className={
                                 isApprovedByLandlord
-                                  ? "text-emerald-600 dark:text-emerald-400"
-                                  : "text-amber-600 dark:text-amber-400 font-bold"
+                                  ? "text-slate-900 dark:text-white font-medium"
+                                  : "text-slate-700 dark:text-zinc-300 font-semibold"
                               }
                             >
                               {isApprovedByLandlord ? "✓ Disetujui" : "Perlu Approval"}
@@ -298,7 +282,7 @@ export default function LandlordPortalPage() {
                           <button
                             onClick={() => handleApproveMilestone(m.id, m.title)}
                             disabled={approvingMilestoneId === m.id}
-                            className="py-1.5 px-3 rounded-lg text-xs font-mono font-medium bg-amber-500 hover:bg-amber-400 text-black shadow-md shadow-amber-500/10 active:scale-95 transition flex items-center gap-1.5 shrink-0"
+                            className="py-1.5 px-3 rounded-lg text-xs font-mono font-medium bg-slate-900 hover:bg-slate-800 text-white dark:bg-white dark:text-black dark:hover:bg-slate-100 shadow-sm active:scale-95 transition flex items-center gap-1.5 shrink-0"
                           >
                             <MaterialIcon name="check_circle" size={15} />
                             <span>{approvingMilestoneId === m.id ? "Menyetujui..." : "Setujui Fisik"}</span>
@@ -345,7 +329,7 @@ export default function LandlordPortalPage() {
               </div>
               <div className="pt-2 flex justify-between">
                 <span className="text-slate-500 dark:text-[#8A8A8A]">Struktur Sewa:</span>
-                <span className="text-purple-600 dark:text-purple-400 font-medium">Turnover Rent 5% Omzet</span>
+                <span className="text-slate-900 dark:text-white font-medium">Turnover Rent 5% Omzet</span>
               </div>
               <div className="pt-2 flex justify-between">
                 <span className="text-slate-500 dark:text-[#8A8A8A]">Penyertaan Modal:</span>
@@ -353,14 +337,14 @@ export default function LandlordPortalPage() {
               </div>
               <div className="pt-2 flex justify-between">
                 <span className="text-slate-500 dark:text-[#8A8A8A]">Hak Proteksi Aset:</span>
-                <span className="text-emerald-600 dark:text-emerald-400 font-medium">Step-In Lease Takeover</span>
+                <span className="text-slate-900 dark:text-white font-medium">Step-In Lease Takeover</span>
               </div>
             </div>
 
             {/* Collateral & Step-in Info */}
             <div className="p-3 rounded-lg border border-slate-200/80 dark:border-white/5 bg-slate-50 dark:bg-white/[0.02] text-xs space-y-1">
               <div className="text-slate-900 dark:text-white/80 font-medium flex items-center gap-1.5">
-                <MaterialIcon name="gavel" size={15} className="text-emerald-600 dark:text-emerald-400" />
+                <MaterialIcon name="gavel" size={15} className="text-slate-700 dark:text-zinc-300" />
                 <span>Hak Klausul Step-In</span>
               </div>
               <p className="text-[11px] text-slate-500 dark:text-[#8A8A8A] leading-relaxed">
@@ -402,15 +386,7 @@ export default function LandlordPortalPage() {
                   className="p-3 rounded-lg border border-slate-200/80 dark:border-white/5 bg-slate-50/70 dark:bg-white/[0.02] flex items-center justify-between text-xs"
                 >
                   <div className="flex items-center gap-3">
-                    <span
-                      className={`w-2 h-2 rounded-full shrink-0 ${
-                        log.type === "success"
-                          ? "bg-amber-500"
-                          : log.type === "warning"
-                          ? "bg-rose-500"
-                          : "bg-purple-500"
-                      }`}
-                    />
+                    <span className="w-2 h-2 rounded-full shrink-0 bg-slate-400 dark:bg-zinc-500" />
                     <div>
                       <div className="font-mono text-slate-900 dark:text-white font-medium">{log.eventName}</div>
                       <div className="text-[11px] text-slate-500 dark:text-[#8A8A8A]">{log.details}</div>

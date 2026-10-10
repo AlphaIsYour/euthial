@@ -14,6 +14,7 @@ import { LanguageProvider } from "../../hooks/useLanguageMode";
 import { AppProvider } from "../../context/AppContext";
 import { ProtocolProvider } from "../../context/ProtocolContext";
 import { Web3Provider } from "../../context/Web3Context";
+import { ToastContainer } from "../ui/Toast";
 
 export const Providers: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [queryClient] = useState(
@@ -39,6 +40,7 @@ export const Providers: React.FC<{ children: React.ReactNode }> = ({ children })
                   <ProtocolProvider>
                     <Web3Provider>
                       {children}
+                      <ToastContainer />
                     </Web3Provider>
                   </ProtocolProvider>
                 </AppProvider>

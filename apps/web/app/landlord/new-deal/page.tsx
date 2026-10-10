@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { Shell } from "../../../components/layout/Shell";
 import { MaterialIcon } from "../../../components/ui/MaterialIcon";
 import { useWeb3 } from "../../../context/Web3Context";
+import { toast } from "../../../components/ui/Toast";
 
 export default function NewDealWizardPage() {
   const router = useRouter();
@@ -340,9 +341,9 @@ export default function NewDealWizardPage() {
                 <button
                   onClick={() => {
                     navigator.clipboard.writeText(`https://euthial.protocol/deals/${deployedDealId}`);
-                    alert("Link disalin!");
+                    toast.success("Tautan Disalin", "Link ruko berhasil disalin ke clipboard.");
                   }}
-                  className="px-2.5 py-1 rounded bg-blue-600 text-white shrink-0 hover:bg-blue-700 font-medium"
+                  className="px-2.5 py-1 rounded bg-slate-900 dark:bg-white text-white dark:text-black shrink-0 hover:opacity-90 font-medium"
                 >
                   Salin
                 </button>
