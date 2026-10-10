@@ -60,22 +60,16 @@ const ROLE_PORTALS: RoleLink[] = [
 
 export const LandingHeader: React.FC = () => {
   const [roleMenuOpen, setRoleMenuOpen] = useState(false);
-  const [locationMenuOpen, setLocationMenuOpen] = useState(false);
-  const [selectedLocation, setSelectedLocation] = useState("Jember (Pilot)");
   const [searchQuery, setSearchQuery] = useState("");
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const roleDropdownRef = useRef<HTMLDivElement>(null);
-  const locationDropdownRef = useRef<HTMLDivElement>(null);
 
   // Close dropdowns when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (roleDropdownRef.current && !roleDropdownRef.current.contains(event.target as Node)) {
         setRoleMenuOpen(false);
-      }
-      if (locationDropdownRef.current && !locationDropdownRef.current.contains(event.target as Node)) {
-        setLocationMenuOpen(false);
       }
     };
     document.addEventListener("mousedown", handleClickOutside);
@@ -99,7 +93,7 @@ export const LandingHeader: React.FC = () => {
         <div className="max-w-7xl mx-auto flex items-center justify-between gap-4">
           {/* SISI KIRI: LOGO RESMI EUTHIAL */}
           <Link href="/" className="flex items-center gap-2.5 shrink-0 group">
-            <div className="w-8 h-8 rounded-lg bg-white border border-slate-200 p-0.5 flex items-center justify-center shrink-0 shadow-xs group-hover:border-slate-300 transition-colors">
+            <div className="w-8 h-8 rounded-lg bg-white flex items-center justify-center shrink-0">
               <img
                 src="/euthial.png"
                 alt="Euthial Protocol"
@@ -222,9 +216,8 @@ export const LandingHeader: React.FC = () => {
               <MaterialIcon
                 name="expand_more"
                 size={14}
-                className={`text-slate-500 transition-transform duration-200 ${
-                  roleMenuOpen ? "rotate-180" : ""
-                }`}
+                className={`text-slate-500 transition-transform duration-200 ${roleMenuOpen ? "rotate-180" : ""
+                  }`}
               />
             </button>
 
@@ -313,51 +306,6 @@ export const LandingHeader: React.FC = () => {
               Jury Console
             </Link>
           </nav>
-
-          {/* SISI KANAN: PILIH LOKASI & STATUS TESTNET */}
-          <div className="relative flex items-center gap-3" ref={locationDropdownRef}>
-            <div className="flex items-center gap-1.5 text-[11px] text-slate-500 font-mono">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-              <span>Base Sepolia</span>
-            </div>
-
-            <button
-              type="button"
-              onClick={() => setLocationMenuOpen(!locationMenuOpen)}
-              className="flex items-center gap-1 text-xs text-slate-700 hover:text-slate-950 font-medium transition-colors cursor-pointer"
-            >
-              <MaterialIcon name="location_on" size={13} className="text-sky-600" />
-              <span>{selectedLocation}</span>
-              <MaterialIcon name="expand_more" size={13} className="text-slate-400" />
-            </button>
-
-            {locationMenuOpen && (
-              <div className="absolute right-0 top-full mt-1 w-44 rounded-xl border border-slate-200 bg-white shadow-lg p-1 z-50 animate-in fade-in duration-100">
-                <div className="px-2 py-1 text-[10px] font-mono text-slate-400 uppercase">
-                  Pilih Area Pilot
-                </div>
-                {["Jember (Pilot)", "Surabaya (Upcoming)", "Jakarta (Upcoming)"].map(
-                  (loc) => (
-                    <button
-                      key={loc}
-                      type="button"
-                      onClick={() => {
-                        setSelectedLocation(loc);
-                        setLocationMenuOpen(false);
-                      }}
-                      className={`w-full text-left px-2 py-1.5 rounded-lg text-xs transition ${
-                        selectedLocation === loc
-                          ? "bg-slate-100 font-semibold text-slate-900"
-                          : "text-slate-600 hover:bg-slate-50 hover:text-slate-900"
-                      }`}
-                    >
-                      {loc}
-                    </button>
-                  )
-                )}
-              </div>
-            )}
-          </div>
         </div>
       </div>
 

@@ -207,10 +207,10 @@ export function CustomerRebateScanner() {
             ) : (
               <form onSubmit={handleClaimBounty} className="space-y-3 text-xs">
                 <div>
-                  <label className="block text-slate-700 dark:text-[#A1A1AA] font-mono mb-1">Nama Pelapor / Mahasiswa:</label>
+                  <label className="block text-slate-700 dark:text-[#A1A1AA] font-mono mb-1">Nama Pelapor / Mystery Shopper:</label>
                   <input
                     type="text"
-                    defaultValue="Dimas Prayoga (Univ. Jember)"
+                    defaultValue="Dimas Prayoga (Auditor Independen)"
                     className="w-full px-3 py-2 rounded-lg bg-slate-50 dark:bg-[#1E1E22] border border-slate-300 dark:border-[rgba(207,207,207,0.12)] text-slate-900 dark:text-white font-mono focus:bg-white dark:focus:bg-[#1E1E22] focus:outline-none"
                   />
                 </div>

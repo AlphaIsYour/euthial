@@ -101,7 +101,7 @@ export default function InvestorPortalPage() {
                 </span>
               </div>
               <p className="text-xs text-slate-500 dark:text-[#8A8A8A] mt-0.5 font-mono">
-                Ruko Jl. Kalimantan No. 12, Jember · Hak Prioritas #1 (1.25x Cap) · Bulan {currentMonth}/24
+                Ruko Komersial Sentra #01 · Hak Prioritas #1 (1.25x Cap) · Bulan {currentMonth}/24
               </p>
             </div>
           </div>

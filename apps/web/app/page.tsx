@@ -35,8 +35,8 @@ export default function HomePage() {
   const rukoListings = [
     {
       id: "RU-01",
-      name: "Ruko Kampus UNEJ (Pilot Aktif)",
-      address: "Jl. Kalimantan No. 12, Sumbersari, Jember",
+      name: "Ruko Sentra Niaga (Pilot Aktif)",
+      address: "Kawasan Komersial Sentra, Unit #01",
       status: "LIVE_ACTIVE",
       statusBadge: "Protokol Berjalan",
       tenant: "Kedai Kopi Melati (F&B Coffee)",
@@ -56,8 +56,8 @@ export default function HomePage() {
     },
     {
       id: "RU-02",
-      name: "Ruko Tegal Boto Sentra",
-      address: "Jl. Jawa No. 45, Sumbersari, Jember",
+      name: "Ruko Sentra Bisnis Terpadu",
+      address: "Koridor Ritel Terpadu, Unit #02",
       status: "OPEN_TENANT",
       statusBadge: "Tersedia untuk Penyewa",
       tenant: "Dicari: F&B / Bakery / Roastery",
@@ -73,8 +73,8 @@ export default function HomePage() {
     },
     {
       id: "RU-03",
-      name: "Ruko Komersial Roxy Mall Area",
-      address: "Jl. Gajah Mada No. 88, Kaliwates, Jember",
+      name: "Ruko Lifestyle & F&B Hub",
+      address: "Pusat Niaga Komersial, Unit #03",
       status: "FUNDING_OPEN",
       statusBadge: "Pendanaan Terbuka 68%",
       tenant: "Calon: Kitchen Hub & Artisan Tea",
@@ -932,7 +932,7 @@ export default function HomePage() {
             <div className="flex items-center gap-3">
               <span className="flex items-center gap-1.5">
                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
-                <span>Base Sepolia (Chain ID 84532)</span>
+                <span>On-Chain Verifiable Protocol</span>
               </span>
               <span>·</span>
               <span>EIP-712 Attestation Engine</span>

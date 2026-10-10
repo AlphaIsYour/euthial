@@ -230,7 +230,7 @@ export const PhysicalStepInCard: React.FC = () => {
           </div>
           <div className="font-bold text-slate-900 dark:text-white mb-0.5">Operator Siaga Masuk</div>
           <p className="text-[11px] text-slate-600 dark:text-[#8A8A8A] leading-snug">
-            Konsorsium F&B Jember mengambil alih ruko &lt; 7 hari. Arus kas bagi hasil QRIS berlanjut.
+            Konsorsium operator terverifikasi mengambil alih ruko &lt; 7 hari. Arus kas bagi hasil QRIS berlanjut.
           </p>
         </div>
       </div>
@@ -336,7 +336,7 @@ export const PhysicalStepInCard: React.FC = () => {
           </div>
 
           <div className="pt-2 border-t border-slate-200/80 dark:border-white/10 flex items-center justify-between text-[11px] text-slate-600 dark:text-[#8A8A8A]">
-            <span>Konsorsium Pengganti: <strong className="text-slate-900 dark:text-white">Roastery Kopi Jember Bersatu</strong></span>
+            <span>Konsorsium Pengganti: <strong className="text-slate-900 dark:text-white">Jaringan Operator Terakreditasi</strong></span>
             <span className="text-emerald-700 dark:text-emerald-400 font-semibold">SLA Take-Over: Maks. 7 Hari Kalender</span>
           </div>
         </div>

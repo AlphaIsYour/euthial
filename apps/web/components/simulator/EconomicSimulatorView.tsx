@@ -38,7 +38,7 @@ export const EconomicSimulatorView: React.FC = () => {
           </p>
         </div>
         <span className="text-[11px] font-mono text-[#71717A] bg-[#141414] px-2.5 py-1 rounded border border-[rgba(207,207,207,0.06)]">
-          Asumsi Model Finansial · Jember Pilot
+          Asumsi Model Finansial · Commercial Pilot
         </span>
       </div>
 

@@ -13,7 +13,7 @@ export default function AuthLayout({
         {/* Top: Logo Asli Euthial & Judul */}
         <div className="space-y-6 relative z-10">
           <Link href="/" className="inline-flex items-center gap-3 group">
-            <div className="w-9 h-9 rounded-lg bg-white border border-slate-200 p-0.5 flex items-center justify-center shrink-0 shadow-xs group-hover:border-slate-300 transition-colors">
+            <div className="w-9 h-9 rounded-lg bg-white flex items-center justify-center shrink-0 ">
               <img
                 src="/euthial.png"
                 alt="Euthial Protocol"
@@ -33,7 +33,7 @@ export default function AuthLayout({
           <div className="pt-4 space-y-3">
             <div className="inline-flex items-center gap-2 px-2.5 py-1 rounded-md bg-slate-100 border border-slate-200 text-slate-700 text-xs font-mono">
               <span className="w-2 h-2 rounded-full bg-emerald-500" />
-              Pilot Komersial #01 · Jember
+              Pilot Komersial #01
             </div>
             <h1 className="text-2xl xl:text-3xl font-extrabold text-slate-950 tracking-tight leading-snug">
               Infrastruktur Pembiayaan Ruko Berbasis Omzet Terverifikasi.
@@ -80,40 +80,46 @@ export default function AuthLayout({
           </div>
         </div>
 
-        {/* Bottom: Network & Event Info */}
+        {/* Bottom: Protocol Info */}
         <div className="pt-3 border-t border-slate-200 flex items-center justify-between text-[11px] font-mono text-slate-500 relative z-10">
-          <div>Base Sepolia Testnet</div>
-          <div>Ethereum Hackathon 2026</div>
+          <div>Verifiable Smart Contract</div>
+          <div>Euthial Protocol</div>
         </div>
       </div>
 
-      {/* SISI KANAN: FORM CONTAINER DENGAN VIEWPORT FIT (TIDAK SCROLL PADA DESKTOP) */}
-      <div className="flex-1 flex flex-col justify-between p-6 sm:p-10 lg:p-8 xl:p-12 overflow-y-auto lg:overflow-hidden relative bg-slate-50">
+      {/* SISI KANAN: FORM CONTAINER DENGAN BACKGROUND /bg-auth.jpg */}
+      <div
+        className="flex-1 flex flex-col justify-between p-6 sm:p-10 lg:p-8 xl:p-12 overflow-y-auto lg:overflow-hidden relative bg-cover bg-center bg-no-repeat"
+        style={{ backgroundImage: "url('/bg-auth.jpg')" }}
+      >
+        {/* Dark/Blur Overlay untuk kontras dan estetika */}
+        <div className="absolute inset-0 bg-slate-950/60 backdrop-blur-[2px] z-0 pointer-events-none" />
+
         {/* Mobile Header Logo */}
-        <div className="flex lg:hidden items-center justify-between pb-3 mb-2 border-b border-slate-200">
+        <div className="flex lg:hidden items-center justify-between pb-3 mb-2 border-b border-white/10 relative z-10">
           <Link href="/" className="inline-flex items-center gap-2">
-            <div className="w-7 h-7 rounded-lg bg-white border border-slate-200 p-0.5 flex items-center justify-center">
+            <div className="w-7 h-7 rounded-lg bg-white flex items-center justify-center">
               <img
                 src="/euthial.png"
                 alt="Euthial Protocol"
                 className="w-full h-full object-contain"
               />
             </div>
-            <span className="font-bold text-slate-950 text-sm tracking-tight">EUTHIAL</span>
+            <span className="font-bold text-white text-sm tracking-tight">EUTHIAL</span>
           </Link>
-          <span className="text-[10px] font-mono text-slate-500">Pilot #01</span>
+          <span className="text-[10px] font-mono text-slate-300">Pilot #01</span>
         </div>
 
         {/* Center Content Card */}
-        <div className="w-full max-w-md mx-auto my-auto py-2">
+        <div className="w-full max-w-md mx-auto my-auto py-2 relative z-10">
           {children}
         </div>
 
         {/* Global Back Link */}
-        <div className="pt-2 text-center shrink-0">
+        <div className="pt-2 text-center shrink-0 relative z-10">
           <Link
             href="/"
-            className="text-xs font-mono text-slate-500 hover:text-slate-900 transition-colors inline-flex items-center gap-1.5"
+            className="text-xs font-mono text-slate-300 hover:text-white transition-colors inline-flex items-center gap-1.5 drop-shadow-sm"
           >
             &larr; Kembali ke Beranda Protokol
           </Link>

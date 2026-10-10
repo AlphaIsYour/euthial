@@ -88,9 +88,8 @@ export const Sidebar: React.FC<{ onOpenSearch?: () => void }> = () => {
 
   return (
     <aside
-      className={`h-screen bg-[var(--sidebar-bg)] flex flex-col justify-between shrink-0 select-none z-40 transition-[width] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] pt-4 ${
-        isSidebarCollapsed ? "w-[64px]" : "w-[240px]"
-      }`}
+      className={`h-screen bg-[var(--sidebar-bg)] flex flex-col justify-between shrink-0 select-none z-40 transition-[width] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] pt-4 ${isSidebarCollapsed ? "w-[64px]" : "w-[240px]"
+        }`}
     >
       {/* Top: Logo row aligned with main panel height (pt-4) WITHOUT border-b */}
       <div className="flex flex-col flex-1 min-h-0">
@@ -99,7 +98,7 @@ export const Sidebar: React.FC<{ onOpenSearch?: () => void }> = () => {
           {!isSidebarCollapsed ? (
             <div className="flex items-center gap-2.5 overflow-hidden w-full">
               {/* 28x28 Logo / Profile Icon */}
-              <div className="w-7 h-7 rounded-lg bg-white border border-[var(--border-soft)] p-0.5 flex items-center justify-center shrink-0 shadow-xs">
+              <div className="w-7 h-7 rounded-lg bg-white flex items-center justify-center shrink-0">
                 <img
                   src="/euthial.png"
                   alt="Euthial Protocol"
@@ -123,7 +122,7 @@ export const Sidebar: React.FC<{ onOpenSearch?: () => void }> = () => {
               title="Maximize Sidebar (Expand)"
               className="w-9 h-9 rounded-lg mx-auto flex items-center justify-center hover:bg-[var(--hover-bg)] transition-colors group"
             >
-              <div className="w-7 h-7 rounded-lg bg-white border border-[var(--border-soft)] p-0.5 flex items-center justify-center shrink-0 shadow-xs group-hover:scale-105 transition-transform">
+              <div className="w-7 h-7 rounded-lg bg-white flex items-center justify-center shrink-0 ">
                 <img
                   src="/euthial.png"
                   alt="Euthial Protocol"
@@ -160,22 +159,19 @@ export const Sidebar: React.FC<{ onOpenSearch?: () => void }> = () => {
                       onClick={() => handleNavClick(item)}
                       onMouseEnter={() => setHoveredKey(uniqueKey)}
                       onMouseLeave={() => setHoveredKey(null)}
-                      className={`h-9 text-[13px] rounded-lg transition-colors flex items-center ${
-                        isSidebarCollapsed
+                      className={`h-9 text-[13px] rounded-lg transition-colors flex items-center ${isSidebarCollapsed
                           ? "w-9 h-9 mx-auto justify-center"
                           : "mx-2 px-2.5 gap-2.5 w-[calc(100%-16px)]"
-                      } ${
-                        isActive
+                        } ${isActive
                           ? "bg-[var(--active-bg)] text-[var(--text-main)] font-medium"
                           : "text-[var(--text-muted)] hover:bg-[var(--hover-bg)] hover:text-[var(--text-main)]"
-                      }`}
+                        }`}
                     >
                       <MaterialIcon
                         name={item.icon}
                         size={16}
-                        className={`shrink-0 ${
-                          isActive ? "text-blue-500" : "text-[var(--text-muted)] group-hover:text-[var(--text-main)]"
-                        }`}
+                        className={`shrink-0 ${isActive ? "text-blue-500" : "text-[var(--text-muted)] group-hover:text-[var(--text-main)]"
+                          }`}
                       />
 
                       {!isSidebarCollapsed && (
@@ -184,10 +180,9 @@ export const Sidebar: React.FC<{ onOpenSearch?: () => void }> = () => {
 
                       {!isSidebarCollapsed && item.badge && (
                         <span
-                          className={`text-[10px] px-1.5 py-0.2 rounded border font-mono font-medium ${
-                            item.badgeColor ||
+                          className={`text-[10px] px-1.5 py-0.2 rounded border font-mono font-medium ${item.badgeColor ||
                             "bg-[var(--input-bg)] border-[var(--border-soft)] text-[var(--text-muted)]"
-                          }`}
+                            }`}
                         >
                           {item.badge}
                         </span>
@@ -224,10 +219,10 @@ export const Sidebar: React.FC<{ onOpenSearch?: () => void }> = () => {
               <span className="text-[#10B981] font-semibold">ONLINE</span>
             </div>
             <div className="text-xs font-medium text-[var(--text-main)] truncate">
-              Ruko Jl. Kalimantan
+              Ruko Komersial Sentra #01
             </div>
             <div className="text-[10px] text-[var(--text-muted)] font-mono">
-              Jember Commercial Fit-Out
+              Commercial Fit-Out Vault
             </div>
           </div>
         ) : (

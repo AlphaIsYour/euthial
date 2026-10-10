@@ -332,7 +332,7 @@ export default function LandlordPortalPage() {
                   Ruko 2 Lantai (Luas 140 m²)
                 </span>
                 <span className="text-slate-500 dark:text-[#71717A] text-[11px] block">
-                  Jl. Kalimantan No. 12, Sumbersari, Jember
+                  Kawasan Komersial Sentra, Unit #01
                 </span>
               </div>
               <div className="pt-2 flex justify-between">

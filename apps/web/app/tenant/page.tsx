@@ -68,7 +68,7 @@ export default function TenantPortalPage() {
                 </span>
               </div>
               <p className="text-xs text-slate-500 dark:text-[#8A8A8A] mt-0.5 font-mono">
-                Ruko Jl. Kalimantan No. 12, Jember · Bulan Operasional ke-{currentMonth} (Hari {currentMonth * 30})
+                Ruko Komersial Sentra #01 · Bulan Operasional ke-{currentMonth} (Hari {currentMonth * 30})
               </p>
             </div>
           </div>

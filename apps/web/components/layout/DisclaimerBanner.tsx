@@ -16,9 +16,9 @@ export const DisclaimerBanner: React.FC = () => {
         <span className="text-amber-300/90 font-medium">Bukan Penawaran Investasi Publik</span>
       </div>
       <div className="hidden sm:flex items-center gap-3 text-[11px] text-[#71717A]">
-        <span>Jember Pilot Context</span>
+        <span>Commercial Pilot #01</span>
         <span>·</span>
-        <span className="text-[#A1A1AA]">Ethereum Sepolia</span>
+        <span className="text-[#A1A1AA]">Live Protocol Sandbox</span>
       </div>
     </div>
   );

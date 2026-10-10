@@ -93,7 +93,7 @@ export default function DemoMissionControlPage() {
                 </span>
               </div>
               <p className="text-xs text-slate-500 dark:text-[#8A8A8A] mt-0.5 font-mono">
-                Ruko Jl. Kalimantan No. 12, Jember · Arena Pengujian Stres 24 Bulan & Sinkronisasi Lintas Portal
+                Ruko Komersial Sentra #01 · Arena Pengujian Stres 24 Bulan & Sinkronisasi Lintas Portal
               </p>
             </div>
           </div>
