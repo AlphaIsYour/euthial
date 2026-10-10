@@ -34,9 +34,9 @@ export function RukoShowcaseCard({ onInvestClick }: RukoShowcaseCardProps) {
   const netProfit = calculatedReturn - investAmount;
 
   return (
-    <div id="tour-ruko-catalog" className="w-full bg-slate-900/90 border border-slate-800 rounded-3xl overflow-hidden shadow-2xl backdrop-blur-xl transition-all hover:border-slate-700">
+    <div className="w-full bg-slate-900/90 border border-slate-800 rounded-3xl overflow-hidden shadow-2xl backdrop-blur-xl transition-all hover:border-slate-700">
       {/* Top Banner / Image Area */}
-      <div className="relative h-64 sm:h-72 w-full bg-slate-950 overflow-hidden group">
+      <div id="tour-ruko-catalog" className="relative h-64 sm:h-72 w-full bg-slate-950 overflow-hidden group">
         {/* Visual Render Placeholder / Background Simulation */}
         <div
           className={`absolute inset-0 bg-cover bg-center transition-all duration-700 ${

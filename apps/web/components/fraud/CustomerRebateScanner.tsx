@@ -129,7 +129,7 @@ export function CustomerRebateScanner() {
           <div className="text-xs text-slate-700 dark:text-[#A1A1AA] leading-relaxed font-normal">
             Transaksi terdaftar dalam mutasi harian Mandiri/BCA Escrow protokol Euthial.
           </div>
-          <div className="pt-2 flex flex-wrap items-center gap-3 text-xs font-mono border-t border-emerald-200 dark:border-emerald-500/20">
+          <div className="pt-2 flex flex-wrap items-center gap-3 text-xs font-mono">
             <div className="p-2.5 rounded-lg bg-white dark:bg-[#0A0A0A] border border-emerald-200 dark:border-emerald-500/20 shadow-xs">
               <span className="text-[10px] text-slate-500 dark:text-[#71717A] block">CASHBACK INSTAN:</span>
               <span className="text-emerald-700 dark:text-emerald-400 font-semibold text-sm">Rp 3.500 (10%)</span>

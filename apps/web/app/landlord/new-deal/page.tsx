@@ -368,7 +368,7 @@ export default function NewDealWizardPage() {
 
           {/* Action Footer Navigation Buttons */}
           {step < 5 && (
-            <div className="flex items-center justify-between pt-4 border-t border-slate-100 dark:border-zinc-800">
+            <div className="flex items-center justify-between pt-4">
               {step > 1 ? (
                 <button
                   onClick={() => setStep(step - 1)}

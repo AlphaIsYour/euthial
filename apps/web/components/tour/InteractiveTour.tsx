@@ -33,11 +33,21 @@ export function InteractiveTour({ steps, tourKey }: InteractiveTourProps) {
   }, [tourKey]);
 
   const handleJoyrideCallback = (data: any) => {
-    const { status } = data;
+    const { status, type, step } = data;
     const finishedStatuses: string[] = [STATUS.FINISHED, STATUS.SKIPPED];
     if (finishedStatuses.includes(status)) {
       setRunTour(false);
       localStorage.setItem(`seen_${tourKey}`, "true");
+    }
+
+    // Auto-scroll target into viewport center on every step transition
+    if (type === "step:before" || type === "tooltip") {
+      if (step?.target && typeof step.target === "string" && step.target !== "body") {
+        const el = document.querySelector(step.target);
+        if (el) {
+          el.scrollIntoView({ behavior: "smooth", block: "center", inline: "nearest" });
+        }
+      }
     }
   };
 
@@ -52,12 +62,6 @@ export function InteractiveTour({ steps, tourKey }: InteractiveTourProps) {
         run={runTour}
         continuous
         scrollToFirstStep
-        scrollOffset={130}
-        disableScrolling={false}
-        disableScrollParentFix={true}
-        floaterProps={{
-          disableAnimation: true,
-        }}
         onEvent={handleJoyrideCallback}
         options={{
           showProgress: true,

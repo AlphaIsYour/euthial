@@ -199,7 +199,7 @@ export default function CoverageCheckCalculatorPage() {
             </div>
 
             {/* Input 4: Estimated Store Monthly Revenue & Take Rate */}
-            <div className="space-y-1.5 pt-2 border-t border-slate-100 dark:border-zinc-800">
+            <div className="space-y-1.5 pt-2">
               <div className="flex justify-between text-xs font-mono">
                 <span className="text-slate-600 dark:text-zinc-300">Estimasi Omzet Toko / Bulan</span>
                 <strong className="text-emerald-600 dark:text-emerald-400">{formatIDR(monthlyRevenue)}</strong>

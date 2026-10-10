@@ -24,7 +24,7 @@ export const DEMO_DASHBOARD_TOUR_STEPS: Step[] = [
   },
   {
     target: "#tour-role-cards",
-    placement: "bottom",
+    placement: "top",
     title: "Dampak Arus Kas Lintas Peran",
     content:
       "Empat kartu ini merangkum posisi keuangan masing-masing pihak: Kas Bersih Penyewa Kedai (80%), Realisasi Imbal Hasil Investor Senior (Target 1.25x), Akumulasi Sewa Pemilik Ruko (5%), dan Pencairan Termin Fisik Kontraktor.",
@@ -148,13 +148,13 @@ export const CONTRACTOR_TOUR_STEPS: Step[] = [
     placement: "top",
     title: "4 Tahapan Termin Konstruksi",
     content:
-      "Termin 0: Uang Muka DP 20% -> Termin 1: MEP 40% -> Termin 2: Interior 30% -> Retensi 10% (garansi 30 hari).",
+      "Tahap 0: Uang Muka DP 20%, Tahap 1: MEP 40%, Tahap 2: Interior 30%, dan Retensi 10% dengan garansi 30 hari.",
   },
   {
     target: "#tour-evidence-upload",
     placement: "top",
     title: "Bukti Foto Fisik & IPFS",
     content:
-      "Kontraktor mengunggah foto progres fisik ke IPFS -> Inspektur independen mengecek lokasi & menyetujui -> Dana termin otomatis cair ke dompet kontraktor.",
+      "Kontraktor mengunggah foto progres fisik ke IPFS, inspektur independen memvalidasi ke lokasi, lalu dana termin otomatis dicairkan ke dompet kontraktor.",
   },
 ];

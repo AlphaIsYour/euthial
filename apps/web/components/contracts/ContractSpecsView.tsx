@@ -69,7 +69,7 @@ export const ContractSpecsView: React.FC = () => {
               </span>
             </div>
             <p className="text-xs text-[#A1A1AA] leading-relaxed">{c.role}</p>
-            <div className="pt-2 border-t border-[rgba(207,207,207,0.06)] flex items-center justify-between text-xs font-mono text-[#8A8A8A]">
+            <div className="pt-2 flex items-center justify-between text-xs font-mono text-[#8A8A8A]">
               <span className="truncate max-w-[240px] text-white/90">{c.address}</span>
               <button
                 onClick={() => navigator.clipboard?.writeText(c.address)}

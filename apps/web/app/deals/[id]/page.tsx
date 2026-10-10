@@ -308,7 +308,7 @@ export default function DealOverviewPage({ params }: { params: { id: string } })
               <p className="text-xs text-slate-500">
                 Pemilik sertifikat SHM ruko. Menyetujui renovasi dan menerima junior tranche + turnover rent.
               </p>
-              <div className="pt-2 border-t border-slate-100 dark:border-zinc-800">
+              <div className="pt-2">
                 <AddressBadge address="0x70997970C51812dc3A010C7d01b50e0d17dc79C8" roleLabel="LANDLORD" />
               </div>
             </div>
@@ -324,7 +324,7 @@ export default function DealOverviewPage({ params }: { params: { id: string } })
               <p className="text-xs text-slate-500">
                 Penyedia dana 80% Capex (Rp 120M). Pemegang token svIDR (Senior Vault ERC-4626).
               </p>
-              <div className="pt-2 border-t border-slate-100 dark:border-zinc-800">
+              <div className="pt-2">
                 <AddressBadge address={networkConfig.contracts.seniorVault} roleLabel="SENIOR VAULT" />
               </div>
             </div>
@@ -340,7 +340,7 @@ export default function DealOverviewPage({ params }: { params: { id: string } })
               <p className="text-xs text-slate-500">
                 Pengelola gerai F&B. Menyetor bond jaminan dan menyalurkan revenue share via QRIS settlement.
               </p>
-              <div className="pt-2 border-t border-slate-100 dark:border-zinc-800">
+              <div className="pt-2">
                 <AddressBadge address="0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC" roleLabel="TENANT" />
               </div>
             </div>
@@ -356,7 +356,7 @@ export default function DealOverviewPage({ params }: { params: { id: string } })
               <p className="text-xs text-slate-500">
                 Pihak audit fisik independen. Menandatangani persetujuan termin dan upload hash bukti IPFS.
               </p>
-              <div className="pt-2 border-t border-slate-100 dark:border-zinc-800">
+              <div className="pt-2">
                 <AddressBadge address="0x15d34AAf54267DB7D7c367839AAf71A00a2C6A65" roleLabel="INSPEKTUR" />
               </div>
             </div>
@@ -372,7 +372,7 @@ export default function DealOverviewPage({ params }: { params: { id: string } })
               <p className="text-xs text-slate-500">
                 Pelaksana renovasi fit-out ruko. Penerima dana termin langsung dari escrow contract.
               </p>
-              <div className="pt-2 border-t border-slate-100 dark:border-zinc-800">
+              <div className="pt-2">
                 <AddressBadge address="0x90F79bf6EB2c4f870365E785982E1f101E93b906" roleLabel="KONTRAKTOR" />
               </div>
             </div>
