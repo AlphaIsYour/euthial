@@ -32,6 +32,9 @@ importers:
       '@auth/prisma-adapter':
         specifier: ^2.11.3
         version: 2.11.3(@prisma/client@7.10.0(typescript@5.9.3))
+      '@euthial/indexer':
+        specifier: workspace:*
+        version: link:../../packages/indexer
       '@euthial/sim':
         specifier: workspace:*
         version: link:../../packages/sim
@@ -110,6 +113,22 @@ importers:
         version: 5.9.3
 
   packages/attestor:
+    dependencies:
+      viem:
+        specifier: ^2.57.3
+        version: 2.57.3(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@5.0.10)(zod@4.6.5)
+    devDependencies:
+      '@types/node':
+        specifier: ^20.17.0
+        version: 20.19.43
+      tsx:
+        specifier: ^4.23.15
+        version: 4.23.15
+      typescript:
+        specifier: ^5.6.3
+        version: 5.9.3
+
+  packages/indexer:
     dependencies:
       viem:
         specifier: ^2.57.3

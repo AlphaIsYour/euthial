@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@auth/prisma-adapter": "^2.11.3",
+    "@euthial/indexer": "workspace:*",
     "@euthial/sim": "workspace:*",
     "@prisma/client": "^7.10.0",
     "@rainbow-me/rainbowkit": "^2.2.11",

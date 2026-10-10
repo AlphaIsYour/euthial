@@ -19,6 +19,7 @@
     "test:iot": "tsx ./packages/iot-bridge/test/iot-bridge.test.ts",
     "test:load": "tsx ./load-tests/benchmark.ts",
     "iot:status": "tsx ./packages/iot-bridge/src/cli.ts",
+    "test:indexer": "tsx ./packages/indexer/test/indexer.test.ts",
     "db:mode": "node scripts/switch-db.js",
     "db:seed": "tsx ./prisma/seed.ts",
     "db:migrate:postgres": "pnpm prisma migrate deploy --schema=prisma/schema.postgresql.prisma"
