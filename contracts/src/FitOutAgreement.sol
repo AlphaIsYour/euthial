@@ -133,7 +133,15 @@ contract FitOutAgreement is ReentrancyGuard {
         if (lastDayId > 0 && dayId > lastDayId + 3 && !oracleStale) { oracleStale = true; staleStartDay = lastDayId; emit OracleStale(lastDayId, dayId); }
         if (oracleStale) { oracleStale = false; emit OracleRecovered(dayId); }
         if (startDay == 0 && state == State.OPERATING) startDay = dayId; lastDayId = dayId;
-        if (state == State.OPERATING && !oracleStale) _evaluateCovenant(cumulativeInvestorPaid);
+        if (state == State.OPERATING && !oracleStale) {
+            if (cumulativeInvestorPaid >= totalClaim) {
+                _transitionState(State.RESIDUAL);
+                covenantStatus = CovenantStatus.HEALTHY;
+                emit ResidualReached(dayId, cumulativeInvestorPaid);
+                return;
+            }
+            _evaluateCovenant(cumulativeInvestorPaid);
+        }
     }
 
     function _evaluateCovenant(uint256 cumulativeInvestorPaid) internal {
