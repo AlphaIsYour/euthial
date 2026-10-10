@@ -33,6 +33,7 @@ async function run() {
 
   // 2. Seed Default Users & Roles
   console.log('🌱 Seeding initial records...');
+  await client.query(`DELETE FROM "UserDeal"; DELETE FROM "User";`);
 
   // Admin
   await client.query(`
@@ -41,45 +42,76 @@ async function run() {
       'usr_demo_admin',
       'admin@euthial.finance',
       'Euthial Protocol Admin',
-      '$2a$10$wTf2zXj5x7L1m8Uv5c3yXe0u5Qy4k4dYm8qV0b0tYvYq5e9dKq5tC',
+      '$2b$10$OKGUd24Z53sPfZJ4.TzhkuED/Db.Kbp8Njq1imqfCybLIiBdJmdyu',
       '0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266',
       'ADMIN',
       NOW(),
       NOW()
-    )
-    ON CONFLICT ("id") DO NOTHING;
+    );
   `);
 
-  // Landlord
+  // Demo Landlord (Budi)
   await client.query(`
     INSERT INTO "User" ("id", "email", "name", "passwordHash", "walletAddress", "role", "createdAt", "updatedAt")
     VALUES (
-      'usr_demo_landlord',
-      'landlord@kemang.id',
-      'PT Kemang Propertindo',
-      '$2a$10$wTf2zXj5x7L1m8Uv5c3yXe0u5Qy4k4dYm8qV0b0tYvYq5e9dKq5tC',
+      'usr_budi_landlord',
+      'budi@landlord.id',
+      'Budi Santoso (Landlord)',
+      '$2b$10$OKGUd24Z53sPfZJ4.TzhkuED/Db.Kbp8Njq1imqfCybLIiBdJmdyu',
       '0x70997970c51812dc3a010c7d01b50e0d17dc79c8',
       'LANDLORD',
       NOW(),
       NOW()
     )
-    ON CONFLICT ("id") DO NOTHING;
+    ON CONFLICT ("id") DO UPDATE SET "passwordHash" = EXCLUDED."passwordHash", "email" = EXCLUDED."email";
   `);
 
-  // Tenant
+  // Demo Investor
   await client.query(`
     INSERT INTO "User" ("id", "email", "name", "passwordHash", "walletAddress", "role", "createdAt", "updatedAt")
     VALUES (
-      'usr_demo_tenant',
-      'tenant@kopi-nusantara.id',
-      'Kopi Nusantara F&B',
-      '$2a$10$wTf2zXj5x7L1m8Uv5c3yXe0u5Qy4k4dYm8qV0b0tYvYq5e9dKq5tC',
+      'usr_demo_yieldfund',
+      'investor@yieldfund.id',
+      'Yield Fund Investor',
+      '$2b$10$OKGUd24Z53sPfZJ4.TzhkuED/Db.Kbp8Njq1imqfCybLIiBdJmdyu',
       '0x3c44cdddb6a900fa2b585dd299e03d12fa4293bc',
+      'INVESTOR',
+      NOW(),
+      NOW()
+    )
+    ON CONFLICT ("id") DO UPDATE SET "passwordHash" = EXCLUDED."passwordHash", "email" = EXCLUDED."email";
+  `);
+
+  // Demo Tenant (Kopi Kenangan)
+  await client.query(`
+    INSERT INTO "User" ("id", "email", "name", "passwordHash", "walletAddress", "role", "createdAt", "updatedAt")
+    VALUES (
+      'usr_demo_kopi',
+      'kopi@kenangan-ruko.id',
+      'Kopi Kenangan (Tenant)',
+      '$2b$10$OKGUd24Z53sPfZJ4.TzhkuED/Db.Kbp8Njq1imqfCybLIiBdJmdyu',
+      '0x90f79bf6eb2c4f870365e785982e1f101e93b906',
       'TENANT',
       NOW(),
       NOW()
     )
-    ON CONFLICT ("id") DO NOTHING;
+    ON CONFLICT ("id") DO UPDATE SET "passwordHash" = EXCLUDED."passwordHash", "email" = EXCLUDED."email";
+  `);
+
+  // Demo Contractor
+  await client.query(`
+    INSERT INTO "User" ("id", "email", "name", "passwordHash", "walletAddress", "role", "createdAt", "updatedAt")
+    VALUES (
+      'usr_demo_mandor',
+      'mandor@kontraktor.id',
+      'PT Reka Cipta (Kontraktor)',
+      '$2b$10$OKGUd24Z53sPfZJ4.TzhkuED/Db.Kbp8Njq1imqfCybLIiBdJmdyu',
+      '0x15d34aaf54267db7d7c367839aaf71a00a2c6a65',
+      'CONTRACTOR',
+      NOW(),
+      NOW()
+    )
+    ON CONFLICT ("id") DO UPDATE SET "passwordHash" = EXCLUDED."passwordHash", "email" = EXCLUDED."email";
   `);
 
   // Whitelist Landlord
