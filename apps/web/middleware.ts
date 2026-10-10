@@ -37,9 +37,17 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
-  // 3. Get JWT token
+  // 3. Get JWT token (support standard, Vercel HTTPS secureCookie, and Auth.js v5 names)
   const secret = process.env.AUTH_SECRET || "euthial-protocol-secret-key-development-mode-2026";
-  const token = await getToken({ req: request, secret });
+  const isHttps = request.url.startsWith("https://") || process.env.NODE_ENV === "production";
+  
+  let token = await getToken({ req: request, secret, secureCookie: isHttps });
+  if (!token && isHttps) {
+    token = await getToken({ req: request, secret, secureCookie: false });
+  }
+  if (!token) {
+    token = await getToken({ req: request, secret, cookieName: isHttps ? "__Secure-authjs.session-token" : "authjs.session-token" });
+  }
 
   // 4. Check for Demo Simulation bypass (cookie or query param for Hackathon Jury)
   const juryPreviewRole = request.cookies.get("euthial_preview_role")?.value;

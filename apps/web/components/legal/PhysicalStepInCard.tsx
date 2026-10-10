@@ -32,7 +32,7 @@ export const PhysicalStepInCard: React.FC = () => {
       setActiveStep(3);
       setDoorLockStatus("REVOKED");
       setLastPinRotation(new Date().toLocaleString("id-ID") + " WIB");
-      setFeedbackToast("IoT Gateway: PIN tenant dicabut, Master PIN dikirim ke Pemilik Ruko!");
+      setFeedbackToast("Grosse Akta: Hak kelola fisik dialihkan resmi ke Pemilik Ruko!");
     }, 2500);
 
     setTimeout(() => {
@@ -47,7 +47,7 @@ export const PhysicalStepInCard: React.FC = () => {
   const handleResetLock = () => {
     setDoorLockStatus("NORMAL");
     setActiveStep(1);
-    setFeedbackToast("Kredensial IoT Smart Lock dipulihkan ke Penyewa Utama.");
+    setFeedbackToast("Hak operasional dan penguasaan fisik dipulihkan ke Penyewa Utama.");
     setTimeout(() => setFeedbackToast(null), 3000);
   };
 
@@ -205,12 +205,12 @@ export const PhysicalStepInCard: React.FC = () => {
           <div className="flex items-center justify-between mb-1.5">
             <span className="text-[10px] font-bold text-red-700 dark:text-red-400">FASE 3</span>
             <span className="material-symbols-outlined text-sm">
-              {activeStep >= 3 ? "lock" : "lock_open"}
+              {activeStep >= 3 ? "gavel" : "description"}
             </span>
           </div>
-          <div className="font-bold text-slate-900 dark:text-white mb-0.5">Rotasi PIN Smart Lock</div>
+          <div className="font-bold text-slate-900 dark:text-white mb-0.5">Berita Acara Pengalihan Fisik</div>
           <p className="text-[11px] text-slate-600 dark:text-[#8A8A8A] leading-snug">
-            Webhook Tuya mencabut PIN tenant jam 23:59. Master PIN dialihkan ke Pemilik Ruko.
+            Grosse Akta Notariil dieksekusi. Berita Acara serah terima penguasaan fisik diterbitkan tanpa proses peradilan.
           </p>
         </div>
 
@@ -235,14 +235,14 @@ export const PhysicalStepInCard: React.FC = () => {
         </div>
       </div>
 
-      {/* Grid: IoT Gateway Cockpit & Fidusia Collateral Inventory */}
+      {/* Grid: Legal Handover Status & Fidusia Collateral Inventory */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-        {/* Left: IoT Door Lock Hardware Live Monitor */}
+        {/* Left: Pengalihan Penguasaan Fisik Ruko */}
         <div className="p-4 rounded-xl border border-slate-200/80 dark:border-white/10 bg-slate-50/80 dark:bg-[#0A0A0A] space-y-3 font-mono">
           <div className="flex items-center justify-between pb-2 border-b border-slate-200/80 dark:border-white/10">
             <div className="flex items-center gap-2">
-              <MaterialIcon name="meeting_room" size={18} className="text-red-600 dark:text-red-400" />
-              <span className="text-xs font-bold text-slate-900 dark:text-white">IoT Gateway: Pintu Ruko</span>
+              <MaterialIcon name="assignment" size={18} className="text-red-600 dark:text-red-400" />
+              <span className="text-xs font-bold text-slate-900 dark:text-white">Eksekusi Fisik Ruko</span>
             </div>
             <span
               className={`px-2 py-0.5 rounded text-[10px] font-bold ${
@@ -251,33 +251,33 @@ export const PhysicalStepInCard: React.FC = () => {
                   : "bg-red-50 dark:bg-red-500/10 text-red-700 dark:text-red-400 border border-red-200 dark:border-red-500/20 animate-pulse"
               }`}
             >
-              {doorLockStatus === "NORMAL" ? "TENANT ACCESS OK" : "ACCESS REVOKED"}
+              {doorLockStatus === "NORMAL" ? "HAK KELOLA PENYEWA" : "STEP-IN DIAKTIFKAN"}
             </span>
           </div>
 
           <div className="space-y-2 text-xs">
             <div className="flex justify-between">
-              <span className="text-slate-500 dark:text-[#71717A]">Device ID:</span>
-              <span className="text-slate-800 dark:text-slate-200 font-semibold">IOT-RUKO-JBR-01</span>
+              <span className="text-slate-500 dark:text-[#71717A]">No. Berita Acara:</span>
+              <span className="text-slate-800 dark:text-slate-200 font-semibold">BAST-PENGOSONGAN-04821</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-slate-500 dark:text-[#71717A]">Hardware Model:</span>
-              <span className="text-slate-800 dark:text-slate-200 font-semibold">Tuya Commercial Smart Lock</span>
+              <span className="text-slate-500 dark:text-[#71717A]">Dasar Penegakan:</span>
+              <span className="text-slate-800 dark:text-slate-200 font-semibold">Grosse Akta Notariil No. 18</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-slate-500 dark:text-[#71717A]">Status Kunci:</span>
+              <span className="text-slate-500 dark:text-[#71717A]">Status Penguasaan:</span>
               <span className={doorLockStatus === "NORMAL" ? "text-emerald-700 dark:text-emerald-400 font-semibold" : "text-red-600 dark:text-red-400 font-bold"}>
                 {doorLockStatus === "NORMAL"
-                  ? "Akses Penyewa Aktif"
-                  : "Master PIN Baru (Terenkripsi)"}
+                  ? "Dikuasai Penyewa Aktif"
+                  : "Dialihkan ke Pemilik Ruko"}
               </span>
             </div>
             <div className="flex justify-between">
-              <span className="text-slate-500 dark:text-[#71717A]">Waktu Rotasi Terakhir:</span>
+              <span className="text-slate-500 dark:text-[#71717A]">Waktu Eksekusi:</span>
               <span className="text-slate-800 dark:text-slate-200 text-[11px]">{lastPinRotation}</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-slate-500 dark:text-[#71717A]">Penerima Kredensial:</span>
+              <span className="text-slate-500 dark:text-[#71717A]">Penerima Kuasa:</span>
               <span className="text-amber-800 dark:text-amber-400 font-semibold text-[11px]">
                 {doorLockStatus === "NORMAL" ? "Penyewa (Kedai Melati)" : "Pemilik Ruko & Operator Siaga"}
               </span>
@@ -285,7 +285,7 @@ export const PhysicalStepInCard: React.FC = () => {
           </div>
 
           <div className="pt-2 text-[10px] text-slate-500 dark:text-[#71717A] leading-relaxed">
-            *Webhook otomatis merotasi PIN pintu saat status on-chain beralih ke <code>STEP_IN</code>, mencegah penyewa menahan aset komersial.
+            *Eksekusi Grosse Akta memiliki kekuatan eksekutorial setara putusan pengadilan berkekuatan hukum tetap (inkracht) sesuai Pasal 224 HIR, menjamin pengalihan penguasaan fisik seketika.
           </div>
         </div>
 

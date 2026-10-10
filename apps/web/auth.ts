@@ -86,26 +86,16 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 
         const isDemoPassword = password === "demo123" || password === "password123";
 
-        // If user not yet created in active DB but matches demo persona
-        if (!user && demoPersonas[email] && isDemoPassword) {
+        // 1-Click Demo Personas: return directly so Vercel serverless works without disk writes
+        if (demoPersonas[email] && isDemoPassword) {
           const persona = demoPersonas[email];
-          try {
-            user = await prisma.user.create({
-              data: {
-                id: persona.id,
-                email,
-                name: persona.name,
-                role: persona.role,
-                walletAddress: persona.wallet.toLowerCase(),
-                passwordHash: "$2b$10$OKGUd24Z53sPfZJ4.TzhkuED/Db.Kbp8Njq1imqfCybLIiBdJmdyu",
-              },
-            });
-          } catch {
-            // If creation fails due to existing wallet or ID, fetch again
-            user = await prisma.user.findFirst({
-              where: { OR: [{ email }, { walletAddress: persona.wallet.toLowerCase() }] },
-            });
-          }
+          return {
+            id: persona.id,
+            name: persona.name,
+            email,
+            role: persona.role,
+            walletAddress: persona.wallet.toLowerCase(),
+          };
         }
 
         if (!user) return null;

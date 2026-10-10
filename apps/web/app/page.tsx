@@ -535,7 +535,7 @@ export default function HomePage() {
                   {formatIDR(calcTenantKeep)}
                 </div>
               </div>
-              <p className="text-xs text-slate-600 leading-relaxed font-normal pt-2 border-t border-emerald-200/60">
+              <p className="text-xs text-slate-600 leading-relaxed font-normal pt-2">
                 Uang bebas pakai langsung diterima kasir harian untuk belanja bahan baku, operasional harian, gaji barista, utilitas listrik, dan laba operasional kedai.
               </p>
             </div>
@@ -555,7 +555,7 @@ export default function HomePage() {
                   {formatIDR(calcInvestorTake)}
                 </div>
               </div>
-              <div className="space-y-2 pt-2 border-t border-slate-200/80">
+              <div className="space-y-2 pt-2">
                 <span className="inline-block text-[11px] font-mono text-sky-800 bg-sky-50 px-2.5 py-0.5 rounded-full border border-sky-200 font-medium">
                   Estimasi Lunas: ~{estMonthsToPayoff} Bulan
                 </span>
@@ -580,7 +580,7 @@ export default function HomePage() {
                   {formatIDR(calcLandlordRent)}
                 </div>
               </div>
-              <div className="space-y-2 pt-2 border-t border-slate-200/80">
+              <div className="space-y-2 pt-2">
                 <span className="inline-block text-[11px] font-mono text-amber-800 bg-amber-50 px-2.5 py-0.5 rounded-full border border-amber-200 font-medium">
                   Turnover Rent Adil
                 </span>
@@ -636,7 +636,7 @@ export default function HomePage() {
                 </div>
               </div>
 
-              <div className="pt-3 border-t border-slate-200/80 flex items-center justify-between text-[11px] font-mono text-slate-500">
+              <div className="pt-3 flex items-center justify-between text-[11px] font-mono text-slate-500">
                 <span>Verifikasi Lokasi & RAB</span>
                 <span className="text-emerald-700 font-medium">Tahap Pra-Protokol</span>
               </div>
@@ -669,7 +669,7 @@ export default function HomePage() {
                 </div>
               </div>
 
-              <div className="pt-3 border-t border-slate-200/80 flex items-center justify-between text-[11px] font-mono text-slate-500">
+              <div className="pt-3 flex items-center justify-between text-[11px] font-mono text-slate-500">
                 <span>Rilis Termin Bertahap</span>
                 <span className="text-sky-700 font-medium">Proteksi 1.25x Cap</span>
               </div>
@@ -702,7 +702,7 @@ export default function HomePage() {
                 </div>
               </div>
 
-              <div className="pt-3 border-t border-slate-200/80 flex items-center justify-between text-[11px] font-mono text-slate-500">
+              <div className="pt-3 flex items-center justify-between text-[11px] font-mono text-slate-500">
                 <span>Distribusi Harian</span>
                 <span className="text-amber-700 font-medium">Automasi EIP-712</span>
               </div>
@@ -789,7 +789,7 @@ export default function HomePage() {
                       <p className="text-xs text-slate-600 leading-relaxed font-normal">{card.desc}</p>
                     </div>
 
-                    <div className="mt-auto pt-3 border-t border-slate-200/80 flex items-center justify-between text-xs font-mono text-slate-900 group-hover:text-emerald-700 transition-colors font-medium">
+                    <div className="mt-auto pt-3 flex items-center justify-between text-xs font-mono text-slate-900 group-hover:text-emerald-700 transition-colors font-medium">
                       <span>Buka Console</span>
                       <MaterialIcon name="arrow_forward" size={13} className="group-hover:translate-x-1 transition-transform" />
                     </div>

@@ -20,7 +20,9 @@ export default function LoginPage() {
       </div>
 
       <div className="bg-white/95 backdrop-blur-md rounded-2xl border border-white/20 p-5 sm:p-6 shadow-2xl shadow-black/40">
-        <LoginForm />
+        <React.Suspense fallback={<div className="h-48 flex items-center justify-center text-xs text-slate-400 font-mono">Memuat formulir autentikasi...</div>}>
+          <LoginForm />
+        </React.Suspense>
       </div>
 
       <div className="text-center text-xs text-slate-300 drop-shadow-sm">

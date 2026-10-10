@@ -2,13 +2,15 @@
 
 import React, { useState } from "react";
 import { signIn } from "next-auth/react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useAccount } from "wagmi";
 import { MaterialIcon } from "../ui/MaterialIcon";
 import { SIWEModal } from "./SIWEModal";
 
 export const LoginForm: React.FC = () => {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const callbackUrl = searchParams.get("callbackUrl") || "/demo";
   const { address, isConnected } = useAccount();
 
   const [authMethod, setAuthMethod] = useState<"wallet" | "credentials">("credentials");
@@ -40,7 +42,7 @@ export const LoginForm: React.FC = () => {
         return;
       }
 
-      router.push("/demo");
+      router.push(callbackUrl);
       router.refresh();
     } catch (err: any) {
       setError(err?.message || "Terjadi kendala saat proses autentikasi.");
