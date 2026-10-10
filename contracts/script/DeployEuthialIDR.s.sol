@@ -20,7 +20,7 @@ contract DeployEuthialIDR is Script {
         );
         address deployer = vm.addr(deployerPrivateKey);
         address admin = vm.envOr("ADMIN_ADDRESS", deployer);
-        uint256 initialSupply = vm.envOr("INITIAL_SUPPLY", 100_000_000 * 1e6); // 100M IDR seed
+        uint256 initialSupply = vm.envOr("INITIAL_SUPPLY", uint256(100_000_000 * 1e6)); // 100M IDR seed
 
         vm.startBroadcast(deployerPrivateKey);
 
