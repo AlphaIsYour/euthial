@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { checkRateLimit, rateLimitExceededResponse, RATE_LIMIT_PROFILES } from "@/lib/rate-limit";
+
+export const dynamic = "force-dynamic";
 import { z } from "zod";
 import {
   sendDepositConfirmedEmail,

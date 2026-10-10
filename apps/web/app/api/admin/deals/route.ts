@@ -3,6 +3,8 @@ import { prisma } from "@/lib/prisma";
 import { checkRateLimit, rateLimitExceededResponse, RATE_LIMIT_PROFILES } from "@/lib/rate-limit";
 import { z } from "zod";
 
+export const dynamic = "force-dynamic";
+
 const createDealSchema = z.object({
   propertyName: z.string().min(3, "Property name must be at least 3 characters"),
   location: z.string().optional().default("Jakarta, Indonesia"),

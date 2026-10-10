@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { checkRateLimit, rateLimitExceededResponse, RATE_LIMIT_PROFILES } from "@/lib/rate-limit";
 import { prisma } from "@/lib/prisma";
 
+export const dynamic = "force-dynamic";
+
 export async function GET(request: NextRequest) {
   // Rate limiting for public telemetry
   const rateLimit = checkRateLimit(request, RATE_LIMIT_PROFILES.PUBLIC, "protocol-metrics");

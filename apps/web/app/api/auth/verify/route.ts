@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { SiweMessage } from "siwe";
 
+export const dynamic = "force-dynamic";
+
 export async function POST(req: NextRequest) {
   try {
     const { message, signature } = await req.json();

@@ -22,7 +22,7 @@
     "test:indexer": "tsx ./packages/indexer/test/indexer.test.ts",
     "db:mode": "node scripts/switch-db.js",
     "db:seed": "tsx ./prisma/seed.ts",
-    "db:migrate:postgres": "pnpm prisma migrate deploy --schema=prisma/schema.postgresql.prisma"
+    "db:migrate:neon": "node scripts/migrate-neon.js"
   },
   "keywords": [
     "ethereum",
@@ -38,6 +38,9 @@
   "license": "MIT",
   "devDependencies": {
     "@types/node": "^26.6.4",
+    "@types/pg": "^8.23.1",
+    "pg": "^8.23.1",
+    "prisma": "7.10.0",
     "tsx": "^4.23.15",
     "typescript": "^7.0.2"
   }

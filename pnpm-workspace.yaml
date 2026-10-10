@@ -6,3 +6,5 @@ allowBuilds:
   bufferutil: true
   keccak: true
   utf-8-validate: true
+  '@prisma/engines': true
+  prisma: true

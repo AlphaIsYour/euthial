@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { checkRateLimit, rateLimitExceededResponse, RATE_LIMIT_PROFILES } from "@/lib/rate-limit";
 
+export const dynamic = "force-dynamic";
+
 // In-memory state for physical lock in web app
 let lockState: "OPERATING" | "LOCKED" | "OVERRIDDEN" = "OPERATING";
 let lastReason = "Normal operations";

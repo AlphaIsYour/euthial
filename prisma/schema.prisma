@@ -1,6 +1,7 @@
 datasource db {
-  provider = "sqlite"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
 
 generator client {
@@ -125,4 +126,3 @@ model DealDocument {
   createdAt     DateTime  @default(now())
   deal          Deal      @relation(fields: [dealId], references: [id], onDelete: Cascade)
 }
-
